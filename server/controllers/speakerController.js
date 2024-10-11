@@ -5,6 +5,7 @@ const createSpeaker = async (req, res) => {
   try {
    
     const { fullName, bio, email, mobile, profilePic, socialLinks } = req.body;
+    
     const newSpeaker = new Speaker({
       fullName,
       bio,

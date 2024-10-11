@@ -22,10 +22,17 @@ const SpeakerList = () => {
     <div>
       <div className='flex items-center justify-start gap-2'>
         <Search/>
-        <button onClick={()=>setShowForm(true)} className='bg-blue-500 text-white rounded-lg px-4 py-2'>Add</button>
+        <button onClick={()=>setShowForm(true)} className=' text-white rounded-lg px-4 py-2 bg-[var(--primary)]'>Add</button>
       </div>
      <div>
       <h2 className='my-5 text-3xl font-bold'>Speakers List</h2>
+      <div className='grid grid-cols-5 items-center my-2 border-b  p-1 font-bold'>
+        <p>Image</p>
+        <p>Name</p>
+        <p>Mobile</p>
+        <p>Email</p>
+        <p>Action</p>
+      </div>
      {
       data.map((speaker)=>{
         return <Speaker key={speaker._id} speaker={speaker}/>

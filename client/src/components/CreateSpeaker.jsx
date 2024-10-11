@@ -16,6 +16,7 @@ const CreateSpeaker = ({onClose,showForm}) => {
     },
   }
   const [formData, setFormData] = useState(initialData);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -31,8 +32,10 @@ const CreateSpeaker = ({onClose,showForm}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true)
+    const toastId = toast.loading("Creating user...")
     try {
+     
       const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/speakers`, {
         method: "POST",
         headers: {
@@ -41,19 +44,25 @@ const CreateSpeaker = ({onClose,showForm}) => {
         body: JSON.stringify(formData)
 
       })
+      const data = await response.json()
 
       if (response.status === 201) {
         toast.success('Speaker created successfully!');
         setFormData(initialData);
+      }else{
+        toast.error(data.message)
       }
     } catch (error) {
       toast.error('Error creating speaker. Please try again.');
       console.error(error);
+    }finally{
+      setLoading(false)
+      toast.dismiss(toastId)
     }
   };
 
   return (
-    <div className={`lg:w-[400px] w-full mx-auto  p-6 h-full overflow-y-scroll shadow-md fixed ${showForm ? 'right-0' :'-right-full'} transition-all duration-500 top-0 bg-blue-500`}>
+    <div className={`lg:w-[400px] w-full mx-auto  p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' :'-right-full'} transition-all duration-500 top-0 bg-[var(--primary)]`}>
       <div className='flex items-center justify-between mb-4'>
       <h2 className="text-2xl font-semibold">Create New Speaker</h2>
       <button onClick={onClose}>
@@ -163,7 +172,7 @@ const CreateSpeaker = ({onClose,showForm}) => {
         <button
           type="submit"
           className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200"
-        >
+        disabled={loading}>
           Create Speaker
         </button>
       </form>
