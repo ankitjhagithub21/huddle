@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const connectDB = require('./config/dbconnection')
+const speakerRouter = require('./routes/speakerRoutes')
 const app = express()
 
 
@@ -13,6 +14,8 @@ app.use(cors({
   origin:process.env.ORIGIN,
   credentials:true
 }))
+
+app.use("/speakers",speakerRouter)
 
 app.get("/",(req,res)=>{
   res.json({"message":"Api working."})
