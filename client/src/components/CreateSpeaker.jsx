@@ -36,7 +36,7 @@ const CreateSpeaker = ({onClose,showForm}) => {
     const toastId = toast.loading("Creating user...")
     try {
      
-      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/speakers`, {
+      const response = await fetch(`${import.meta.env.VITE_SPEAKER_URL}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -60,6 +60,8 @@ const CreateSpeaker = ({onClose,showForm}) => {
       toast.dismiss(toastId)
     }
   };
+
+  
 
   return (
     <div className={`lg:w-[400px] w-full mx-auto  p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' :'-right-full'} transition-all duration-500 top-0 bg-[var(--primary)]`}>
