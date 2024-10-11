@@ -1,4 +1,4 @@
-import {createBrowserRouter} from 'react-router-dom'
+import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import SpeakerList from './SpeakerList'
 
 const Main = () => {
@@ -10,7 +10,7 @@ const Main = () => {
   ])
   return (
     <div className='w-3/4 bg-blue-500 h-full'>
-      hello
+      <RouterProvider router={router}/>
     </div>
   )
 }

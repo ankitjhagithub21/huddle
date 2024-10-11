@@ -3,6 +3,7 @@ const Speaker = require('../models/speaker');
 // Create a new speaker
 const createSpeaker = async (req, res) => {
   try {
+   
     const { fullName, bio, email, mobile, profilePic, socialLinks } = req.body;
     const newSpeaker = new Speaker({
       fullName,
@@ -14,6 +15,7 @@ const createSpeaker = async (req, res) => {
     });
 
     const savedSpeaker = await newSpeaker.save();
+    
     res.status(201).json({ message: 'Speaker created successfully', speaker: savedSpeaker });
   } catch (error) {
     res.status(500).json({ message: 'Error creating speaker', error: error.message });
