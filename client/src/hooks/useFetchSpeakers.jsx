@@ -7,8 +7,8 @@ const useFetchSpeakers = () => {
 
         const getData = async () => {
             try {
-                const url = `${import.meta.env.VITE_SERVER_URL}/speakers`
-                setLoading(true)
+                const url = `${import.meta.env.VITE_SPEAKER_URL}`
+                
                 const res = await fetch(url)
                 if (res.status === 200) {
                     const speakers = await res.json()
