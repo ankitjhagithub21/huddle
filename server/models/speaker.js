@@ -1,24 +1,40 @@
 const mongoose = require('mongoose');
 
 const speakerSchema = new mongoose.Schema({
-  name: {
+  fullName: {
     type: String,
     required: true,
   },
-  image: {
+  bio: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique:true
+  },
+  mobile:{
+    type:String,
+    required:true
+  },
+  profilePic: {
     type: String,
     required: true, 
   },
-  events: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Event', 
-  }],
 
-  createdAt: {
-    type: Date,
-    default: Date.now,
+  socialLinks: {
+    website: {
+      type: String,
+    },
+    twitter: {
+      type: String,
+    },
+    linkedin: {
+      type: String,
+    },
   },
-});
-
+ 
+},{versionKey:false,timestamps:false});
 
 module.exports = mongoose.model('Speaker', speakerSchema);
