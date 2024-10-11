@@ -1,11 +1,12 @@
 import React from 'react'
 import "./App.css"
+import Sidebar from './components/Sidebar'
+import Main from './components/Main'
 const App = () => {
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <div className='h-screen w-full flex'>
+     <Sidebar/>
+     <Main/>
     </div>
   )
 }
