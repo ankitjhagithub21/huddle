@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
+import { IoIosCloseCircleOutline } from "react-icons/io";
 import { toast } from 'react-toastify';
 
-const CreateSpeaker = () => {
-    const initialData = {
-        fullName: '',
-        bio: '',
-        email: '',
-        mobile: '',
-        profilePic: '',
-        socialLinks: {
-          facebook: '',
-          twitter: '',
-          linkedin: '',
-        },
-      }
+const CreateSpeaker = ({onClose,showForm}) => {
+  const initialData = {
+    fullName: '',
+    bio: '',
+    email: '',
+    mobile: '',
+    profilePic: '',
+    socialLinks: {
+      facebook: '',
+      twitter: '',
+      linkedin: '',
+    },
+  }
   const [formData, setFormData] = useState(initialData);
 
   const handleInputChange = (e) => {
@@ -32,12 +33,12 @@ const CreateSpeaker = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/speakers`,{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
+      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/speakers`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
         },
-        body:JSON.stringify(formData)
+        body: JSON.stringify(formData)
 
       })
 
@@ -52,8 +53,13 @@ const CreateSpeaker = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-6">Create New Speaker</h2>
+    <div className={`lg:w-[400px] w-full mx-auto  p-6 h-full overflow-y-scroll shadow-md fixed ${showForm ? 'right-0' :'-right-full'} transition-all duration-500 top-0 bg-blue-500`}>
+      <div className='flex items-center justify-between mb-4'>
+      <h2 className="text-2xl font-semibold">Create New Speaker</h2>
+      <button onClick={onClose}>
+      <IoIosCloseCircleOutline size={25}/>
+      </button>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Full Name</label>
@@ -119,40 +125,39 @@ const CreateSpeaker = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Facebook</label>
-            <input
-              type="text"
-              name="facebook"
-              value={formData.socialLinks.facebook}
-              onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              placeholder="Facebook Profile"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Twitter</label>
-            <input
-              type="text"
-              name="twitter"
-              value={formData.socialLinks.twitter}
-              onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              placeholder="Twitter profile"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">LinkedIn</label>
-            <input
-              type="text"
-              name="linkedin"
-              value={formData.socialLinks.linkedin}
-              onChange={handleInputChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              placeholder="LinkedIn profile"
-            />
-          </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Facebook</label>
+          <input
+            type="text"
+            name="facebook"
+            value={formData.socialLinks.facebook}
+            onChange={handleInputChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Facebook Profile"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Twitter</label>
+          <input
+            type="text"
+            name="twitter"
+            value={formData.socialLinks.twitter}
+            onChange={handleInputChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Twitter profile"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">LinkedIn</label>
+          <input
+            type="text"
+            name="linkedin"
+            value={formData.socialLinks.linkedin}
+            onChange={handleInputChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            placeholder="LinkedIn profile"
+          />
         </div>
 
         <button

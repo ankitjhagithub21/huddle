@@ -9,7 +9,7 @@ const Main = () => {
     }
   ])
   return (
-    <div className='w-3/4 bg-blue-500 h-full'>
+    <div className='w-full relative h-full p-5'>
       <RouterProvider router={router}/>
     </div>
   )
