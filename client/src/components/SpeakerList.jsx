@@ -7,8 +7,9 @@ import Speaker from './Speaker'
 const SpeakerList = () => {
   const {data,loading} = useFetchSpeakers()
   const [showForm,setShowForm] = useState(false)
-  
 
+  
+  
   const onClose = () =>{
     setShowForm(false)
   }
@@ -35,7 +36,7 @@ const SpeakerList = () => {
         <p>Action</p>
       </div>
      {
-      data.map((speaker)=>{
+      data.length==0 ? <p>No speaker found</p> :  data.map((speaker)=>{
         return <Speaker key={speaker._id} speaker={speaker}/>
       })
      }

@@ -24,7 +24,7 @@ const speakerSchema = new mongoose.Schema({
   },
 
   socialLinks: {
-    website: {
+    facebook: {
       type: String,
     },
     twitter: {
