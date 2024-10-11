@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import CreateSpeaker from './createSpeaker'
+import CreateSpeaker from './CreateSpeaker'
 import useFetchSpeakers from '../hooks/useFetchSpeakers'
 import Search from './Search'
 import Speaker from './Speaker'
