@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { toast } from 'react-toastify';
 
-const CreateSpeaker = ({ onClose, showForm, onAddSpeaker }) => {
+const CreateSpeaker = ({ onClose, showForm, onAddSpeaker, currState, speakerData, onEditSpeaker }) => {
   const initialData = {
     fullName: '',
     bio: '',
@@ -14,9 +14,19 @@ const CreateSpeaker = ({ onClose, showForm, onAddSpeaker }) => {
       twitter: '',
       linkedin: '',
     },
-  }
+  };
+
   const [formData, setFormData] = useState(initialData);
   const [loading, setLoading] = useState(false);
+
+  // Populate form data when editing a speaker
+  useEffect(() => {
+    if (currState === 'edit' && speakerData) {
+      setFormData(speakerData);
+    } else {
+      setFormData(initialData); // Reset form when adding a new speaker
+    }
+  }, [currState, speakerData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,11 +43,16 @@ const CreateSpeaker = ({ onClose, showForm, onAddSpeaker }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const toastId = toast.loading("Creating speaker...");
+    const toastId = toast.loading(currState === 'add' ? "Creating speaker..." : "Updating speaker...");
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_SPEAKER_URL}`, {
-        method: "POST",
+      const url = currState === 'add' 
+        ? `${import.meta.env.VITE_SPEAKER_URL}` 
+        : `${import.meta.env.VITE_SPEAKER_URL}/${speakerData._id}`;
+      const method = currState === 'add' ? "POST" : "PUT";
+
+      const response = await fetch(url, {
+        method,
         headers: {
           "Content-Type": "application/json"
         },
@@ -45,16 +60,19 @@ const CreateSpeaker = ({ onClose, showForm, onAddSpeaker }) => {
       });
       const data = await response.json();
 
-      if (response.status === 201) {
-        toast.success('Speaker created successfully!');
-        setFormData(initialData);
-        onAddSpeaker(data.speaker); 
+      if (response.status === currState === 'add' ? 201 : 200) {
+        toast.success(currState === 'add' ? 'Speaker created successfully!' : 'Speaker updated successfully!');
+        if (currState === 'add') {
+          onAddSpeaker(data.speaker); // Add new speaker to the list
+        } else {
+          onEditSpeaker(data.speaker); // Update speaker in the list
+        }
         onClose();
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error('Error creating speaker. Please try again.');
+      toast.error('Error processing speaker. Please try again.');
       console.error(error);
     } finally {
       setLoading(false);
@@ -65,10 +83,10 @@ const CreateSpeaker = ({ onClose, showForm, onAddSpeaker }) => {
   return (
     <div className={`lg:w-[400px] w-full mx-auto p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>
       <div className='flex items-center justify-between mb-4'>
-        <h2 className="text-2xl font-semibold">Create New Speaker</h2>
-        <button onClick={onClose}>
-          <IoIosCloseCircleOutline size={25} />
-        </button>
+        <h2 className="text-2xl font-semibold">
+          {currState === "add" ? 'Create New Speaker' : 'Update Speaker'}
+        </h2>
+        <IoIosCloseCircleOutline size={25} onClick={onClose} />
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Form fields for speaker details */}
@@ -177,7 +195,7 @@ const CreateSpeaker = ({ onClose, showForm, onAddSpeaker }) => {
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 w-full text-white bg-[var(--secondary)]  rounded-lg py-2 px-4 flex justify-center"
+            className="mt-4 w-full text-white bg-[var(--secondary)] rounded-lg py-2 px-4 flex justify-center"
           >
             {loading ? 'Saving...' : 'Save'}
           </button>
@@ -188,4 +206,3 @@ const CreateSpeaker = ({ onClose, showForm, onAddSpeaker }) => {
 };
 
 export default CreateSpeaker;
-

@@ -12,7 +12,7 @@ const Sidebar = () => {
 
   return (
     <div className='h-full lg:w-1/5 w-fit px-2 bg-[var(--secondary)] flex flex-col items-center justify-between py-5'>
-      <h2 className='font-bold text-2xl'>H<span className='lg:inline-block hidden'>UDDLE</span></h2>
+      <h2 className='font-bold text-2xl text-white'>H<span className='lg:inline-block hidden'>UDDLE</span></h2>
 
       <div className='flex flex-col gap-10'>
         {/* Map through sidebarLinks array to render links */}
