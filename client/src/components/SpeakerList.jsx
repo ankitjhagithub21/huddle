@@ -65,12 +65,12 @@ const SpeakerList = () => {
                 <button onClick={() => {
                     setShowForm(true)
                     setCurrState("add")
-                }} className='text-white rounded-lg px-4 py-2 bg-[var(--secondary)]'>Add Speaker</button>
+                }} className='text-white rounded-lg px-4 py-2 bg-[var(--secondary)] min-w-fit'>Add Speaker</button>
             </div>
             {/* Speaker list rendering */}
             <h2 className='my-10 text-2xl font-bold'>Speakers List</h2>
 
-            <div className='grid grid-cols-5 items-center my-2 p-1 font-bold'>
+            <div className='lg:grid hidden grid-cols-5 items-center my-2 p-1 font-bold'>
                 <p>Image</p>
                 <p>Name</p>
                 <p>Mobile</p>
