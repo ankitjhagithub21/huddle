@@ -4,6 +4,7 @@ import useFetchSpeakers from '../hooks/useFetchSpeakers'
 import Search from './Search'
 import Speaker from './Speaker'
 import { toast } from 'react-toastify'
+import { FaPlus } from 'react-icons/fa'
 
 const SpeakerList = () => {
     const { data, loading } = useFetchSpeakers();
@@ -60,15 +61,15 @@ const SpeakerList = () => {
 
     return (
         <>
-            <div className='flex items-center justify-start gap-2'>
+            <div className='flex items-center justify-start gap-2 sticky bg-white top-0 w-full left-0'>
                 <Search />
-                <button onClick={() => {
-                    setShowForm(true)
-                    setCurrState("add")
-                }} className='text-white rounded-lg px-4 py-2 bg-[var(--secondary)] min-w-fit'>Add Speaker</button>
+                <button onClick={onCreate} className='text-white flex items-center gap-1 rounded-lg p-2 bg-[var(--secondary)]'>
+                    <FaPlus />
+                    <span className='md:inline-block hidden'>Add Speaker</span>
+                </button>
             </div>
             {/* Speaker list rendering */}
-            <h2 className='my-10 text-2xl font-bold'>Speakers List</h2>
+            <h2 className='mt-5 text-2xl font-bold'>Speakers List</h2>
 
             <div className='lg:grid hidden grid-cols-5 items-center my-2 p-1 font-bold'>
                 <p>Image</p>
@@ -81,7 +82,7 @@ const SpeakerList = () => {
 
             <div>
                 {
-                    speakers.length === 0 ? <p>No speaker found</p> :
+                    loading ? <p>Loading...</p> : speakers.length === 0 ? <p>No speaker found</p> :
                         speakers.map((speaker) => (
                             <Speaker key={speaker._id} speaker={speaker} onDelete={onDelete} onEdit={onEdit} />
                         ))

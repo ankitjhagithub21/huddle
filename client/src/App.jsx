@@ -18,7 +18,7 @@ const App = () => {
 
       <BrowserRouter>
         <Sidebar />
-        <div className='w-full p-5'>
+        <div className='w-full p-5 h-full  overflow-y-scroll main relative'>
           <Routes>
             <Route path='/' element={<SpeakerList />} />
             <Route path='/events' element={<EventList />} />

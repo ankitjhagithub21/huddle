@@ -40,3 +40,6 @@ svg{
 li{
     transition: 0.2s;
 }
+.main::-webkit-scrollbar{
+    display: none;
+}
