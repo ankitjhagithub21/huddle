@@ -8,7 +8,7 @@ const Speaker = ({ speaker, onDelete }) => {
             <p>{speaker.mobile}</p>
             <p>{speaker.email}</p>
             <div className='flex items-center gap-2'>
-                <button><FaEdit color='blue' size={20} /></button>
+                <button><FaEdit className='text-[var(--secondary)]' size={20} /></button>
                 <button onClick={() => onDelete(speaker._id)}><FaTrash color='red' /></button>
             </div>
         </div>

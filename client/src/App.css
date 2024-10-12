@@ -26,3 +26,11 @@
 button{
     background-color:var(--secondary);
 }
+
+button:hover{
+    background-color: #e97d0a;
+}
+
+li{
+    transition: 0.2s;
+}

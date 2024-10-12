@@ -1,22 +1,42 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
+import { FaMicrophone, FaCalendarAlt, FaUsers } from 'react-icons/fa'
 
 const Sidebar = () => {
+  // Array of links with paths, labels, and icons
+  const sidebarLinks = [
+    { path: '/', label: 'Speakers', icon: <FaMicrophone /> },
+    { path: '/events', label: 'Events', icon: <FaCalendarAlt /> },
+    { path: '/attendees', label: 'Attendees', icon: <FaUsers /> }
+  ];
+
   return (
-    <div className='h-full w-fit px-10 bg-[var(--secondary)] flex flex-col items-center justify-between py-5'>
-      <h2 className='font-bold text-2xl'>HUDDLE</h2>
-      <div className='flex flex-col gap-5'>
-        <Link to={"/"}>
-          Speakers
-        </Link>
-        <Link to={"/events"}>
-          Events
-        </Link>
-        <Link to={"/attendees"}>
-          Attendees
-        </Link>
+    <div className='h-full lg:w-1/5 w-fit px-2 bg-[var(--secondary)] flex flex-col items-center justify-between py-5'>
+      <h2 className='font-bold text-2xl'>H<span className='lg:inline-block hidden'>UDDLE</span></h2>
+
+      <div className='flex flex-col gap-10'>
+        {/* Map through sidebarLinks array to render links */}
+        {sidebarLinks.map((link) => (
+          <NavLink
+            key={link.path}
+            to={link.path}
+            className={({ isActive }) =>
+              `flex items-center w-full gap-2 text-lg p-2 rounded-lg ${
+                isActive
+                  ? 'bg-white text-gray-800'
+                  : 'text-white hover:bg-white hover:text-gray-800'
+              }`
+            }
+          >
+            {link.icon}
+            <span className='lg:block hidden'>{link.label}</span>
+          </NavLink>
+        ))}
       </div>
-      <button>Copyright &copy; {new Date().getFullYear()}</button>
+
+      <button className='text-sm text-white'>
+        <span className='lg:inline-block hidden'>Copyright</span> &copy; {new Date().getFullYear()}
+      </button>
     </div>
   )
 }
