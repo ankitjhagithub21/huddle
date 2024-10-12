@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { toast } from 'react-toastify';
 
-const CreateSpeaker = ({onClose,showForm}) => {
+const CreateSpeaker = ({ onClose, showForm, onAddSpeaker }) => {
   const initialData = {
     fullName: '',
     bio: '',
@@ -32,46 +32,46 @@ const CreateSpeaker = ({onClose,showForm}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true)
-    const toastId = toast.loading("Creating user...")
+    setLoading(true);
+    const toastId = toast.loading("Creating speaker...");
+
     try {
-     
       const response = await fetch(`${import.meta.env.VITE_SPEAKER_URL}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify(formData)
-
-      })
-      const data = await response.json()
+      });
+      const data = await response.json();
 
       if (response.status === 201) {
         toast.success('Speaker created successfully!');
         setFormData(initialData);
-      }else{
-        toast.error(data.message)
+        onAddSpeaker(data.speaker); 
+        onClose();
+      } else {
+        toast.error(data.message);
       }
     } catch (error) {
       toast.error('Error creating speaker. Please try again.');
       console.error(error);
-    }finally{
-      setLoading(false)
-      toast.dismiss(toastId)
+    } finally {
+      setLoading(false);
+      toast.dismiss(toastId);
     }
   };
 
-  
-
   return (
-    <div className={`lg:w-[400px] w-full mx-auto  p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' :'-right-full'} transition-all duration-500 top-0 bg-[var(--primary)]`}>
+    <div className={`lg:w-[400px] w-full mx-auto p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>
       <div className='flex items-center justify-between mb-4'>
-      <h2 className="text-2xl font-semibold">Create New Speaker</h2>
-      <button onClick={onClose}>
-      <IoIosCloseCircleOutline size={25}/>
-      </button>
+        <h2 className="text-2xl font-semibold">Create New Speaker</h2>
+        <button onClick={onClose}>
+          <IoIosCloseCircleOutline size={25} />
+        </button>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Form fields for speaker details */}
         <div>
           <label className="block text-sm font-medium text-gray-700">Full Name</label>
           <input
@@ -136,7 +136,7 @@ const CreateSpeaker = ({onClose,showForm}) => {
           />
         </div>
 
-
+        {/* Social media links */}
         <div>
           <label className="block text-sm font-medium text-gray-700">Facebook</label>
           <input
@@ -148,6 +148,7 @@ const CreateSpeaker = ({onClose,showForm}) => {
             placeholder="Facebook Profile"
           />
         </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700">Twitter</label>
           <input
@@ -156,9 +157,10 @@ const CreateSpeaker = ({onClose,showForm}) => {
             value={formData.socialLinks.twitter}
             onChange={handleInputChange}
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Twitter profile"
+            placeholder="Twitter Profile"
           />
         </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700">LinkedIn</label>
           <input
@@ -167,19 +169,23 @@ const CreateSpeaker = ({onClose,showForm}) => {
             value={formData.socialLinks.linkedin}
             onChange={handleInputChange}
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-            placeholder="LinkedIn profile"
+            placeholder="LinkedIn Profile"
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
-        disabled={loading}>
-          Create Speaker
-        </button>
+        <div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-4 w-full text-white bg-[var(--secondary)]  rounded-lg py-2 px-4 flex justify-center"
+          >
+            {loading ? 'Saving...' : 'Save'}
+          </button>
+        </div>
       </form>
     </div>
   );
 };
 
 export default CreateSpeaker;
+
