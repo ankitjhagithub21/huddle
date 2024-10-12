@@ -24,7 +24,7 @@ const CreateSpeaker = ({ onClose, showForm, onAddSpeaker, currState, speakerData
     if (currState === 'edit' && speakerData) {
       setFormData(speakerData);
     } else {
-      setFormData(initialData); // Reset form when adding a new speaker
+      setFormData(initialData); 
     }
   }, [currState, speakerData]);
 
@@ -109,7 +109,7 @@ const CreateSpeaker = ({ onClose, showForm, onAddSpeaker, currState, speakerData
             name="bio"
             value={formData.bio}
             onChange={handleInputChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md resize-none"
             placeholder="Enter speaker's bio"
             required
           />

@@ -43,7 +43,7 @@ const SpeakerList = () => {
 
     const onClose = () => {
         setShowForm(false);
-        setCurrState(null);
+
     };
 
     const onEdit = (speaker) => {
