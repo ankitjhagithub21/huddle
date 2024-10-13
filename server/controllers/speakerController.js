@@ -27,6 +27,11 @@ const createSpeaker = async (req, res) => {
 const getAllSpeakers = async (req, res) => {
   try {
     const speakers = await Speaker.find();
+
+    if(speakers.length==0){
+      res.status(404).json({ message: 'No Speaker found.'});
+    }
+    
     res.status(200).json(speakers);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching speakers', error: error.message });

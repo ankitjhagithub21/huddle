@@ -1,31 +1,33 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { setLoading, setSpeakers } from '../redux/slices/speakerSlice'
 
 const useFetchSpeakers = () => {
-    const [loading, setLoading] = useState(true)
-    const [data, setData] = useState(null)
+
+    const dispatch = useDispatch()
+    
     useEffect(() => {
         const getData = async () => {
             try {
-                const url = import.meta.env.VITE_SPEAKER_URL
-                
-                const res = await fetch(url)
-                if (res.ok) { 
+                dispatch(setLoading(true))
+                const res = await fetch(import.meta.env.VITE_SPEAKER_URL)
+                if (res.status===200) { 
                     const speakers = await res.json()
-                    setData(speakers)
+                    dispatch(setSpeakers(speakers))
                 } else {
                     throw new Error(`Failed to fetch speakers: ${res.statusText}`)
                 }
             } catch (error) {
                 console.log(error.message)
             } finally {
-                setLoading(false)
+                dispatch(setLoading(false))
             }
         }
 
         getData()
     }, [])
 
-    return { loading, data} 
+    
 }
 
 export default useFetchSpeakers
