@@ -3,6 +3,7 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addSpeaker, editSpeaker } from '../redux/slices/speakerSlice';
+import { addNewSpeaker, editSpeakerById } from '../api/speakers';
 
 const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
     const dispatch = useDispatch();
@@ -46,23 +47,15 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
         e.preventDefault();
         setLoading(true);
         const toastId = toast.loading(currState === 'add' ? "Creating speaker..." : "Updating speaker...");
-
+    
         try {
-            const url = currState === 'add'
-                ? `${import.meta.env.VITE_SPEAKER_URL}`
-                : `${import.meta.env.VITE_SPEAKER_URL}/${speakerData._id}`;
-            const method = currState === 'add' ? "POST" : "PUT";
-
-            const response = await fetch(url, {
-                method,
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData)
-            });
-            const data = await response.json();
-
-            if (response.status === (currState === 'add' ? 201 : 200)) {
+            const res = currState === 'add'
+                ? await addNewSpeaker(formData)
+                : await editSpeakerById(speakerData._id, formData);
+    
+            const data = await res.json();
+            
+            if (res.status === (currState === 'add' ? 201 : 200)) {  
                 toast.success(currState === 'add' ? 'Speaker created successfully!' : 'Speaker updated successfully!');
                 if (currState === 'add') {
                     dispatch(addSpeaker(data.speaker));
@@ -81,6 +74,7 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
             toast.dismiss(toastId);
         }
     };
+    
 
     return (
         <div className={`lg:w-[400px] w-full mx-auto p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>

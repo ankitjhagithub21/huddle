@@ -7,6 +7,7 @@ import { FaPlus } from 'react-icons/fa';
 import Search from './Search';
 import { deleteSpeaker } from '../redux/slices/speakerSlice';
 import useFetchSpeakers from '../hooks/useFetchSpeakers';
+import { deleteSpeakerById } from '../api/speakers';
 
 const SpeakerList = () => {
     useFetchSpeakers();
@@ -35,15 +36,13 @@ const SpeakerList = () => {
     };
 
     const onDelete = async (id) => {
-        const res = await fetch(`${import.meta.env.VITE_SPEAKER_URL}/${id}`, {
-            method: "DELETE",
-        });
-        const data = await res.json();
-        if (res.status === 200) {
+        const res = await deleteSpeakerById(id);
+        const data = await res.json()
+        if (res.status==200) {
             dispatch(deleteSpeaker(id));
             toast.success(data.message);
         } else {
-            toast.error(data.error);
+            toast.error(data.message);
         }
     };
 
