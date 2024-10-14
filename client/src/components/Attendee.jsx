@@ -3,7 +3,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const Attendee = ({ attendee, onEdit, onDelete }) => {
     return (
-        <div className='grid md:grid-cols-4 grid-cols-2 gap-2 items-center p-2 border my-2 rounded-lg border-gray-300'>
+        <div className='grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-2 items-center p-3 border my-2 rounded-lg border-gray-300'>
             {/* Full Name */}
             <p>{attendee.fullName}</p>
 

@@ -9,6 +9,7 @@ import useFetchAttendees from '../hooks/useFetchAttendees';
 import { deleteAttendeeById } from '../api/attendees';
 import CreateAttendee from './CreateAttendee';
 
+
 const AttendeeList = () => {
     useFetchAttendees();
     const dispatch = useDispatch();

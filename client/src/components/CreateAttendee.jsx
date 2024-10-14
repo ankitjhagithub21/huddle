@@ -115,11 +115,13 @@ const CreateAttendee = ({ onClose, showForm, currState, attendeeData }) => {
                     <button
                         type='button'
                         onClick={onClose}
+                        d
                         className='bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md'
                     >
                         Cancel
                     </button>
                     <button
+                    disabled={loading}
                         type='submit'
                         className='bg-[var(--secondary)] text-white px-4 py-2 rounded-md'
                     >
