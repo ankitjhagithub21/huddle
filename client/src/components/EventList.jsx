@@ -1,9 +1,10 @@
 import React from 'react'
+import ExcelUploader from './ExcelUploader'
 
 const EventList = () => {
   return (
     <div>
-      Event List
+      <ExcelUploader/>
     </div>
   )
 }
