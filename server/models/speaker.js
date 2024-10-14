@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const speakerSchema = new mongoose.Schema({
+  salutation: {
+    type: String,
+    required: true, 
+  },
   fullName: {
     type: String,
     required: true,

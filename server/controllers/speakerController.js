@@ -4,9 +4,10 @@ const Speaker = require('../models/speaker');
 const createSpeaker = async (req, res) => {
   try {
    
-    const { fullName, bio, email, mobile, profilePic, socialLinks } = req.body;
+    const { salutation, fullName, bio, email, mobile, profilePic, socialLinks } = req.body;
     
     const newSpeaker = new Speaker({
+      salutation,
       fullName,
       bio,
       email,
@@ -28,10 +29,6 @@ const getAllSpeakers = async (req, res) => {
   try {
     const speakers = await Speaker.find();
 
-    if(speakers.length==0){
-      res.status(404).json({ message: 'No Speaker found.'});
-    }
-    
     res.status(200).json(speakers);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching speakers', error: error.message });
@@ -54,11 +51,11 @@ const getSpeakerById = async (req, res) => {
 // Update a speaker by ID
 const updateSpeaker = async (req, res) => {
   try {
-    const { fullName, bio, email, mobile, profilePic, socialLinks } = req.body;
+    const { salutation, fullName, bio, email, mobile, profilePic, socialLinks } = req.body;
 
     const updatedSpeaker = await Speaker.findByIdAndUpdate(
       req.params.id,
-      { fullName, bio, email, mobile, profilePic, socialLinks },
+      {salutation, fullName, bio, email, mobile, profilePic, socialLinks },
       { new: true, runValidators: true }
     );
 

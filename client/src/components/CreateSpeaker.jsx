@@ -8,6 +8,7 @@ import { addNewSpeaker, editSpeakerById } from '../api/speakers';
 const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
     const dispatch = useDispatch();
     const initialData = {
+        salutation:'',
         fullName: '',
         bio: '',
         email: '',
@@ -88,6 +89,20 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Form fields for speaker details */}
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Salutation</label>
+                    <input
+                        type="text"
+                        name="salutation"
+                        value={formData.salutation}
+                        onChange={handleInputChange}
+                        className={classnames}
+                        placeholder="Enter speaker's salutation"
+                        required
+                    />
+                </div>
+                
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Full Name</label>
                     <input
