@@ -20,7 +20,7 @@ const SpeakerList = () => {
     const onClose = () => {
         setShowForm(false);
         setSelectedSpeaker(null);
-        setCurrState(null);
+        
     };
 
     const onEdit = (speaker) => {

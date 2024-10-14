@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setLoading, setSpeakers } from '../redux/slices/speakerSlice'
 import { fetchSpeakers } from '../api/speakers'
 
 const useFetchSpeakers = () => {
 
     const dispatch = useDispatch()
+    const {speakers} = useSelector(state=>state.speaker)
     
     useEffect(() => {
         const getData = async () => {
@@ -24,7 +25,10 @@ const useFetchSpeakers = () => {
             }
         }
 
-        getData()
+        if(!speakers){
+            getData()
+        }
+        
     }, [])
 
     

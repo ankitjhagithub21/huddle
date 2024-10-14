@@ -6,8 +6,8 @@ const Sidebar = () => {
   // Array of links with paths, labels, and icons
   const sidebarLinks = [
     { path: '/', label: 'Speakers', icon: <FaMicrophone /> },
+    { path: '/attendees', label: 'Attendees', icon: <FaUsers /> },
     { path: '/events', label: 'Events', icon: <FaCalendarAlt /> },
-    { path: '/attendees', label: 'Attendees', icon: <FaUsers /> }
   ];
 
   return (

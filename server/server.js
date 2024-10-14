@@ -3,6 +3,7 @@ const express = require('express')
 const cors = require('cors')
 const connectDB = require('./config/dbconnection')
 const speakerRouter = require('./routes/speakerRoutes')
+const attendeeRouter = require('./routes/attendeeRoutes')
 const app = express()
 
 
@@ -16,6 +17,7 @@ app.use(cors({
 }))
 
 app.use("/speakers",speakerRouter)
+app.use("/attendees",attendeeRouter)
 
 app.get("/",(req,res)=>{
   res.json({"message":"Api working."})
