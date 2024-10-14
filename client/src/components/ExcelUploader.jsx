@@ -34,17 +34,22 @@ const ExcelUploader = () => {
 
   return (
     <div className="p-4 max-w-7xl mx-auto">
-      <div className="mb-4">
+      <div className="bg-[var(--secondary)] w-fit px-4 py-2 text-white rounded-lg cursor-pointer ">
+        <label htmlFor="excel" className='cursor-pointer'>Import Excel</label>
         <input
           type="file"
+          name='excel'
+          id='excel'
           onChange={handleFileUpload}
-          className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+         className='hidden'
+
         />
       </div>
 
       {/* Render the table only if there's data */}
       {data.length > 0 && (
         <div className="overflow-x-auto shadow-md sm:rounded-lg">
+       
           <table className="min-w-full text-sm text-left text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50">
               <tr>
