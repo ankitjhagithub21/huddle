@@ -15,15 +15,13 @@ const createAttendee = async (req, res) => {
 
         // Save attendee to the database
         await newAttendee.save();
-        res.status(201).json({ message: 'Attendee created successfully!', data: newAttendee });
+        res.status(201).json({ message: 'Attendee created successfully!', attendee: newAttendee });
 
     } catch (error) {
-        if (error.code === 11000) {
-            // Handle duplicate email
-            res.status(400).json({ message: 'Email already exists!' });
-        } else {
-            res.status(500).json({ message: 'Error creating attendee', error: error.message });
-        }
+
+
+        res.status(500).json({ message: 'Error creating attendee', error: error.message });
+
     }
 };
 
@@ -68,7 +66,7 @@ const updateAttendee = async (req, res) => {
             return res.status(404).json({ message: 'Attendee not found!' });
         }
 
-        res.status(200).json({ message: 'Attendee updated successfully!', data: updatedAttendee });
+        res.status(200).json({ message: 'Attendee updated successfully!', attendee: updatedAttendee });
     } catch (error) {
         res.status(500).json({ message: 'Error updating attendee', error: error.message });
     }

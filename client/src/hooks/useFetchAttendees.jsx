@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
-import { useDispatch} from 'react-redux'
+import { useDispatch, useSelector} from 'react-redux'
 import { setAttendees, setLoading } from '../redux/slices/attendeeSlice'
 import { fetchAttendees } from '../api/attendees'
 
 const useFetchAttendees = () => {
 
     const dispatch = useDispatch()
-   
+    const {attendees} = useSelector(state=>state.attendee)
     
     useEffect(() => {
         const getData = async () => {
@@ -25,7 +25,9 @@ const useFetchAttendees = () => {
             }
         }
 
+       if(!attendees){
         getData()
+       }
 
     }, [])
 

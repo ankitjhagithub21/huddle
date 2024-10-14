@@ -19,6 +19,8 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
             linkedin: '',
         },
     };
+    const classnames = 'w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2'
+
 
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
@@ -47,15 +49,15 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
         e.preventDefault();
         setLoading(true);
         const toastId = toast.loading(currState === 'add' ? "Creating speaker..." : "Updating speaker...");
-    
+
         try {
             const res = currState === 'add'
                 ? await addNewSpeaker(formData)
                 : await editSpeakerById(speakerData._id, formData);
-    
+
             const data = await res.json();
-            
-            if (res.status === (currState === 'add' ? 201 : 200)) {  
+
+            if (res.status === (currState === 'add' ? 201 : 200)) {
                 toast.success(currState === 'add' ? 'Speaker created successfully!' : 'Speaker updated successfully!');
                 if (currState === 'add') {
                     dispatch(addSpeaker(data.speaker));
@@ -74,7 +76,7 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
             toast.dismiss(toastId);
         }
     };
-    
+
 
     return (
         <div className={`lg:w-[400px] w-full mx-auto p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>
@@ -93,7 +95,7 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
                         name="fullName"
                         value={formData.fullName}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        className={classnames}
                         placeholder="Enter speaker's full name"
                         required
                     />
@@ -105,7 +107,7 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
                         name="bio"
                         value={formData.bio}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md resize-none"
+                        className={classnames}
                         placeholder="Enter speaker's bio"
                         required
                     />
@@ -118,7 +120,7 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        className={classnames}
                         placeholder="Enter speaker's email"
                         required
                     />
@@ -131,7 +133,7 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
                         name="mobile"
                         value={formData.mobile}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        className={classnames}
                         placeholder="Enter speaker's mobile number"
                         required
                     />
@@ -144,7 +146,7 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
                         name="profilePic"
                         value={formData.profilePic}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        className={classnames}
                         placeholder="Enter profile picture URL"
                         required
                     />
@@ -158,7 +160,7 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
                         name="facebook"
                         value={formData.socialLinks.facebook}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        className={classnames}
                         placeholder="Facebook Profile"
                     />
                 </div>
@@ -170,7 +172,7 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
                         name="twitter"
                         value={formData.socialLinks.twitter}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        className={classnames}
                         placeholder="Twitter Profile"
                     />
                 </div>
@@ -182,19 +184,25 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
                         name="linkedin"
                         value={formData.socialLinks.linkedin}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        className={classnames}
                         placeholder="LinkedIn Profile"
                     />
                 </div>
 
 
-                <div>
+                <div className='flex justify-end gap-2'>
                     <button
-                        type="submit"
-                        disabled={loading}
-                        className="mt-4 w-full text-white bg-[var(--secondary)] rounded-lg py-2 px-4 flex justify-center"
+                        type='button'
+                        onClick={onClose}
+                        className='bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md'
                     >
-                        {loading ? 'Saving...' : 'Save'}
+                        Cancel
+                    </button>
+                    <button
+                        type='submit'
+                        className='bg-[var(--secondary)] text-white px-4 py-2 rounded-md'
+                    >
+                        {currState === 'add' ? 'Add' : 'Update'}
                     </button>
                 </div>
             </form>

@@ -5,6 +5,6 @@ import attendeeReducer from '../redux/slices/attendeeSlice';
 export const store = configureStore({
   reducer: {
     speaker: speakerReducer,  
-    attenddee:attendeeReducer
+    attendee:attendeeReducer
   },
 });
