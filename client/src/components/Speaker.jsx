@@ -8,9 +8,19 @@ const Speaker = ({ speaker, onDelete, onEdit }) => {
             <p> <span className='lg:hidden inline-block font-bold '>Name :</span> {speaker.fullName}</p>
             <p> <span className='lg:hidden inline-block font-bold '>Mobile :</span> {speaker.mobile}</p>
             <p><span className='lg:hidden inline-block font-bold '>Email :</span> {speaker.email}</p> 
-            <div className='flex items-center gap-2'>
-                <FaEdit className='text-[var(--secondary)]' onClick={()=>onEdit(speaker)} size={20}/>
-                <FaTrash color='red' onClick={() => onDelete(speaker._id)}/>
+            <div className='flex gap-2'>
+                <button
+                    onClick={() => onEdit(speaker)}
+                    className='text-white bg-blue-500 p-2 rounded-md hover:bg-blue-600 transition'
+                >
+                    <FaEdit />
+                </button>
+                <button
+                    onClick={() => onDelete(speaker._id)}
+                    className='text-white bg-red-500 p-2 rounded-md hover:bg-red-600 transition'
+                >
+                    <FaTrash />
+                </button>
             </div>
         </div>
     )
