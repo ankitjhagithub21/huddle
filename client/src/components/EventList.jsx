@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify'; 
 import CreateEvent from './CreateEvent';
 
 const EventList = () => {
     const [events, setEvents] = useState([]);
-
+   
     const [showForm,setShowForm] = useState(false)
     const onClose = () => {
       setShowForm(false)
@@ -38,15 +39,16 @@ const EventList = () => {
             ) : (
                 <ul className="space-y-4">
                     {events.map((event) => (
-                        <li key={event._id} className="p-4 border rounded-lg shadow-md">
-                            <h3 className="text-xl font-semibold">{event.title}</h3>
-                            <p className="text-sm text-gray-600">{event.description}</p>
-                            <p className="text-sm text-gray-600">
+                        <li key={event._id} className="p-4 border rounded-lg shadow-md" >
+                            <h3 className="font-semibold">{event.title}</h3>
+                            <p className=" text-gray-600">{event.description}</p>
+                            <p className=" text-gray-600">
                                 <strong>Date:</strong> {new Date(event.date).toLocaleDateString()}
                             </p>
-                            <p className="text-sm text-gray-600">
+                            <p className=" text-gray-600 mb-3">
                                 <strong>Speakers:</strong> {event.speakers.map(speaker => speaker.fullName).join(', ')}
                             </p>
+                            <Link to={`/event/${event._id}`} className='text-blue-500 underline'>View Event Details</Link>
                         </li>
                     ))}
                 </ul>

@@ -32,7 +32,7 @@ const EventDetails = () => {
       <p className="text-lg text-gray-600">Date: {event.date}</p>
       <p className="text-lg text-gray-600">Venue: {event.venue}</p>
       <div className="mt-4" dangerouslySetInnerHTML={{ __html: event.description }} />
-      <button className="bg-[var(--secondary)] text-white px-4 py-2 rounded mt-4">RSVP Now</button>
+      <button className="bg-[var(--secondary)] text-white px-4 py-2 rounded mt-4">Publish Now</button>
     </div>
   );
 };
