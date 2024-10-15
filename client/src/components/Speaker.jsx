@@ -11,7 +11,7 @@ const Speaker = ({ speaker, onDelete, onEdit }) => {
             <div className='flex gap-2'>
                 <button
                     onClick={() => onEdit(speaker)}
-                    className='text-white bg-blue-500 p-2 rounded-md hover:bg-blue-600 transition'
+                    className='text-white bg-[var(--secondary)] p-2 rounded-md transition'
                 >
                     <FaEdit />
                 </button>

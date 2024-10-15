@@ -56,7 +56,7 @@ const AttendeeList = () => {
                 </button>
             </div>
             <h2 className='mt-5 text-2xl font-bold'>Attendees List</h2>
-            <div className='lg:grid hidden grid-cols-4 items-center my-2 p-1 font-bold'>
+            <div className='lg:grid hidden grid-cols-4 items-center my-2 p-2 font-bold'>
               
                 <p>Name</p>
                 <p>Mobile</p>
