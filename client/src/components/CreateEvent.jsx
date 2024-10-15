@@ -3,6 +3,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import JoditEditor from 'jodit-react'; // Import JoditEditor
 import { useSelector } from 'react-redux';
+import { IoIosCloseCircleOutline } from 'react-icons/io';
 
 const CreateEvent = ({ showForm, onClose, onAdd }) => {
     const [title, setTitle] = useState('');
@@ -73,9 +74,11 @@ const CreateEvent = ({ showForm, onClose, onAdd }) => {
     };
 
     return (
-        <div className={`lg:w-1/2 w-full mx-auto p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>
-            <h2 className="text-2xl font-bold mb-4">Create Event</h2>
-            
+        <div className={`lg:w-[400px] w-full mx-auto p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>
+          <div className='flex items-center justify-between mb-3'>
+          <h2 className="text-2xl font-bold ">Create Event</h2>
+          <IoIosCloseCircleOutline size={25} onClick={onClose} />
+          </div>
             <form onSubmit={handleSubmit}>
                 {/* Title Field */}
                 <div className="mb-4">
