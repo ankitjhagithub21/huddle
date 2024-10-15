@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
+import {FaTrash} from 'react-icons/fa';
 import axios from 'axios';
 import { toast } from 'react-toastify'; 
 import CreateEvent from './CreateEvent';
@@ -25,6 +26,20 @@ const EventList = () => {
         fetchEvents();
     }, []);
 
+    const handleDeleteEvent = async(eventId) =>{
+        try{
+            await axios.delete(`${import.meta.env.VITE_EVENT_URL}/${eventId}`)
+            toast.success('Event deleted successfully!');
+            setEvents(events.filter((event)=>event._id !== eventId))
+        }catch(error){
+            console.log(error.message)
+            toast.error('Error deleting event');
+        }
+    }
+    const onAdd = (event) =>{
+        setEvents([...events,event])
+    }
+
     return (
       <section>
           <div className="max-w-4xl p-6">
@@ -39,9 +54,13 @@ const EventList = () => {
             ) : (
                 <ul className="space-y-4">
                     {events.map((event) => (
-                        <li key={event._id} className="p-4 border rounded-lg shadow-md" >
+                        <li key={event._id} className="p-4 border rounded-lg shadow-md relative" >
+                            <button onClick={()=>handleDeleteEvent(event._id)} className='bg-red-500 hover:Bg-red-600 absolute top-2 right-2  text-white p-2 rounded-lg'>
+                                <FaTrash/>
+                            </button>
                             <h3 className="font-semibold">{event.title}</h3>
-                            <p className=" text-gray-600">{event.description}</p>
+
+                          
                             <p className=" text-gray-600">
                                 <strong>Date:</strong> {new Date(event.date).toLocaleDateString()}
                             </p>
@@ -55,7 +74,7 @@ const EventList = () => {
             )}
             
         </div>
-        <CreateEvent showForm={showForm} onClose={onClose}/>
+        <CreateEvent showForm={showForm} onClose={onClose} onAdd={onAdd}/>
       </section>
     );
 };

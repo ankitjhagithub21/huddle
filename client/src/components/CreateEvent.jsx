@@ -1,19 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify'; // Assuming you're using react-toastify for notifications
+import { toast } from 'react-toastify';
+import JoditEditor from 'jodit-react'; // Import JoditEditor
 
-const CreateEvent = ({showForm,onClose}) => {
+const CreateEvent = ({ showForm, onClose,onAdd }) => {
     const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+    const [description, setDescription] = useState(''); // Use this state to store the editor content
     const [date, setDate] = useState('');
     const [speakers, setSpeakers] = useState([]);
     const [allSpeakers, setAllSpeakers] = useState([]);
+    
+    const editor = useRef(null); // Ref for Jodit editor
 
     // Fetch available speakers from the backend
     useEffect(() => {
         const fetchSpeakers = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_SPEAKER_URL}`); // Update with your speakers API route
+                const response = await axios.get(`${import.meta.env.VITE_SPEAKER_URL}`);
                 setAllSpeakers(response.data);
             } catch (error) {
                 console.error('Error fetching speakers:', error);
@@ -34,15 +37,15 @@ const CreateEvent = ({showForm,onClose}) => {
 
         const newEvent = {
             title,
-            description,
+            description, // Send the HTML content of the description
             date,
             speakers,
         };
 
         try {
-            await axios.post(`${import.meta.env.VITE_EVENT_URL}`, newEvent); // Update with your API route for event creation
+            const res = await axios.post(`${import.meta.env.VITE_EVENT_URL}`, newEvent);
             toast.success('Event created successfully!');
-            // Clear the form
+           onAdd(res.data.event)
             setTitle('');
             setDescription('');
             setDate('');
@@ -54,8 +57,7 @@ const CreateEvent = ({showForm,onClose}) => {
     };
 
     return (
-        <div className={`lg:w-[400px] w-full mx-auto p-6 h-full  shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>
-
+        <div className={`lg:w-1/2 w-full mx-auto p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>
             <h2 className="text-2xl font-bold mb-4">Create Event</h2>
             <form onSubmit={handleSubmit}>
                 {/* Title Field */}
@@ -71,16 +73,15 @@ const CreateEvent = ({showForm,onClose}) => {
                     />
                 </div>
 
-                {/* Description Field */}
+                {/* Jodit Description Field */}
                 <div className="mb-4">
                     <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea
-                        id="description"
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                        rows="4"
+                    <JoditEditor
+                        ref={editor}
                         value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        required
+                        tabIndex={1} // Tab index of textarea
+                        onBlur={newContent => setDescription(newContent)} // Save HTML content to the state
+                        onChange={newContent => {}} // Handle real-time updates
                     />
                 </div>
 
@@ -102,7 +103,7 @@ const CreateEvent = ({showForm,onClose}) => {
                     <label htmlFor="speakers" className="block text-sm font-medium text-gray-700">Speakers</label>
                     <select
                         id="speakers"
-                        className="mt-1 block w-full p-2 border border-gray-300  rounded-md"
+                        className="mt-1 block w-full h-20 overflow-y-scroll scroll p-2 border border-gray-300 rounded-md"
                         multiple
                         value={speakers}
                         onChange={(e) => setSpeakers([...e.target.selectedOptions].map(o => o.value))}
@@ -118,10 +119,9 @@ const CreateEvent = ({showForm,onClose}) => {
 
                 {/* Submit Button */}
                 <div className="mt-4 flex items-center gap-2">
-                <button
-                        type='button'
+                    <button
+                        type="button"
                         onClick={onClose}
-                        
                         className='bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md'
                     >
                         Cancel
