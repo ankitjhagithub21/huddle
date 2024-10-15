@@ -33,7 +33,8 @@ const ExcelUploader = () => {
   };
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
+    <div className="max-w-7xl">
+     
       <div className="bg-[var(--secondary)] w-fit px-4 py-2 text-white rounded-lg cursor-pointer ">
         <label htmlFor="excel" className='cursor-pointer'>Import Excel</label>
         <input
@@ -49,6 +50,7 @@ const ExcelUploader = () => {
       {/* Render the table only if there's data */}
       {data.length > 0 && (
         <div className="overflow-x-auto shadow-md sm:rounded-lg">
+           <button onClick={()=>setData([])} className='px-4 py-2 text-white bg-[var(--secondary)] m-2 rounded-lg'>X</button>
        
           <table className="min-w-full text-sm text-left text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50">

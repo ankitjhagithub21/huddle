@@ -8,6 +8,7 @@ import { deleteAttendee } from '../redux/slices/attendeeSlice';
 import useFetchAttendees from '../hooks/useFetchAttendees';
 import { deleteAttendeeById } from '../api/attendees';
 import CreateAttendee from './CreateAttendee';
+import ExcelUploader from './ExcelUploader';
 
 
 const AttendeeList = () => {
@@ -48,9 +49,12 @@ const AttendeeList = () => {
 
     return (
         <>
-            <div className='flex items-center justify-start gap-2 sticky bg-white top-0 w-full left-0'>
-                <Search />
-                <button onClick={onCreate} className='text-white flex items-center gap-1 rounded-lg p-2 bg-[var(--secondary)]'>
+             <div className='flex items-center gap-2'>
+                <ExcelUploader />
+              
+        
+           
+            <button onClick={onCreate} className='text-white flex items-center gap-1 rounded-lg p-2 bg-[var(--secondary)]'>
                     <FaPlus />
                     <span className='md:inline-block hidden'>Add Attendee</span>
                 </button>
