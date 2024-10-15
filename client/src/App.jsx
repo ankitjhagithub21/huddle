@@ -7,6 +7,7 @@ import EventList from './components/EventList'
 import AttendeeList from './components/AttendeeList'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EventDetails from './components/EventDetails'
 
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
             <Route path='/' element={<SpeakerList />} />
             <Route path='/events' element={<EventList />} />
             <Route path='/attendees' element={<AttendeeList />} />
+            <Route path='/event/:eventId' element={<EventDetails />} />
           </Routes>
         </div>
       </BrowserRouter>

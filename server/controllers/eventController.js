@@ -1,4 +1,3 @@
-// controllers/eventController.js
 
 const Event = require('../models/event');
 
@@ -23,9 +22,11 @@ const createEvent = async (req, res) => {
 };
 
 // Get all events
-const getEvents = async (req, res) => {
-    try {
-        const events = await Event.find().populate('speakers');
+const getEvents = async (req, res) => {try {
+        const events = await Event.find().populate({
+            path:"speakers",
+            select:"fullName"
+        });
         res.status(200).json(events);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
@@ -35,7 +36,7 @@ const getEvents = async (req, res) => {
 // Get a single event by ID
 const getEventById = async (req, res) => {
     try {
-        const event = await Event.findById(req.params.id).populate('speakers');
+        const event = await Event.findById(req.params.id)
         if (!event) {
             return res.status(404).json({ message: 'Event not found' });
         }
