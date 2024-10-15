@@ -1,18 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef,useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import JoditEditor from 'jodit-react'; // Import JoditEditor
+import { useSelector } from 'react-redux';
 
-const CreateEvent = ({ showForm, onClose,onAdd }) => {
+const CreateEvent = ({ showForm, onClose, onAdd }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState(''); // Use this state to store the editor content
     const [date, setDate] = useState('');
-    const [speakers, setSpeakers] = useState([]);
-    const [allSpeakers, setAllSpeakers] = useState([]);
-    
-    const editor = useRef(null); // Ref for Jodit editor
+    const [selectedSpeakers,setSelectedSpeakers] = useState([])
+    const [selectedAttendees,setSelectedAttendees] = useState([])
+    const [allSpeakers,setAllSpeakers] = useState([])
+    const [allAttendees,setAllAttendees] = useState([])
+   
 
-    // Fetch available speakers from the backend
     useEffect(() => {
         const fetchSpeakers = async () => {
             try {
@@ -23,14 +24,26 @@ const CreateEvent = ({ showForm, onClose,onAdd }) => {
                 toast.error('Error fetching speakers');
             }
         };
+        const fetchAttendees = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_ATTENDEE_URL}`);
+                setAllAttendees(response.data.data);
+            } catch (error) {
+                console.error('Error fetching speakers:', error);
+                toast.error('Error fetching speakers');
+            }
+        };
         fetchSpeakers();
+        fetchAttendees();
     }, []);
+    
+    const editor = useRef(null); // Ref for Jodit editor
 
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!title || !description || !date || speakers.length === 0) {
+        if (!title || !description || !date || selectedSpeakers.length === 0 || selectedAttendees.length === 0) {
             toast.error('All fields are required');
             return;
         }
@@ -39,17 +52,20 @@ const CreateEvent = ({ showForm, onClose,onAdd }) => {
             title,
             description, // Send the HTML content of the description
             date,
-            speakers,
+            speakers: selectedSpeakers,
+            attendees: selectedAttendees,
         };
 
         try {
             const res = await axios.post(`${import.meta.env.VITE_EVENT_URL}`, newEvent);
             toast.success('Event created successfully!');
-           onAdd(res.data.event)
+            onAdd(res.data.event);
+            // Reset the form
             setTitle('');
             setDescription('');
             setDate('');
-            setSpeakers([]);
+            setSelectedSpeakers([]);
+            setSelectedAttendees([]);
         } catch (error) {
             console.error('Error creating event:', error);
             toast.error('Error creating event');
@@ -59,6 +75,7 @@ const CreateEvent = ({ showForm, onClose,onAdd }) => {
     return (
         <div className={`lg:w-1/2 w-full mx-auto p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>
             <h2 className="text-2xl font-bold mb-4">Create Event</h2>
+            
             <form onSubmit={handleSubmit}>
                 {/* Title Field */}
                 <div className="mb-4">
@@ -81,7 +98,7 @@ const CreateEvent = ({ showForm, onClose,onAdd }) => {
                         value={description}
                         tabIndex={1} // Tab index of textarea
                         onBlur={newContent => setDescription(newContent)} // Save HTML content to the state
-                        onChange={newContent => {}} // Handle real-time updates
+                        onChange={newContent => {}} // Handle real-time updates (optional)
                     />
                 </div>
 
@@ -103,15 +120,34 @@ const CreateEvent = ({ showForm, onClose,onAdd }) => {
                     <label htmlFor="speakers" className="block text-sm font-medium text-gray-700">Speakers</label>
                     <select
                         id="speakers"
-                        className="mt-1 block w-full h-20 overflow-y-scroll scroll p-2 border border-gray-300 rounded-md"
+                        className="mt-1 block w-full h-20 overflow-y-scroll p-2 border border-gray-300 rounded-md"
                         multiple
-                        value={speakers}
-                        onChange={(e) => setSpeakers([...e.target.selectedOptions].map(o => o.value))}
+                        value={selectedSpeakers}
+                        onChange={(e) => setSelectedSpeakers([...e.target.selectedOptions].map(option => option.value))}
                         required
                     >
-                        {allSpeakers.map((speaker) => (
+                        {allSpeakers?.map((speaker) => (
                             <option key={speaker._id} value={speaker._id} className='text-gray-800'>
                                 {speaker.fullName}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Attendees Selection */}
+                <div className="mb-4">
+                    <label htmlFor="attendees" className="block text-sm font-medium text-gray-700">Attendees</label>
+                    <select
+                        id="attendees"
+                        className="mt-1 block w-full h-20 overflow-y-scroll p-2 border border-gray-300 rounded-md"
+                        multiple
+                        value={selectedAttendees}
+                        onChange={(e) => setSelectedAttendees([...e.target.selectedOptions].map(option => option.value))}
+                        required
+                    >
+                        {allAttendees?.map((attendee) => (
+                            <option key={attendee._id} value={attendee._id} className='text-gray-800'>
+                                {attendee.fullName}
                             </option>
                         ))}
                     </select>

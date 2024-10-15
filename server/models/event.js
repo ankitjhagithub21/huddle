@@ -20,6 +20,13 @@ const eventSchema = new mongoose.Schema({
             required: true, 
         }
     ],
+    attendees: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Attendee",
+            required: true, 
+        }
+    ],
 }, { versionKey: false, timestamps: true }); 
 
 module.exports = mongoose.model('Event', eventSchema); 

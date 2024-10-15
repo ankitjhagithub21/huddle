@@ -46,10 +46,12 @@ const CreateAttendee = ({ onClose, showForm, currState, attendeeData }) => {
                 toast.success(currState === 'add' ? 'Attendee created successfully!' : 'Attendee updated successfully!');
                 if (currState === 'add') {
                     dispatch(addAttendee(data.attendee));
+                    
                 } else {
                     dispatch(editAttendee(data.attendee));
                 }
-                onClose();
+                setFormData(initialData)
+               
             } else {
                 toast.error(data.message);
             }

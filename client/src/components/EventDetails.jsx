@@ -45,7 +45,7 @@ const EventDetails = () => {
       <h1 className="text-xl font-bold mb-2">Title: {event.title}</h1>
       <p className="text-lg text-gray-600 mb-2">Date: {event.date}</p>
    
-   <h1 className='text-2xl font-bold'>Event template</h1>
+   
       <div className="mt-4" dangerouslySetInnerHTML={{ __html: event.description }} />
       <button className="bg-[var(--secondary)] text-white px-4 py-2 rounded mt-4" onClick={handlePublishEvent}>Publish Now</button>
      {

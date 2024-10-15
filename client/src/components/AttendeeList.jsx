@@ -22,6 +22,7 @@ const AttendeeList = () => {
     const onClose = () => {
         setShowForm(false);
         setSelectedAttendee(null);
+        setCurrState(null)
     };
 
     const onEdit = (attendee) => {
