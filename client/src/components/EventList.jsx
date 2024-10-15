@@ -1,16 +1,14 @@
 
 
+
 const EventList = () => {
  
  
   return (
     <div>
      
-     
-     
-     Event
+     Events
     
-
     </div>
   )
 }
