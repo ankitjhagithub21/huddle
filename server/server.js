@@ -21,7 +21,7 @@ app.use(cors({
 app.use("/speakers",speakerRouter)
 app.use("/attendees",attendeeRouter)
 app.use("/events",eventRouter)
-app.use("/venue",venueRouter)
+app.use("/venues",venueRouter)
 
 app.get("/",(req,res)=>{
   res.json({"message":"Api working."})
@@ -30,3 +30,4 @@ app.get("/",(req,res)=>{
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`)
 })
+
