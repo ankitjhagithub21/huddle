@@ -29,7 +29,7 @@ const createAttendee = async (req, res) => {
 const getAllAttendees = async (req, res) => {
     try {
         const attendees = await Attendee.find();
-        res.status(200).json({ data: attendees });
+        res.status(200).json(attendees);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching attendees', error: error.message });
     }

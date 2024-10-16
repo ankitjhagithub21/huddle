@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import JoditEditor from 'jodit-react';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { addNewEvent, editEventById } from '../api/events';
 import { addEvent, editEvent } from '../redux/slices/eventSlice';
+import { fetchSpeakers } from '../api/speakers';
+import { fetchAttendees } from '../api/attendees';
 
 const CreateEvent = ({ showForm, onClose, eventData }) => {
 
@@ -24,20 +25,22 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
 
     // Fetch speakers and attendees when the component mounts or when showForm changes
     useEffect(() => {
-        const fetchSpeakers = async () => {
+        const getSpeakers = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_SPEAKER_URL}`);
-                setAllSpeakers(response.data);
+                const response = await fetchSpeakers();
+                const data = await response.json()
+                setAllSpeakers(data)
             } catch (error) {
                 console.error('Error fetching speakers:', error);
                 toast.error('Error fetching speakers');
             }
         };
 
-        const fetchAttendees = async () => {
+        const getAttendees = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_ATTENDEE_URL}`);
-                setAllAttendees(response.data.data);
+                const response = await fetchAttendees();
+                const data = await response.json()
+                setAllAttendees(data);
             } catch (error) {
                 console.error('Error fetching attendees:', error);
                 toast.error('Error fetching attendees');
@@ -45,8 +48,8 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
         };
 
         if (showForm) {
-            fetchSpeakers();
-            fetchAttendees();
+            getSpeakers();
+            getAttendees();
         }
 
         if (eventData) {
