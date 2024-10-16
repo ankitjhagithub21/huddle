@@ -27,26 +27,31 @@ const SpeakerList = () => {
     };
 
     const onCreate = () => {
-        setSelectedSpeaker(null);
-        setShowForm(true);
+      
+       setSelectedSpeaker(null);
+       setShowForm(true);
     };
 
     const onDelete = async (id) => {
+        const toastId = toast.loading("Deleting speaker...")
         const res = await deleteSpeakerById(id);
         const data = await res.json();
         if (res.status === 200) {
             dispatch(deleteSpeaker(id));
+            
             toast.success(data.message);
         } else {
             toast.error(data.message);
         }
+        toast.dismiss(toastId)
+
     };
 
     return (
         <>
             <div className='flex items-center justify-start gap-2 sticky bg-white top-0 w-full left-0'>
                 <Search />
-                <button onClick={onCreate} className='text-white flex items-center gap-1 rounded-lg p-2 bg-[var(--secondary)]'>
+                <button onClick={onCreate} disabled={selectedSpeaker} className='text-white flex items-center gap-1 rounded-lg p-2 bg-[var(--secondary)]'>
                     <FaPlus />
                     <span className='md:inline-block hidden'>Add Speaker</span>
                 </button>
