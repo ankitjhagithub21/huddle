@@ -16,7 +16,7 @@ const Sidebar = () => {
     <div className='h-full lg:w-1/5 w-fit px-2 bg-[var(--secondary)] flex flex-col items-center justify-between py-5'>
       <h2 className='font-bold text-2xl text-white'>H<span className='lg:inline-block hidden'>UDDLE</span></h2>
 
-      <div className='flex flex-col gap-10'>
+      <div className='flex flex-col gap-5'>
         {/* Map through sidebarLinks array to render links */}
         {sidebarLinks.map((link) => (
           <NavLink
