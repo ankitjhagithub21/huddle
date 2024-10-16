@@ -7,25 +7,22 @@ export const fetchSpeakers = async () => {
     return res;
 };
 
-// Add a new speaker
-export const addNewSpeaker = async (speakerData) => {
+export const addNewSpeaker = async (formData) => {
     const res = await fetch(`${baseUrl}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(speakerData),
+        body: formData, // No need for headers with FormData
     });
     return res;
 };
 
-// Edit speaker details
-export const editSpeakerById = async (id, updatedData) => {
+export const editSpeakerById = async (id, formData) => {
     const res = await fetch(`${baseUrl}/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedData),
+        body: formData, // No need for headers with FormData
     });
     return res;
 };
+
 
 // Delete a speaker
 export const deleteSpeakerById = async (id) => {

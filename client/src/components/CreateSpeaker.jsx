@@ -7,27 +7,39 @@ import { addNewSpeaker, editSpeakerById } from '../api/speakers';
 
 const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
     const dispatch = useDispatch();
+    const [profilePic, setProfilePic] = useState(null);
+
     const initialData = {
         salutation: '',
         fullName: '',
         bio: '',
         email: '',
         mobile: '',
-        profilePic: '',
         socialLinks: {
             facebook: '',
             twitter: '',
             linkedin: '',
         },
     };
+
     const classnames = 'w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2';
 
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
 
+    // Cleanup URL.createObjectURL when the component is closed or unmounted
+    useEffect(() => {
+        return () => {
+            if (profilePic) {
+                URL.revokeObjectURL(profilePic);
+            }
+        };
+    }, [profilePic]);
+
     useEffect(() => {
         if (speakerData) {
             setFormData(speakerData);
+            setProfilePic(speakerData.profilePic || '');
         } else {
             setFormData(initialData);
         }
@@ -45,15 +57,38 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
         }
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setProfilePic(file);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         const toastId = toast.loading(speakerData ? "Updating speaker..." : "Creating speaker...");
 
+        const formDataToSend = new FormData();
+        formDataToSend.append('salutation', formData.salutation);
+        formDataToSend.append('fullName', formData.fullName);
+        formDataToSend.append('bio', formData.bio);
+        formDataToSend.append('email', formData.email);
+        formDataToSend.append('mobile', formData.mobile);
+        formDataToSend.append('profilePic', profilePic);
+        formDataToSend.append(
+            'socialLinks',
+            JSON.stringify({
+                facebook: formData.socialLinks.facebook,
+                linkedin: formData.socialLinks.linkedin,
+                twitter: formData.socialLinks.twitter,
+            })
+        );
+
         try {
             const res = speakerData
-                ? await editSpeakerById(speakerData._id, formData)
-                : await addNewSpeaker(formData);
+                ? await editSpeakerById(speakerData._id, formDataToSend)
+                : await addNewSpeaker(formDataToSend);
 
             const data = await res.json();
 
@@ -64,6 +99,8 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
                 } else {
                     dispatch(addSpeaker(data.speaker));
                 }
+                setFormData(initialData);
+                setProfilePic(null);
                 onClose();
             } else {
                 toast.error(data.message);
@@ -83,9 +120,39 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
                 <h2 className="text-2xl font-semibold">
                     {speakerData ? 'Update Speaker' : 'Create New Speaker'}
                 </h2>
-                <IoIosCloseCircleOutline size={25} onClick={onClose} />
+                <IoIosCloseCircleOutline size={25} onClick={() => {
+                    setFormData(initialData);
+                    setProfilePic(null);
+                    onClose();
+                }} />
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
+                <div className='bg-gray-200 w-20 h-20 rounded-full mx-auto cursor-pointer overflow-hidden flex items-center justify-center text-center'>
+                    <label htmlFor="profilePic">
+                        {profilePic ? (
+                            <img
+                                src={speakerData ? profilePic : URL.createObjectURL(profilePic)}
+                                alt="Profile Preview"
+                                className="w-full h-full object-cover object-center"
+                            />
+                        ) : (
+                            <p className='text-xs'>Choose Profile Pic</p>
+                        )}
+                    </label>
+                    <input
+                        type="file"
+                        name='profilePic'
+                        id='profilePic'
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="hidden"
+                        required={!speakerData}
+                    />
+                </div>
+
+
+
+
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Salutation</label>
                     <input
@@ -150,18 +217,7 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
                     />
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Profile Picture URL</label>
-                    <input
-                        type="text"
-                        name="profilePic"
-                        value={formData.profilePic}
-                        onChange={handleInputChange}
-                        className={classnames}
-                        placeholder="Enter profile picture URL"
-                        required
-                    />
-                </div>
+
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Facebook</label>
@@ -198,6 +254,8 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
                         placeholder="LinkedIn Profile"
                     />
                 </div>
+
+
 
                 <button
                     type="submit"

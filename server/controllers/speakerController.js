@@ -1,10 +1,19 @@
 const Speaker = require('../models/speaker');
+const { uploadImage, deleteImage } = require('../utils/cloudinary');
 
 // Create a new speaker
 const createSpeaker = async (req, res) => {
   try {
+
+    const uploadResponse = await uploadImage(req.file.path);
+
+    if (!uploadResponse) {
+        return res.status(500).json({ message: 'Image upload failed' });
+    }
+
    
-    const { salutation, fullName, bio, email, mobile, profilePic, socialLinks } = req.body;
+    const { salutation, fullName, bio, email, mobile} = req.body;
+    const socialLinks = JSON.parse(req.body.socialLinks);
     
     const newSpeaker = new Speaker({
       salutation,
@@ -12,7 +21,8 @@ const createSpeaker = async (req, res) => {
       bio,
       email,
       mobile,
-      profilePic,
+      profilePic: uploadResponse.publicUrl, 
+      cloudinaryId: uploadResponse.cloudinaryId,
       socialLinks,
     });
 
@@ -69,20 +79,27 @@ const updateSpeaker = async (req, res) => {
   }
 };
 
-// Delete a speaker by ID
 const deleteSpeaker = async (req, res) => {
   try {
-    const deletedSpeaker = await Speaker.findByIdAndDelete(req.params.id);
+      const speaker = await Speaker.findById(req.params.id);
+      
+      if (!speaker) {
+          return res.status(404).json({ message: 'Speaker not found' });
+      }
 
-    if (!deletedSpeaker) {
-      return res.status(404).json({ message: 'Speaker not found' });
-    }
+      // Delete the speaker's image from Cloudinary using the stored cloudinaryId
+      await deleteImage(speaker.cloudinaryId);
 
-    res.status(200).json({ message: 'Speaker deleted successfully' });
+      // Delete the speaker from the database
+      await Speaker.findByIdAndDelete(req.params.id);
+
+      res.json({ message: 'Speaker deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting speaker', error: error.message });
+      console.error('Error deleting speaker:', error);
+      res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 
 module.exports = {

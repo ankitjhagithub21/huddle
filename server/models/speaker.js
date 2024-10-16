@@ -16,17 +16,21 @@ const speakerSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-
   },
-  mobile:{
-    type:String,
-    required:true
-  },
-  profilePic: {
+  mobile: {
     type: String,
-    required: true, 
+    required: true
   },
-
+  
+  profilePic: {  
+    type: String,
+    required: true,
+  },
+  cloudinaryId: { 
+    type: String,
+    required: true,
+  },
+  
   socialLinks: {
     facebook: {
       type: String,
@@ -38,7 +42,6 @@ const speakerSchema = new mongoose.Schema({
       type: String,
     },
   },
- 
-},{versionKey:false,timestamps:false});
+}, { versionKey: false, timestamps: false });
 
 module.exports = mongoose.model('Speaker', speakerSchema);
