@@ -54,7 +54,7 @@ const EventList = () => {
                         className="bg-[var(--secondary)] text-white px-4 py-2 rounded-lg flex items-center gap-1"
                     >
                         <FaPlus/>
-                        Add  Event
+                      <span className='md:block hidden'>Add  Event</span>
                     </button>
                 </div>
                 <h2 className="text-2xl font-bold">All Events</h2>

@@ -54,7 +54,7 @@ const SpeakerList = () => {
           <div className='max-w-4xl p-4'>
           <div className='flex items-center gap-2 justify-between'>
                 <Search />
-                <button onClick={onCreate} disabled={selectedSpeaker} className='text-white flex items-center gap-1 rounded-lg p-2 bg-[var(--secondary)]'>
+                <button onClick={onCreate} disabled={selectedSpeaker} className='text-white flex items-center gap-1 rounded-lg px-4 py-2 bg-[var(--secondary)]'>
                     <FaPlus />
                     <span className='md:inline-block hidden'>Add Speaker</span>
                 </button>
