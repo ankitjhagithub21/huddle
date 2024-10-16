@@ -4,10 +4,11 @@ import { toast } from 'react-toastify';
 import JoditEditor from 'jodit-react';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
-import { addNewEvent, editEventById} from '../api/events';
-import { addEvent, editEvent} from '../redux/slices/eventSlice';
+import { addNewEvent, editEventById } from '../api/events';
+import { addEvent, editEvent } from '../redux/slices/eventSlice';
 
 const CreateEvent = ({ showForm, onClose, eventData }) => {
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
@@ -16,6 +17,7 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
     const [allSpeakers, setAllSpeakers] = useState([]);
     const [allAttendees, setAllAttendees] = useState([]);
     const dispatch = useDispatch();
+
     const classnames = 'w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2';
 
     const editor = useRef(null);
@@ -50,7 +52,8 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
         if (eventData) {
             setTitle(eventData.title);
             setDescription(eventData.description);
-            setDate(eventData.date);
+            const formattedDate = new Date(eventData.date).toISOString().split('T')[0];
+            setDate(formattedDate);
             setSelectedSpeakers(eventData.speakers || []);
             setSelectedAttendees(eventData.attendees || []);
         } else {
