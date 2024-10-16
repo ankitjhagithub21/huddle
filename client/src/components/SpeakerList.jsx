@@ -12,33 +12,29 @@ import { deleteSpeakerById } from '../api/speakers';
 const SpeakerList = () => {
     useFetchSpeakers();
     const dispatch = useDispatch();
-    const { speakers,loading } = useSelector((state) => state.speaker);
+    const { speakers, loading } = useSelector((state) => state.speaker);
     const [showForm, setShowForm] = useState(false);
-    const [currState, setCurrState] = useState(null);
     const [selectedSpeaker, setSelectedSpeaker] = useState(null);
 
     const onClose = () => {
         setShowForm(false);
         setSelectedSpeaker(null);
-        
     };
 
     const onEdit = (speaker) => {
         setSelectedSpeaker(speaker);
-        setCurrState('edit');
         setShowForm(true);
     };
 
     const onCreate = () => {
         setSelectedSpeaker(null);
-        setCurrState('add');
         setShowForm(true);
     };
 
     const onDelete = async (id) => {
         const res = await deleteSpeakerById(id);
-        const data = await res.json()
-        if (res.status==200) {
+        const data = await res.json();
+        if (res.status === 200) {
             dispatch(deleteSpeaker(id));
             toast.success(data.message);
         } else {
@@ -73,7 +69,6 @@ const SpeakerList = () => {
             <CreateSpeaker
                 onClose={onClose}
                 showForm={showForm}
-                currState={currState}
                 speakerData={selectedSpeaker}
             />
         </>

@@ -5,10 +5,10 @@ import { toast } from 'react-toastify';
 import { addSpeaker, editSpeaker } from '../redux/slices/speakerSlice';
 import { addNewSpeaker, editSpeakerById } from '../api/speakers';
 
-const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
+const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
     const dispatch = useDispatch();
     const initialData = {
-        salutation:'',
+        salutation: '',
         fullName: '',
         bio: '',
         email: '',
@@ -20,19 +20,18 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
             linkedin: '',
         },
     };
-    const classnames = 'w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2'
-
+    const classnames = 'w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2';
 
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (currState === 'edit' && speakerData) {
+        if (speakerData) {
             setFormData(speakerData);
         } else {
             setFormData(initialData);
         }
-    }, [currState, speakerData]);
+    }, [speakerData]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -49,21 +48,21 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const toastId = toast.loading(currState === 'add' ? "Creating speaker..." : "Updating speaker...");
+        const toastId = toast.loading(speakerData ? "Updating speaker..." : "Creating speaker...");
 
         try {
-            const res = currState === 'add'
-                ? await addNewSpeaker(formData)
-                : await editSpeakerById(speakerData._id, formData);
+            const res = speakerData
+                ? await editSpeakerById(speakerData._id, formData)
+                : await addNewSpeaker(formData);
 
             const data = await res.json();
 
-            if (res.status === (currState === 'add' ? 201 : 200)) {
-                toast.success(currState === 'add' ? 'Speaker created successfully!' : 'Speaker updated successfully!');
-                if (currState === 'add') {
-                    dispatch(addSpeaker(data.speaker));
-                } else {
+            if (res.status === (speakerData ? 200 : 201)) {
+                toast.success(speakerData ? 'Speaker updated successfully!' : 'Speaker created successfully!');
+                if (speakerData) {
                     dispatch(editSpeaker(data.speaker));
+                } else {
+                    dispatch(addSpeaker(data.speaker));
                 }
                 onClose();
             } else {
@@ -78,18 +77,15 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
         }
     };
 
-
     return (
         <div className={`lg:w-[400px] w-full mx-auto p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>
             <div className='flex items-center justify-between mb-4'>
                 <h2 className="text-2xl font-semibold">
-                    {currState === "add" ? 'Create New Speaker' : 'Update Speaker'}
+                    {speakerData ? 'Update Speaker' : 'Create New Speaker'}
                 </h2>
                 <IoIosCloseCircleOutline size={25} onClick={onClose} />
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Form fields for speaker details */}
-
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Salutation</label>
                     <input
@@ -102,7 +98,7 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
                         required
                     />
                 </div>
-                
+
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Full Name</label>
                     <input
@@ -167,7 +163,6 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
                     />
                 </div>
 
-                {/* Social media links */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Facebook</label>
                     <input
@@ -204,23 +199,13 @@ const CreateSpeaker = ({ onClose, showForm, currState, speakerData }) => {
                     />
                 </div>
 
-
-                <div className='flex justify-end gap-2'>
-                    <button
-                        type='button'
-                        onClick={onClose}
-                        className='bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md'
-                    >
-                        Cancel
-                    </button>
-                    <button
-                      disabled={loading}
-                        type='submit'
-                        className='bg-[var(--secondary)] text-white px-4 py-2 rounded-md'
-                    >
-                        {currState === 'add' ? 'Add' : 'Update'}
-                    </button>
-                </div>
+                <button
+                    type="submit"
+                    className="w-full p-3 bg-[var(--secondary)] text-white rounded-md mt-4"
+                    disabled={loading}
+                >
+                    {loading ? 'Processing...' : speakerData ? 'Update Speaker' : 'Create Speaker'}
+                </button>
             </form>
         </div>
     );
