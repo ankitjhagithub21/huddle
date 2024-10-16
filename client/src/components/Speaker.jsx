@@ -8,7 +8,7 @@ const Speaker = ({ speaker, onDelete, onEdit }) => {
             <p> <span className='lg:hidden inline-block font-bold '>Name :</span> {speaker.fullName}</p>
             <p> <span className='lg:hidden inline-block font-bold '>Mobile :</span> {speaker.mobile}</p>
             <p><span className='lg:hidden inline-block font-bold '>Email :</span> {speaker.email}</p> 
-            <div className='flex gap-2'>
+            <div className='flex gap-2 lg:justify-end justify-start'>
                 <button
                     onClick={() => onEdit(speaker)}
                     className='text-white bg-[var(--secondary)] p-2 rounded-md transition'

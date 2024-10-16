@@ -4,9 +4,10 @@ import { toast } from 'react-toastify';
 import CreateEvent from './CreateEvent';
 import useFetchEvents from '../hooks/useFetchEvents';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteEventById, editEventById } from '../api/events';
-import { deleteEvent, editEvent } from '../redux/slices/eventSlice';
+import { deleteEventById} from '../api/events';
+import { deleteEvent} from '../redux/slices/eventSlice';
 import Search from './Search';
+import { FaPlus } from 'react-icons/fa';
 
 const EventList = () => {
     // Fetch events with custom hook
@@ -50,9 +51,10 @@ const EventList = () => {
                     <Search/>
                     <button
                         onClick={() => setShowForm(true)}
-                        className="bg-[var(--secondary)] text-white px-4 py-2 rounded-lg"
+                        className="bg-[var(--secondary)] text-white px-4 py-2 rounded-lg flex items-center gap-1"
                     >
-                        Add New Event
+                        <FaPlus/>
+                        Add  Event
                     </button>
                 </div>
                 <h2 className="text-2xl font-bold">All Events</h2>
