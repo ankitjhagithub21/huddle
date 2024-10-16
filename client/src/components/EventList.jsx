@@ -1,77 +1,85 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Event from './Event';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import CreateEvent from './CreateEvent';
+import useFetchEvents from '../hooks/useFetchEvents';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteEventById, editEventById } from '../api/events';
+import { deleteEvent, editEvent } from '../redux/slices/eventSlice';
 
 const EventList = () => {
-    const [events, setEvents] = useState([]);
+    // Fetch events with custom hook
+    useFetchEvents();
+    
+    // Get event state and loading status from Redux
+    const { events, loading } = useSelector(state => state.event);
     const [showForm, setShowForm] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null); // State for selected event when editing
+    const dispatch = useDispatch();
 
+    // Close the Create Event form
     const onClose = () => {
         setShowForm(false);
+        setSelectedEvent(null); // Reset selected event
     };
-
-    // Fetch all events from the backend
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_EVENT_URL}`);
-                setEvents(response.data);
-            } catch (error) {
-                console.error('Error fetching events:', error);
-                toast.error('Error fetching events');
-            }
-        };
-        fetchEvents();
-    }, []);
 
     // Handle event deletion
     const handleDeleteEvent = async (eventId) => {
         try {
-            await axios.delete(`${import.meta.env.VITE_EVENT_URL}/${eventId}`);
+            await deleteEventById(eventId);
             toast.success('Event deleted successfully!');
-            setEvents(events.filter((event) => event._id !== eventId));
+            dispatch(deleteEvent(eventId));
         } catch (error) {
             console.error('Error deleting event:', error);
-            toast.error('Error deleting event');
+            toast.error('Failed to delete event.');
         }
     };
 
-    // Handle adding a new event
-    const onAdd = (event) => {
-        setEvents([...events, event]);
+    // Handle event editing
+    const handleEditEvent = (event) => {
+        console.log(event)
+        setSelectedEvent(event); 
+        setShowForm(true); 
     };
 
     return (
         <section>
             <div className="max-w-4xl p-6">
                 <div className="flex items-center justify-between gap-3 mb-5">
-                    <h2 className="text-2xl font-bold mb-4">All Events</h2>
+                    <h2 className="text-2xl font-bold">All Events</h2>
                     <button
                         onClick={() => setShowForm(true)}
                         className="bg-[var(--secondary)] text-white px-4 py-2 rounded-lg"
                     >
-                        Add new event
+                        Add New Event
                     </button>
                 </div>
 
-                {/* Show message if no events */}
-                {events && events.length === 0 ? (
+                {/* Show loading message */}
+                {loading ? (
+                    <p>Loading events...</p>
+                ) : events?.length === 0 ? (
                     <p>No events found.</p>
                 ) : (
                     <ul className="space-y-4">
-                       {
-                        events && events.length === 0 ? <p>no event found.</p> :  events.map((event)=>{
-                            return <Event key={event?._id} onDelete={handleDeleteEvent} event={event}/>
-                        })
-                       }
+                        {events?.map((event) => (
+                            <Event
+                                key={event._id}
+                                event={event}
+                                onDelete={handleDeleteEvent}
+                                onEdit={handleEditEvent}
+                            />
+                        ))}
                     </ul>
                 )}
             </div>
 
-            {/* Create Event Form */}
-            <CreateEvent showForm={showForm} onClose={onClose} onAdd={onAdd} />
+            {/* Create/Edit Event Form */}
+            <CreateEvent
+                showForm={showForm}
+                onClose={onClose}
+                eventData={selectedEvent} // Pass selected event data for editing
+            />
         </section>
     );
 };
