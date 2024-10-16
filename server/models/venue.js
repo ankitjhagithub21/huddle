@@ -13,7 +13,7 @@ const venueSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-});
+},{versionKey:false,timestamps:true});
 
 module.exports = mongoose.model('Venue', venueSchema);
 

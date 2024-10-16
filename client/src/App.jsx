@@ -13,7 +13,6 @@ import VenueList from './components/VenueList'
 
 const App = () => {
 
-
   return (
     <div className='h-screen w-full flex'>
       <ToastContainer theme='dark' autoClose={1500} />

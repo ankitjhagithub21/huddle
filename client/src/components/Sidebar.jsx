@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { FaMicrophone, FaCalendarAlt, FaUsers } from 'react-icons/fa'
+import { FaLocationDot } from "react-icons/fa6";
 
 const Sidebar = () => {
   // Array of links with paths, labels, and icons
@@ -8,6 +9,7 @@ const Sidebar = () => {
     { path: '/', label: 'Speakers', icon: <FaMicrophone /> },
     { path: '/attendees', label: 'Attendees', icon: <FaUsers /> },
     { path: '/events', label: 'Events', icon: <FaCalendarAlt /> },
+    { path: '/venues', label: 'Venues', icon: <FaLocationDot /> },
   ];
 
   return (

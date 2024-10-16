@@ -19,7 +19,7 @@ export const addNewVenue = async (venueData) => {
     if (!res.ok) {
         throw new Error('Failed to add venue');
     }
-    return res.json(); // Return the newly created venue object
+    return res; 
 };
 
 // Edit venue details
@@ -32,7 +32,7 @@ export const editVenueById = async (id, updatedData) => {
     if (!res.ok) {
         throw new Error('Failed to update venue');
     }
-    return res.json(); // Return the updated venue object
+    return res;
 };
 
 // Delete a venue
@@ -43,5 +43,5 @@ export const deleteVenueById = async (id) => {
     if (!res.ok) {
         throw new Error('Failed to delete venue');
     }
-    return res.json(); // Optionally return the response (like a success message)
+    return res; 
 };
