@@ -11,7 +11,7 @@ const createSpeaker = async (req, res) => {
         return res.status(500).json({ message: 'Image upload failed' });
     }
 
-   
+
     const { salutation, fullName, bio, email, mobile} = req.body;
     const socialLinks = JSON.parse(req.body.socialLinks);
     

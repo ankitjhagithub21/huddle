@@ -47,6 +47,8 @@ const SpeakerList = () => {
 
     };
 
+    
+
     return (
         <>
             <div className='flex items-center justify-start gap-2 sticky bg-white top-0 w-full left-0'>

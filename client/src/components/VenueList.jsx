@@ -44,34 +44,36 @@ const VenueList = () => {
     };
 
     return (
-        <>
-            <div className='flex items-center gap-2'>
-               <Search/>
-                <button onClick={onCreate} className='text-white flex items-center gap-1 rounded-lg p-2 bg-[var(--secondary)]'>
-                    <FaPlus />
-                    <span className='md:inline-block hidden'>Add Venue</span>
-                </button>
+        <section>
+            <div className='max-w-4xl p-4'>
+                <div className='flex items-center gap-2 justify-between'>
+                    <Search />
+                    <button onClick={onCreate} className='text-white flex items-center gap-1 rounded-lg p-2 bg-[var(--secondary)]'>
+                        <FaPlus />
+                        <span className='md:inline-block hidden'>Add Venue</span>
+                    </button>
+                </div>
+                <h2 className='mt-5 text-2xl font-bold'>Venues List</h2>
+                <div className='lg:grid hidden grid-cols-4 items-center my-2 p-2 font-bold'>
+                    <p>Building Number</p>
+                    <p>Room Number</p>
+                    <p>Room Capacity</p>
+                    <p className='text-end'>Action</p>
+                </div>
+                <div>
+                    {loading ? <p>Loading...</p> : venues?.length === 0 ? <p>No venues found</p> :
+                        venues?.map((venue) => (
+                            <Venue key={venue._id} venue={venue} onDelete={onDelete} onEdit={onEdit} />
+                        ))
+                    }
+                </div>
+                <CreateVenue
+                    onClose={onClose}
+                    showForm={showForm}
+                    venueData={selectedVenue}
+                />
             </div>
-            <h2 className='mt-5 text-2xl font-bold'>Venues List</h2>
-            <div className='lg:grid hidden grid-cols-4 items-center my-2 p-2 font-bold'>
-                <p>Building Number</p>
-                <p>Room Number</p>
-                <p>Room Capacity</p>
-                <p>Action</p>
-            </div>
-            <div>
-                {loading ? <p>Loading...</p> : venues?.length === 0 ? <p>No venues found</p> :
-                    venues?.map((venue) => (
-                        <Venue key={venue._id} venue={venue} onDelete={onDelete} onEdit={onEdit} />
-                    ))
-                }
-            </div>
-            <CreateVenue
-                onClose={onClose}
-                showForm={showForm}
-                venueData={selectedVenue}
-            />
-        </>
+        </section>
     );
 };
 

@@ -6,11 +6,12 @@ import useFetchEvents from '../hooks/useFetchEvents';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteEventById, editEventById } from '../api/events';
 import { deleteEvent, editEvent } from '../redux/slices/eventSlice';
+import Search from './Search';
 
 const EventList = () => {
     // Fetch events with custom hook
     useFetchEvents();
-    
+
     // Get event state and loading status from Redux
     const { events, loading } = useSelector(state => state.event);
     const [showForm, setShowForm] = useState(false);
@@ -38,21 +39,28 @@ const EventList = () => {
     // Handle event editing
     const handleEditEvent = (event) => {
         console.log(event)
-        setSelectedEvent(event); 
-        setShowForm(true); 
+        setSelectedEvent(event);
+        setShowForm(true);
     };
 
     return (
         <section>
-            <div className="max-w-4xl p-6">
+            <div className="max-w-4xl p-4">
                 <div className="flex items-center justify-between gap-3 mb-5">
-                    <h2 className="text-2xl font-bold">All Events</h2>
+                    <Search/>
                     <button
                         onClick={() => setShowForm(true)}
                         className="bg-[var(--secondary)] text-white px-4 py-2 rounded-lg"
                     >
                         Add New Event
                     </button>
+                </div>
+                <h2 className="text-2xl font-bold">All Events</h2>
+                <div className='lg:grid hidden grid-cols-3 items-center my-2 p-2 font-bold '>
+                    <p>Event Name</p>
+                    <p>Event Date</p>
+                   
+                    <p className='text-end'>Action</p>
                 </div>
 
                 {/* Show loading message */}

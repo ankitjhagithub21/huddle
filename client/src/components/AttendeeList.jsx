@@ -43,8 +43,9 @@ const AttendeeList = () => {
     };
 
     return (
-        <>
-            <div className='flex items-center gap-2'>
+        <section>
+         <div className='max-w-4xl p-4'>
+         <div className='flex items-center gap-2'>
                 <ExcelUploader />
                 <button onClick={onCreate} className='text-white flex items-center gap-1 rounded-lg p-2 bg-[var(--secondary)]'>
                     <FaPlus />
@@ -56,7 +57,7 @@ const AttendeeList = () => {
                 <p>Name</p>
                 <p>Mobile</p>
                 <p>Email</p>
-                <p>Action</p>
+                <p className='text-end'>Action</p>
             </div>
             <div>
                 {loading ? <p>Loading...</p> : attendees?.length === 0 ? <p>No attendees found</p> :
@@ -70,7 +71,8 @@ const AttendeeList = () => {
                 showForm={showForm}
                 attendeeData={selectedAttendee}
             />
-        </>
+         </div>
+        </section>
     );
 };
 

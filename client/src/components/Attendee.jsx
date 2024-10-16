@@ -14,7 +14,7 @@ const Attendee = ({ attendee, onEdit, onDelete }) => {
             <p>{attendee.email}</p>
 
             {/* Action Buttons */}
-            <div className='flex gap-2'>
+            <div className='flex gap-2 lg:justify-end justify-start'>
                 <button
                     onClick={() => onEdit(attendee)}
                     className='text-white bg-[var(--secondary)] p-2 rounded-md  transition'

@@ -14,7 +14,7 @@ const Venue = ({ venue, onEdit, onDelete }) => {
             <p>{venue.roomCapacity}</p>
 
             {/* Action Buttons */}
-            <div className='flex gap-2'>
+            <div className='flex gap-2 justify-start lg:justify-end '>
                 <button
                     onClick={() => onEdit(venue)}
                     className='text-white bg-[var(--secondary)] p-2 rounded-md  transition'
