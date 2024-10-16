@@ -5,6 +5,7 @@ const connectDB = require('./config/dbconnection')
 const speakerRouter = require('./routes/speakerRoutes')
 const attendeeRouter = require('./routes/attendeeRoutes')
 const eventRouter = require('./routes/eventRoutes')
+const venueRouter = require('./routes/venueRoutes')
 const app = express()
 
 
@@ -20,6 +21,7 @@ app.use(cors({
 app.use("/speakers",speakerRouter)
 app.use("/attendees",attendeeRouter)
 app.use("/events",eventRouter)
+app.use("/venue",venueRouter)
 
 app.get("/",(req,res)=>{
   res.json({"message":"Api working."})
