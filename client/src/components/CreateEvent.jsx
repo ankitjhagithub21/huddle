@@ -35,9 +35,9 @@ const CreateEvent = ({ showForm, onClose, onAdd }) => {
             }
         };
 
-        if(showForm){
+        if (showForm) {
             fetchSpeakers();
-        fetchAttendees();
+            fetchAttendees();
         }
     }, [showForm]);
 
@@ -78,7 +78,7 @@ const CreateEvent = ({ showForm, onClose, onAdd }) => {
     };
 
     return (
-        <div className={`lg:w-[400px] w-full mx-auto p-6 h-full overflow-y-scroll shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>
+        <div className={`lg:w-[400px] w-full mx-auto p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>
             <div className='flex items-center justify-between mb-3'>
                 <h2 className="text-2xl font-bold">Create Event</h2>
                 <IoIosCloseCircleOutline size={25} onClick={onClose} className="cursor-pointer" />
@@ -105,7 +105,7 @@ const CreateEvent = ({ showForm, onClose, onAdd }) => {
                         value={description}
                         tabIndex={1}
                         onBlur={(newContent) => setDescription(newContent)}
-                        onChange={() => {}}
+                        onChange={() => { }}
                     />
                 </div>
 
