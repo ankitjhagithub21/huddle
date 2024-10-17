@@ -6,8 +6,9 @@ import useFetchEvents from '../hooks/useFetchEvents';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteEventById} from '../api/events';
 import { deleteEvent} from '../redux/slices/eventSlice';
-import Search from './Search';
-import AddButton from './shared/AddButton';
+import ListHeader from './shared/ListHeader';
+import ListType from './shared/ListType';
+import ListTop from './shared/ListTop';
 
 const EventList = () => {
     // Fetch events with custom hook
@@ -51,17 +52,9 @@ const EventList = () => {
     return (
         <section>
             <div className="max-w-4xl p-4">
-                <div className="flex items-center justify-between gap-3 mb-5">
-                    <Search/>
-                  <AddButton text={"Add Event"} onBtnClick={onCreate}/>
-                </div>
-                <h2 className="text-2xl font-bold">All Events</h2>
-                <div className='lg:grid hidden grid-cols-3 items-center my-2 font-bold '>
-                    <p>Event Name</p>
-                    <p>Event Date</p>
-                   
-                    <p className='text-end'>Action</p>
-                </div>
+               <ListTop onCreate={onCreate}/>
+                <ListType text={"Event List"}/>
+                <ListHeader columns={['Event Name', 'Event Date', 'Action']} />
 
                 {/* Show loading message */}
                 {loading ? (

@@ -6,8 +6,9 @@ import { deleteVenueById } from '../api/venue';
 import { deleteVenue } from '../redux/slices/venueSlice';
 import Venue from './Venue';
 import CreateVenue from './CreateVenue';
-import Search from './Search';
-import AddButton from './shared/AddButton';
+import ListHeader from './shared/ListHeader';
+import ListType from './shared/ListType';
+import ListTop from './shared/ListTop';
 
 
 const VenueList = () => {
@@ -48,17 +49,9 @@ const VenueList = () => {
     return (
         <section>
             <div className='max-w-4xl p-4'>
-                <div className='flex items-center gap-2 justify-between'>
-                    <Search />
-                     <AddButton text={"Add Venue"} onBtnClick={onCreate}/>
-                </div>
-                <h2 className='mt-5 text-2xl font-bold'>Venues List</h2>
-                <div className='lg:grid hidden grid-cols-4 items-center my-2  font-bold'>
-                    <p>Building Number</p>
-                    <p>Room Number</p>
-                    <p>Room Capacity</p>
-                    <p className='text-end'>Action</p>
-                </div>
+                <ListTop onCreate={onCreate}/>
+                <ListType text={"Venue List"}/>
+                <ListHeader columns={['Building Number', 'Room Number', 'Room Capacity', 'Action']} />
                 <div>
                     {loading ? <p>Loading...</p> : venues?.length === 0 ? <p>No venues found</p> :
                         venues?.map((venue) => (

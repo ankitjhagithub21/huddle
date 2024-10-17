@@ -12,6 +12,7 @@ const CreateVenue = ({ onClose, showForm, venueData }) => {
         roomNumber: '',
         roomCapacity: ''
     };
+    
     const classnames = 'w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2';
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);

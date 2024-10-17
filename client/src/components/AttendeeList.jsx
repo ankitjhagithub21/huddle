@@ -6,9 +6,9 @@ import { deleteAttendee } from '../redux/slices/attendeeSlice';
 import useFetchAttendees from '../hooks/useFetchAttendees';
 import { deleteAttendeeById } from '../api/attendees';
 import CreateAttendee from './CreateAttendee';
-import Search from './Search';
-import AddButton from './shared/AddButton';
-import ExcelUploader from './ExcelUploader';
+import ListHeader from './shared/ListHeader';
+import ListType from './shared/ListType';
+import ListTop from './shared/ListTop';
 
 const AttendeeList = () => {
     useFetchAttendees();
@@ -45,31 +45,23 @@ const AttendeeList = () => {
 
     return (
         <section>
-         <div className='max-w-4xl p-4'>
-         <div className='flex items-center gap-2 justify-between'>
-                <ExcelUploader/>
-                <AddButton text={"Add Attendee"} onBtnClick={onCreate}/>
+            <div className='max-w-4xl p-4'>
+               <ListTop onCreate={onCreate}/>
+                <ListType text={"Attendees List"} />
+                <ListHeader columns={['Name', 'Mobile', 'Email', 'Action']} />
+                <div>
+                    {loading ? <p>Loading...</p> : attendees?.length === 0 ? <p>No attendees found</p> :
+                        attendees?.map((attendee) => (
+                            <Attendee key={attendee._id} attendee={attendee} onDelete={onDelete} onEdit={onEdit} />
+                        ))
+                    }
+                </div>
+                <CreateAttendee
+                    onClose={onClose}
+                    showForm={showForm}
+                    attendeeData={selectedAttendee}
+                />
             </div>
-            <h2 className='mt-5 text-2xl font-bold'>Attendees List</h2>
-            <div className='lg:grid hidden grid-cols-4 items-center my-2 font-bold'>
-                <p>Name</p>
-                <p>Mobile</p>
-                <p>Email</p>
-                <p className='text-end'>Action</p>
-            </div>
-            <div>
-                {loading ? <p>Loading...</p> : attendees?.length === 0 ? <p>No attendees found</p> :
-                    attendees?.map((attendee) => (
-                        <Attendee key={attendee._id} attendee={attendee} onDelete={onDelete} onEdit={onEdit} />
-                    ))
-                }
-            </div>
-            <CreateAttendee
-                onClose={onClose}
-                showForm={showForm}
-                attendeeData={selectedAttendee}
-            />
-         </div>
         </section>
     );
 };
