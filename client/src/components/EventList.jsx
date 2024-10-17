@@ -58,7 +58,7 @@ const EventList = () => {
                     </button>
                 </div>
                 <h2 className="text-2xl font-bold">All Events</h2>
-                <div className='lg:grid hidden grid-cols-3 items-center my-2 p-2 font-bold '>
+                <div className='lg:grid hidden grid-cols-3 items-center my-2 font-bold '>
                     <p>Event Name</p>
                     <p>Event Date</p>
                    

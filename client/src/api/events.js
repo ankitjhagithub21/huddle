@@ -17,6 +17,12 @@ export const addNewEvent = async (eventData) => {
     return res;
 };
 
+export const getEventById = async (id) => {
+    const res = await fetch(`${baseUrl}/${id}`);
+    return res;
+};
+
+
 // Edit Event details
 export const editEventById = async (id, updatedData) => {
     const res = await fetch(`${baseUrl}/${id}`, {

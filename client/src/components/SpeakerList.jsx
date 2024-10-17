@@ -60,7 +60,7 @@ const SpeakerList = () => {
                 </button>
             </div>
             <h2 className='mt-5 text-2xl font-bold'>Speakers List</h2>
-            <div className='lg:grid hidden grid-cols-5 items-center my-2 p-1 font-bold'>
+            <div className='lg:grid hidden grid-cols-5 items-center my-2 font-bold'>
                 <p>Image</p>
                 <p>Name</p>
                 <p>Mobile</p>

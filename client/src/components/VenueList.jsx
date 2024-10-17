@@ -56,7 +56,7 @@ const VenueList = () => {
                     </button>
                 </div>
                 <h2 className='mt-5 text-2xl font-bold'>Venues List</h2>
-                <div className='lg:grid hidden grid-cols-4 items-center my-2 p-2 font-bold'>
+                <div className='lg:grid hidden grid-cols-4 items-center my-2  font-bold'>
                     <p>Building Number</p>
                     <p>Room Number</p>
                     <p>Room Capacity</p>

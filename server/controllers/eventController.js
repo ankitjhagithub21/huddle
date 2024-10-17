@@ -80,8 +80,11 @@ const updateEvent = async (req, res) => {
     const updatedEvent = await Event.findByIdAndUpdate(
       eventId,
       { title, description, date, speakers, attendees },
-      { new: true } // Return the updated event
-    );
+      { new: true }
+    )
+    .populate('speakers', 'fullName')
+    .populate('attendees', 'fullName');
+    
 
     if (!updatedEvent) {
       return res.status(404).json({ message: 'Event not found' });

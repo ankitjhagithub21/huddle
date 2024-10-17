@@ -9,7 +9,7 @@ import { fetchSpeakers } from '../api/speakers';
 import { fetchAttendees } from '../api/attendees';
 
 const CreateEvent = ({ showForm, onClose, eventData }) => {
-
+    
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
@@ -102,20 +102,22 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
     };
 
     // Toggle speaker selection
-    const toggleSpeaker = (speakerId) => {
-        if (selectedSpeakers.includes(speakerId)) {
-            setSelectedSpeakers(selectedSpeakers.filter((id) => id !== speakerId));
+    const toggleSpeaker = (speaker) => {
+        const isSpeakerSelected = selectedSpeakers.find(sp => sp._id === speaker._id);
+        if (isSpeakerSelected) {
+            setSelectedSpeakers(selectedSpeakers.filter(sp => sp._id !== speaker._id));
         } else {
-            setSelectedSpeakers([...selectedSpeakers, speakerId]);
+            setSelectedSpeakers([...selectedSpeakers, speaker]);
         }
     };
 
     // Toggle attendee selection
-    const toggleAttendee = (attendeeId) => {
-        if (selectedAttendees.includes(attendeeId)) {
-            setSelectedAttendees(selectedAttendees.filter((id) => id !== attendeeId));
+    const toggleAttendee = (attendee) => {
+        const isAttendeeSelected = selectedAttendees.find(at => at._id === attendee._id);
+        if (isAttendeeSelected) {
+            setSelectedAttendees(selectedAttendees.filter(at => at._id !== attendee._id));
         } else {
-            setSelectedAttendees([...selectedAttendees, attendeeId]);
+            setSelectedAttendees([...selectedAttendees, attendee]);
         }
     };
 
@@ -167,19 +169,17 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
                 {/* Selected Speakers Pills */}
                 <p className="mb-2">Selected Speakers</p>
                 <div className="flex gap-2 items-center flex-wrap mb-4">
-                    {selectedSpeakers.map((speakerId) => {
-                        const speaker = allSpeakers.find((spk) => spk._id === speakerId);
-                        return (
-                            <div key={speakerId} className="bg-[var(--secondary)] text-sm text-white px-3 py-1 rounded-lg flex items-center">
-                                {speaker?.fullName}
+                    {selectedSpeakers.length > 0 &&
+                        selectedSpeakers.map((speaker) => (
+                            <div key={speaker._id} className="bg-[var(--secondary)] text-sm text-white px-3 py-1 rounded-lg flex items-center">
+                                {speaker.fullName}
                                 <IoIosCloseCircleOutline
                                     size={18}
                                     className="ml-2 cursor-pointer"
-                                    onClick={() => toggleSpeaker(speakerId)}
+                                    onClick={() => toggleSpeaker(speaker)}
                                 />
                             </div>
-                        );
-                    })}
+                        ))}
                 </div>
 
                 {/* Speakers Selection */}
@@ -191,8 +191,8 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
                                 <input
                                     type="checkbox"
                                     id={`speaker-${speaker._id}`}
-                                    checked={selectedSpeakers.includes(speaker._id)}
-                                    onChange={() => toggleSpeaker(speaker._id)}
+                                    checked={selectedSpeakers.some(sp => sp._id === speaker._id)}
+                                    onChange={() => toggleSpeaker(speaker)}
                                     className="mr-2"
                                 />
                                 <label htmlFor={`speaker-${speaker._id}`} className="text-gray-700">{speaker.fullName}</label>
@@ -204,19 +204,17 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
                 {/* Selected Attendees Pills */}
                 <p className="mb-2">Selected Attendees</p>
                 <div className="flex gap-2 items-center flex-wrap mb-4">
-                    {selectedAttendees.map((attendeeId) => {
-                        const attendee = allAttendees.find((att) => att._id === attendeeId);
-                        return (
-                            <div key={attendeeId} className="bg-[var(--secondary)] text-sm text-white px-3 py-1 rounded-lg flex items-center">
-                                {attendee?.fullName}
+                    {selectedAttendees.length > 0 &&
+                        selectedAttendees.map((attendee) => (
+                            <div key={attendee._id} className="bg-[var(--secondary)] text-sm text-white px-3 py-1 rounded-lg flex items-center">
+                                {attendee.fullName}
                                 <IoIosCloseCircleOutline
                                     size={18}
                                     className="ml-2 cursor-pointer"
-                                    onClick={() => toggleAttendee(attendeeId)}
+                                    onClick={() => toggleAttendee(attendee)}
                                 />
                             </div>
-                        );
-                    })}
+                        ))}
                 </div>
 
                 {/* Attendees Selection */}
@@ -228,8 +226,8 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
                                 <input
                                     type="checkbox"
                                     id={`attendee-${attendee._id}`}
-                                    checked={selectedAttendees.includes(attendee._id)}
-                                    onChange={() => toggleAttendee(attendee._id)}
+                                    checked={selectedAttendees.some(at => at._id === attendee._id)}
+                                    onChange={() => toggleAttendee(attendee)}
                                     className="mr-2"
                                 />
                                 <label htmlFor={`attendee-${attendee._id}`} className="text-gray-700">{attendee.fullName}</label>
