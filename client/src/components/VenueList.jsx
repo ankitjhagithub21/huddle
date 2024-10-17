@@ -47,8 +47,8 @@ const VenueList = () => {
     const columns = ['Building Number', 'Room Number', 'Room Capacity', 'Action'];
 
     return (
-        <section>
-            <div className='max-w-4xl p-4'>
+      
+            <>
                 <ListTop onCreate={onCreate} btnText={"Add Venue"}/>
                 <ListType text={"Venue List"} />
                 <ListTable
@@ -64,8 +64,8 @@ const VenueList = () => {
                     showForm={showForm}
                     venueData={selectedVenue}
                 />
-            </div>
-        </section>
+            </>
+
     );
 };
 

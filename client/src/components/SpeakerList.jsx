@@ -47,25 +47,24 @@ const SpeakerList = () => {
     const columns = ['Image', 'Name', 'Mobile', 'Email', 'Action'];
 
     return (
-        <section>
-            <div className='max-w-4xl p-4'>
-                <ListTop onCreate={onCreate} btnText={"Add Speaker"}/>
-                <ListType text={"Speakers List"} />
-                <ListTable
-                    columns={columns}
-                    data={speakers}
-                    loading={loading}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                    listType={"speakers"}
-                />
-                <CreateSpeaker
-                    onClose={onClose}
-                    showForm={showForm}
-                    speakerData={selectedSpeaker}
-                />
-            </div>
-        </section>
+        <>
+            <ListTop onCreate={onCreate} btnText={"Add Speaker"} />
+            <ListType text={"Speakers List"} />
+            <ListTable
+                columns={columns}
+                data={speakers}
+                loading={loading}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                listType={"speakers"}
+            />
+            <CreateSpeaker
+                onClose={onClose}
+                showForm={showForm}
+                speakerData={selectedSpeaker}
+            />
+        </>
+
     );
 };
 

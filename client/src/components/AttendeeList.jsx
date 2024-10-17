@@ -45,25 +45,25 @@ const AttendeeList = () => {
     const columns = ['Name', 'Mobile', 'Email', 'Action'];
 
     return (
-        <section>
-            <div className='max-w-4xl p-4'>
-                <ListTop onCreate={onCreate} btnText={"Add Attendee"}/>
-                <ListType text={"Attendees List"} />
-                <ListTable
-                    columns={columns}
-                    data={attendees}
-                    loading={loading}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                    listType={"attendees"}
-                />
-                <CreateAttendee
-                    onClose={onClose}
-                    showForm={showForm}
-                    attendeeData={selectedAttendee}
-                />
-            </div>
-        </section>
+        <>
+
+            <ListTop onCreate={onCreate} btnText={"Add Attendee"} />
+            <ListType text={"Attendees List"} />
+            <ListTable
+                columns={columns}
+                data={attendees}
+                loading={loading}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                listType={"attendees"}
+            />
+            <CreateAttendee
+                onClose={onClose}
+                showForm={showForm}
+                attendeeData={selectedAttendee}
+            />
+        </>
+
     );
 };
 

@@ -16,12 +16,12 @@ const EventList = () => {
     // Get event state and loading status from Redux
     const { events, loading } = useSelector((state) => state.event);
     const [showForm, setShowForm] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState(null); 
+    const [selectedEvent, setSelectedEvent] = useState(null);
     const dispatch = useDispatch();
 
     const onClose = () => {
         setShowForm(false);
-        setSelectedEvent(null); 
+        setSelectedEvent(null);
     };
 
     const handleDeleteEvent = async (eventId) => {
@@ -35,7 +35,7 @@ const EventList = () => {
         }
     };
 
-    const handleEditEvent = (event) => {  
+    const handleEditEvent = (event) => {
         setSelectedEvent(event);
         setShowForm(true);
     };
@@ -48,28 +48,28 @@ const EventList = () => {
     const columns = ['Event Name', 'Event Date', 'Action'];
 
     return (
-        <section>
-            <div className="max-w-4xl p-4">
-                <ListTop onCreate={onCreate} btnText={"Add Event"}/>
-                <ListType text={"Event List"} />
-                <ListTable 
-                    columns={columns} 
-                    data={events} 
-                    loading={loading} 
-                    onEdit={handleEditEvent} 
-                    onDelete={handleDeleteEvent} 
-                    listType={"events"}
-                />
-            </div>
+        <>
+
+            <ListTop onCreate={onCreate} btnText={"Add Event"} />
+            <ListType text={"Event List"} />
+            <ListTable
+                columns={columns}
+                data={events}
+                loading={loading}
+                onEdit={handleEditEvent}
+                onDelete={handleDeleteEvent}
+                listType={"events"}
+            />
+
 
             {/* Create/Edit Event Form */}
             <CreateEvent
                 showForm={showForm}
                 onClose={onClose}
                 eventData={selectedEvent}
-                
+
             />
-        </section>
+        </>
     );
 };
 
