@@ -1,6 +1,9 @@
-import {FaTrash,FaEdit} from "react-icons/fa"
+import { FaTrash, FaEdit, FaEye } from "react-icons/fa"
+import { useNavigate } from "react-router-dom";
+
 const ListBody = ({ data, loading, onEdit, onDelete, listType }) => {
-   
+
+    const navigate = useNavigate()
     const safeData = Array.isArray(data) ? data : [];
 
     if (loading) {
@@ -60,17 +63,27 @@ const ListBody = ({ data, loading, onEdit, onDelete, listType }) => {
                 </>
             )}
             <td className="border px-4 py-2 space-x-2">
+                {
+                    listType === "events" && (
+                        <button onClick={() => navigate(`/public/event/${item._id}`)}
+                            className="text-white bg-[var(--secondary)] p-2 rounded-md  transition"
+                        >
+                            <FaEye />
+                        </button>
+                    )
+                }
+
                 <button
                     onClick={() => onEdit(item)}
-                   className="text-white bg-[var(--secondary)] p-2 rounded-md  transition"
+                    className="text-white bg-[var(--secondary)] p-2 rounded-md  transition"
                 >
-                    <FaEdit/>
+                    <FaEdit />
                 </button>
                 <button
                     onClick={() => onDelete(item._id)}
-                   className="text-white bg-red-500 hover:bg-red-600 p-2 rounded-md  transition"
+                    className="text-white bg-red-500 hover:bg-red-600 p-2 rounded-md  transition"
                 >
-                    <FaTrash/>
+                    <FaTrash />
                 </button>
             </td>
         </tr>
@@ -78,7 +91,7 @@ const ListBody = ({ data, loading, onEdit, onDelete, listType }) => {
 
     return (
         <tbody>
-            {safeData.map(renderRow)} 
+            {safeData.map(renderRow)}
         </tbody>
     );
 };
