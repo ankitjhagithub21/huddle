@@ -42,3 +42,11 @@ export const deleteEventById = async (id) => {
     return res;
 };
 
+export const changeVisibility = async (id) => {
+    const res = await fetch(`${baseUrl}/${id}`, {
+        method: 'POST',
+    });
+    return res;
+};
+
+
