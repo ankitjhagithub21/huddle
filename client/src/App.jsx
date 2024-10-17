@@ -17,14 +17,14 @@ const AppLayout = () => (
     <ToastContainer theme="dark" autoClose={1500} />
     <Sidebar /> 
     <main className="w-full p-5 h-full overflow-y-scroll main relative">
-      <div className="max-w-4xl p-4">
+      <section className="max-w-4xl p-4">
         <Routes>
           <Route path="/" element={<SpeakerList />} />
           <Route path="/events" element={<EventList />} />
           <Route path="/attendees" element={<AttendeeList />} />
           <Route path="/venues" element={<VenueList />} />
         </Routes>
-      </div>
+      </section>
     </main>
   </div>
 );

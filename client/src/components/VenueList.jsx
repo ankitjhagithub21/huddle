@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import useFetchVenues from '../hooks/useFetchVenues';
@@ -6,8 +6,7 @@ import { deleteVenueById } from '../api/venue';
 import { deleteVenue } from '../redux/slices/venueSlice';
 import CreateVenue from './CreateVenue';
 import ListType from './shared/ListType';
-import ListTop from './shared/ListTop';
-import ListTable from './shared/ListTable';
+import List from './shared/List';
 
 const VenueList = () => {
     useFetchVenues();
@@ -32,7 +31,7 @@ const VenueList = () => {
     };
 
     const onDelete = async (id) => {
-        const toastId = toast.loading("Deleting Venue...");
+        const toastId = toast.loading('Deleting Venue...');
         const res = await deleteVenueById(id);
         const data = await res.json();
         if (res.status === 200) {
@@ -47,25 +46,18 @@ const VenueList = () => {
     const columns = ['Building Number', 'Room Number', 'Room Capacity', 'Action'];
 
     return (
-      
-            <>
-                <ListTop onCreate={onCreate} btnText={"Add Venue"}/>
-                <ListType text={"Venue List"} />
-                <ListTable
-                    columns={columns}
-                    data={venues}
-                    loading={loading}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                    listType={"venues"}
+        <>
+            <ListType text="Venue List" />
+            <List columns={columns}
+                data={venues}
+                loading={loading}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onCreate={onCreate}
+                listType="venue" 
                 />
-                <CreateVenue
-                    onClose={onClose}
-                    showForm={showForm}
-                    venueData={selectedVenue}
-                />
-            </>
-
+            <CreateVenue onClose={onClose} showForm={showForm} venueData={selectedVenue} />
+        </>
     );
 };
 

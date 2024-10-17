@@ -24,7 +24,6 @@ export const getEventById = async (id) => {
 
 
 
-
 // Edit Event details
 export const editEventById = async (id, updatedData) => {
     const res = await fetch(`${baseUrl}/${id}`, {

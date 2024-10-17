@@ -5,9 +5,8 @@ import useFetchEvents from '../hooks/useFetchEvents';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteEventById } from '../api/events';
 import { deleteEvent } from '../redux/slices/eventSlice';
-import ListTop from './shared/ListTop';
 import ListType from './shared/ListType';
-import ListTable from './shared/ListTable';
+import List from './shared/List';
 
 const EventList = () => {
     // Fetch events with custom hook
@@ -50,15 +49,16 @@ const EventList = () => {
     return (
         <>
 
-            <ListTop onCreate={onCreate} btnText={"Add Event"} />
+           
             <ListType text={"Event List"} />
-            <ListTable
+            <List
                 columns={columns}
                 data={events}
                 loading={loading}
                 onEdit={handleEditEvent}
                 onDelete={handleDeleteEvent}
-                listType={"events"}
+                onCreate={onCreate}
+                listType={"event"}
             />
 
 

@@ -6,8 +6,7 @@ import useFetchAttendees from '../hooks/useFetchAttendees';
 import { deleteAttendeeById } from '../api/attendees';
 import CreateAttendee from './CreateAttendee';
 import ListType from './shared/ListType';
-import ListTop from './shared/ListTop';
-import ListTable from './shared/ListTable';
+import List from './shared/List';
 
 const AttendeeList = () => {
     useFetchAttendees();
@@ -46,16 +45,15 @@ const AttendeeList = () => {
 
     return (
         <>
-
-            <ListTop onCreate={onCreate} btnText={"Add Attendee"} />
             <ListType text={"Attendees List"} />
-            <ListTable
+            <List
                 columns={columns}
                 data={attendees}
                 loading={loading}
                 onEdit={onEdit}
                 onDelete={onDelete}
-                listType={"attendees"}
+                onCreate={onCreate}
+                listType={"attendee"}
             />
             <CreateAttendee
                 onClose={onClose}

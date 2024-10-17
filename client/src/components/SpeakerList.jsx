@@ -6,8 +6,7 @@ import { deleteSpeaker } from '../redux/slices/speakerSlice';
 import useFetchSpeakers from '../hooks/useFetchSpeakers';
 import { deleteSpeakerById } from '../api/speakers';
 import ListType from './shared/ListType';
-import ListTop from './shared/ListTop';
-import ListTable from './shared/ListTable';
+import List from './shared/List';
 
 const SpeakerList = () => {
     useFetchSpeakers();
@@ -48,16 +47,16 @@ const SpeakerList = () => {
 
     return (
         <>
-            <ListTop onCreate={onCreate} btnText={"Add Speaker"} />
+
             <ListType text={"Speakers List"} />
-            <ListTable
-                columns={columns}
+            <List columns={columns}
                 data={speakers}
                 loading={loading}
                 onEdit={onEdit}
                 onDelete={onDelete}
-                listType={"speakers"}
-            />
+                onCreate={onCreate}
+                listType="speaker" />
+
             <CreateSpeaker
                 onClose={onClose}
                 showForm={showForm}
