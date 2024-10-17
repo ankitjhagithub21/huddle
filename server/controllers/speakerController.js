@@ -3,8 +3,17 @@ const { uploadImage, deleteImage } = require('../utils/cloudinary');
 
 // Create a new speaker
 const createSpeaker = async (req, res) => {
-  try {
 
+  try {
+    const { salutation, fullName, bio, email, mobile} = req.body;
+    const socialLinks = JSON.parse(req.body.socialLinks);
+    
+    const isExist = await Speaker.findOne({ email })
+
+    if (isExist) {
+        return res.status(400).json({ message: 'Email already exist!' });
+    }
+    
     const uploadResponse = await uploadImage(req.file.path);
 
     if (!uploadResponse) {
@@ -12,9 +21,6 @@ const createSpeaker = async (req, res) => {
     }
 
 
-    const { salutation, fullName, bio, email, mobile} = req.body;
-    const socialLinks = JSON.parse(req.body.socialLinks);
-    
     const newSpeaker = new Speaker({
       salutation,
       fullName,

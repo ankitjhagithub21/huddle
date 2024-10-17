@@ -104,8 +104,8 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate }) => {
                 <AddButton text={`Add ${listType}`} onBtnClick={onCreate} />
             </div>
 
-            <table className="table-auto text-left w-full border-collapse border border-gray-200">
-                <thead>
+            <table className="table-auto text-left  w-full border-collapse border border-gray-200">
+                <thead className="bg-gray-200">
                     <tr>
                         {listType === "speaker" && (
                             <>

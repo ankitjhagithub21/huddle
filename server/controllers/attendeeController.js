@@ -6,6 +6,10 @@ const createAttendee = async (req, res) => {
 
     try {
 
+        const isExist = await Attendee.findOne({ email })
+        if (isExist) {
+            return res.status(400).json({ message: 'Email already exist!' });
+        }
         // Create new attendee object
         const newAttendee = new Attendee({
             fullName,
@@ -28,7 +32,7 @@ const createAttendee = async (req, res) => {
 
 //create multiple attendees
 
-const createMultipleAttendee = async(req,res) =>{
+const createMultipleAttendee = async (req, res) => {
     const attendees = req.body;
 
     try {
