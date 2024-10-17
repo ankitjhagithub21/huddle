@@ -1,6 +1,6 @@
 const Event = require('../models/event');
-const Speaker = require('../models/speaker'); 
-const Attendee = require('../models/attendee'); 
+const Speaker = require('../models/speaker');
+const Attendee = require('../models/attendee');
 
 // Create a new event
 const createEvent = async (req, res) => {
@@ -26,7 +26,7 @@ const createEvent = async (req, res) => {
     const savedEvent = await newEvent.save();
     res.status(201).json(savedEvent);
   } catch (error) {
-    console.error('Error creating event:', error);
+
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -35,11 +35,11 @@ const createEvent = async (req, res) => {
 const getAllEvents = async (req, res) => {
   try {
     const events = await Event.find()
-      .populate('speakers', 'fullName') 
-      .populate('attendees', 'fullName'); 
+      .populate('speakers', 'fullName')
+      .populate('attendees', 'fullName');
     res.status(200).json(events);
   } catch (error) {
-    console.error('Error fetching events:', error);
+
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -52,13 +52,20 @@ const getEventById = async (req, res) => {
       .populate('speakers', 'fullName profilePic')
       .populate('attendees', 'fullName');
 
+
+
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
 
+    if (!event.isPublic) {
+      return res.status(400).json({ message: 'Event is not public.' });
+    }
+
+
     res.status(200).json(event);
   } catch (error) {
-    console.error('Error fetching event:', error);
+    
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -82,9 +89,9 @@ const updateEvent = async (req, res) => {
       { title, description, date, speakers, attendees },
       { new: true }
     )
-    .populate('speakers', 'fullName')
-    .populate('attendees', 'fullName');
-    
+      .populate('speakers', 'fullName')
+      .populate('attendees', 'fullName');
+
 
     if (!updatedEvent) {
       return res.status(404).json({ message: 'Event not found' });
@@ -92,10 +99,11 @@ const updateEvent = async (req, res) => {
 
     res.status(200).json(updatedEvent);
   } catch (error) {
-    console.error('Error updating event:', error);
+
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 // Delete an event
 const deleteEvent = async (req, res) => {
@@ -108,17 +116,44 @@ const deleteEvent = async (req, res) => {
       return res.status(404).json({ message: 'Event not found' });
     }
 
+
     res.status(200).json({ message: 'Event deleted successfully' });
   } catch (error) {
-    console.error('Error deleting event:', error);
+
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+const changeEventVisibility = async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    const event = await Event.findById(eventId);
+
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    // Toggle the isPublic property
+    event.isPublic = !event.isPublic;
+
+    await event.save();
+
+
+    res.status(200).json({
+      message: `Event visibility is now ${event.isPublic ? 'public' : 'private'}`
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 
 module.exports = {
   createEvent,
   getAllEvents,
   getEventById,
   updateEvent,
-  deleteEvent
+  deleteEvent,
+  changeEventVisibility
 };

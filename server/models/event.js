@@ -13,6 +13,11 @@ const eventSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    isPublic: {
+        type: Boolean,
+        required: false,
+    },
+    
     speakers: [
         {
             type: mongoose.Schema.Types.ObjectId,

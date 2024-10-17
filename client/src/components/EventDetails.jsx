@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getEventById } from '../api/events';
 
 const EventDetails = () => {
   const { eventId } = useParams();
@@ -11,9 +12,15 @@ const EventDetails = () => {
   useEffect(() => {
     // Fetch the event details from your backend using eventId
     const fetchEvent = async () => {
-      const response = await fetch(`${import.meta.env.VITE_EVENT_URL}/${eventId}`);
+      const response = await getEventById(eventId);
       const eventData = await response.json();
-      setEvent(eventData);
+
+      if(response.ok){
+        setEvent(eventData);
+      }else{
+        setEvent(null)
+      }
+      
       setLoading(false)
     };
 
