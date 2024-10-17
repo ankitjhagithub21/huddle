@@ -4,6 +4,7 @@ const attendeeController = require('../controllers/attendeeController');
 
 // CRUD routes
 attendeeRouter.post('/', attendeeController.createAttendee);
+attendeeRouter.post('/multiple', attendeeController.createMultipleAttendee);
 attendeeRouter.get('/', attendeeController.getAllAttendees);
 attendeeRouter.get('/:id', attendeeController.getAttendeeById);
 attendeeRouter.put('/:id', attendeeController.updateAttendee);

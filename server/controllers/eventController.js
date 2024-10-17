@@ -35,8 +35,8 @@ const createEvent = async (req, res) => {
 const getAllEvents = async (req, res) => {
   try {
     const events = await Event.find()
-      .populate('speakers', 'fullName') // Populating speaker data (adjust based on speaker fields)
-      .populate('attendees', 'fullName'); // Populating attendee data (adjust based on attendee fields)
+      .populate('speakers', 'fullName') 
+      .populate('attendees', 'fullName'); 
     res.status(200).json(events);
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -49,7 +49,7 @@ const getEventById = async (req, res) => {
   try {
     const { eventId } = req.params;
     const event = await Event.findById(eventId)
-      .populate('speakers', 'fullName')
+      .populate('speakers', 'fullName profilePic')
       .populate('attendees', 'fullName');
 
     if (!event) {

@@ -8,6 +8,7 @@ import { deleteAttendeeById } from '../api/attendees';
 import CreateAttendee from './CreateAttendee';
 import Search from './Search';
 import AddButton from './shared/AddButton';
+import ExcelUploader from './ExcelUploader';
 
 const AttendeeList = () => {
     useFetchAttendees();
@@ -46,7 +47,7 @@ const AttendeeList = () => {
         <section>
          <div className='max-w-4xl p-4'>
          <div className='flex items-center gap-2 justify-between'>
-                <Search />
+                <ExcelUploader/>
                 <AddButton text={"Add Attendee"} onBtnClick={onCreate}/>
             </div>
             <h2 className='mt-5 text-2xl font-bold'>Attendees List</h2>

@@ -25,6 +25,25 @@ const createAttendee = async (req, res) => {
     }
 };
 
+
+//create multiple attendees
+
+const createMultipleAttendee = async(req,res) =>{
+    const attendees = req.body;
+
+    try {
+        if (attendees.length === 0) {
+            return res.status(400).json({ message: 'No valid attendees to save.' });
+        }
+
+        const newAttendees = await Attendee.insertMany(attendees);
+        res.status(201).json(newAttendees);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+
 // READ all attendees
 const getAllAttendees = async (req, res) => {
     try {
@@ -92,6 +111,7 @@ const deleteAttendee = async (req, res) => {
 
 module.exports = {
     createAttendee,
+    createMultipleAttendee,
     getAllAttendees,
     getAttendeeById,
     updateAttendee,

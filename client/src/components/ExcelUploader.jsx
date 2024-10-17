@@ -18,7 +18,15 @@ const ExcelUploader = () => {
           const sheetName = workbook.SheetNames[0];
           const sheet = workbook.Sheets[sheetName];
           const parsedData = XLSX.utils.sheet_to_json(sheet);
-          setData(parsedData); // Store the parsed data in state
+
+          // Filter the parsed data to include only specific fields
+          const filteredData = parsedData.map((row) => ({
+            fullName: row.fullName || '', // Provide default empty string if field doesn't exist
+            email: row.email || '',
+            mobile: row.mobile || ''
+          }));
+
+          setData(filteredData); // Store the filtered data in state
         } catch (error) {
           console.error('Error parsing file:', error);
         }
@@ -42,37 +50,29 @@ const ExcelUploader = () => {
           name='excel'
           id='excel'
           onChange={handleFileUpload}
-         className='hidden'
-
+          className='hidden'
         />
       </div>
 
       {/* Render the table only if there's data */}
       {data.length > 0 && (
         <div className="overflow-x-auto shadow-md sm:rounded-lg">
-           <button onClick={()=>setData([])} className='px-4 py-2 text-white bg-[var(--secondary)] m-2 rounded-lg'>X</button>
-       
+          <button onClick={() => setData([])} className='px-4 py-2 text-white bg-[var(--secondary)] m-2 rounded-lg'>X</button>
           <table className="min-w-full text-sm text-left text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50">
               <tr>
-                {/* Dynamically generate table headers from the keys of the first object */}
-                {Object.keys(data[0]).map((key) => (
-                  <th key={key} className="px-6 py-3">
-                    {key}
-                  </th>
-                ))}
+                <th className="px-6 py-3">Full Name</th>
+                <th className="px-6 py-3">Email</th>
+                <th className="px-6 py-3">Mobile</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {/* Map through data rows */}
               {data.map((row, index) => (
                 <tr key={index} className="hover:bg-gray-100">
-                  {/* Render each cell */}
-                  {Object.keys(row).map((key) => (
-                    <td key={key} className="px-6 py-4 whitespace-nowrap">
-                      {row[key]}
-                    </td>
-                  ))}
+                  <td className="px-6 py-4 whitespace-nowrap">{row.fullName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{row.email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{row.mobile}</td>
                 </tr>
               ))}
             </tbody>
