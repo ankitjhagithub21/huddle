@@ -1,3 +1,4 @@
+import {FaTrash,FaEdit} from "react-icons/fa"
 const ListBody = ({ data, loading, onEdit, onDelete, listType }) => {
    
     const safeData = Array.isArray(data) ? data : [];
@@ -61,15 +62,15 @@ const ListBody = ({ data, loading, onEdit, onDelete, listType }) => {
             <td className="border px-4 py-2 space-x-2">
                 <button
                     onClick={() => onEdit(item)}
-                    className="text-blue-500"
+                   className="text-white bg-[var(--secondary)] p-2 rounded-md  transition"
                 >
-                    Edit
+                    <FaEdit/>
                 </button>
                 <button
                     onClick={() => onDelete(item._id)}
-                    className="text-red-500"
+                   className="text-white bg-red-500 hover:bg-red-600 p-2 rounded-md  transition"
                 >
-                    Delete
+                    <FaTrash/>
                 </button>
             </td>
         </tr>
