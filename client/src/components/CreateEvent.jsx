@@ -18,8 +18,10 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
     const [selectedAttendees, setSelectedAttendees] = useState([]);
     const [allSpeakers, setAllSpeakers] = useState([]);
     const [allAttendees, setAllAttendees] = useState([]);
-    const dispatch = useDispatch();
+    const [loading,setLoading] = useState(false)
 
+    const dispatch = useDispatch();
+ 
     const classnames = 'w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2';
 
     const editor = useRef(null);
@@ -68,6 +70,7 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+       
 
         if (!title || !description || !date || selectedSpeakers.length === 0 || selectedAttendees.length === 0) {
             toast.error('All fields are required');
@@ -81,6 +84,8 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
             speakers: selectedSpeakers,
             attendees: selectedAttendees,
         };
+        setLoading(true)
+        const toastId = toast.loading("Processing...")
 
         try {
             if (eventData) {
@@ -99,6 +104,9 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
         } catch (error) {
             console.error('Error creating/updating event:', error);
             toast.error('Error creating/updating event');
+        }finally{
+            setLoading(false)
+            toast.dismiss(toastId)
         }
     };
 
@@ -240,6 +248,7 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
 
                 <button
                     type="submit"
+                    disabled={loading}
                     className="bg-[var(--secondary)] text-white px-4 py-2 rounded-lg w-full"
                 >
                     {eventData ? 'Update Event' : 'Create Event'}
