@@ -17,6 +17,18 @@ export const addNewAttendee = async (attendeeData) => {
     return res;
 };
 
+
+export const addMultipleAttendee = async (data) => {
+    const res = await fetch(`${baseUrl}/multiple`, {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify(data)
+      });
+      return res;
+}
+
 // Edit Attendee details
 export const editAttendeeById = async (id, updatedData) => {
     const res = await fetch(`${baseUrl}/${id}`, {

@@ -8,6 +8,7 @@ import { addEvent, editEvent } from '../redux/slices/eventSlice';
 import { fetchSpeakers } from '../api/speakers';
 import { fetchAttendees } from '../api/attendees';
 
+
 const CreateEvent = ({ showForm, onClose, eventData }) => {
     
     const [title, setTitle] = useState('');
@@ -123,6 +124,7 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
 
     return (
         <div className={`lg:w-[400px] w-full mx-auto p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>
+           
             <div className='flex items-center justify-between mb-3'>
                 <h2 className="text-2xl font-bold">{eventData ? 'Edit Event' : 'Create Event'}</h2>
                 <IoIosCloseCircleOutline size={25} onClick={onClose} className="cursor-pointer" />
@@ -220,7 +222,7 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
                 {/* Attendees Selection */}
                 <div className="mb-4">
                     <label htmlFor="attendees" className="block text-sm font-medium text-gray-700">Attendees</label>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 h-20 overflow-y-scroll">
                         {allAttendees?.map((attendee) => (
                             <div key={attendee._id} className="flex items-center">
                                 <input
