@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import CreateSpeaker from './CreateSpeaker';
-import Speaker from './Speaker';
 import { toast } from 'react-toastify';
 import { deleteSpeaker } from '../redux/slices/speakerSlice';
 import useFetchSpeakers from '../hooks/useFetchSpeakers';
 import { deleteSpeakerById } from '../api/speakers';
-import ListHeader from './shared/ListHeader';
 import ListType from './shared/ListType';
 import ListTop from './shared/ListTop';
+import ListTable from './shared/ListTable';
 
 const SpeakerList = () => {
     useFetchSpeakers();
@@ -33,35 +32,33 @@ const SpeakerList = () => {
     };
 
     const onDelete = async (id) => {
-        const toastId = toast.loading("Deleting speaker...")
+        const toastId = toast.loading("Deleting speaker...");
         const res = await deleteSpeakerById(id);
         const data = await res.json();
         if (res.status === 200) {
             dispatch(deleteSpeaker(id));
-
             toast.success(data.message);
         } else {
             toast.error(data.message);
         }
-        toast.dismiss(toastId)
-
+        toast.dismiss(toastId);
     };
 
-
+    const columns = ['Image', 'Name', 'Mobile', 'Email', 'Action'];
 
     return (
         <section>
             <div className='max-w-4xl p-4'>
-                <ListTop onCreate={onCreate} />
+                <ListTop onCreate={onCreate} btnText={"Add Speaker"}/>
                 <ListType text={"Speakers List"} />
-                <ListHeader columns={['Image', 'Name', 'Mobile', 'Email', 'Action']} />
-                <div>
-                    {loading ? <p>Loading...</p> : speakers.length === 0 ? <p>No speaker found</p> :
-                        speakers.map((speaker) => (
-                            <Speaker key={speaker._id} speaker={speaker} onDelete={onDelete} onEdit={onEdit} />
-                        ))
-                    }
-                </div>
+                <ListTable
+                    columns={columns}
+                    data={speakers}
+                    loading={loading}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    listType={"speakers"}
+                />
                 <CreateSpeaker
                     onClose={onClose}
                     showForm={showForm}

@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import Attendee from './Attendee';
 import { deleteAttendee } from '../redux/slices/attendeeSlice';
 import useFetchAttendees from '../hooks/useFetchAttendees';
 import { deleteAttendeeById } from '../api/attendees';
 import CreateAttendee from './CreateAttendee';
-import ListHeader from './shared/ListHeader';
 import ListType from './shared/ListType';
 import ListTop from './shared/ListTop';
+import ListTable from './shared/ListTable';
 
 const AttendeeList = () => {
     useFetchAttendees();
@@ -43,19 +42,21 @@ const AttendeeList = () => {
         }
     };
 
+    const columns = ['Name', 'Mobile', 'Email', 'Action'];
+
     return (
         <section>
             <div className='max-w-4xl p-4'>
-               <ListTop onCreate={onCreate}/>
+                <ListTop onCreate={onCreate} btnText={"Add Attendee"}/>
                 <ListType text={"Attendees List"} />
-                <ListHeader columns={['Name', 'Mobile', 'Email', 'Action']} />
-                <div>
-                    {loading ? <p>Loading...</p> : attendees?.length === 0 ? <p>No attendees found</p> :
-                        attendees?.map((attendee) => (
-                            <Attendee key={attendee._id} attendee={attendee} onDelete={onDelete} onEdit={onEdit} />
-                        ))
-                    }
-                </div>
+                <ListTable
+                    columns={columns}
+                    data={attendees}
+                    loading={loading}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    listType={"attendees"}
+                />
                 <CreateAttendee
                     onClose={onClose}
                     showForm={showForm}

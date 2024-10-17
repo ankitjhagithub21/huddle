@@ -4,12 +4,10 @@ import { toast } from 'react-toastify';
 import useFetchVenues from '../hooks/useFetchVenues';
 import { deleteVenueById } from '../api/venue';
 import { deleteVenue } from '../redux/slices/venueSlice';
-import Venue from './Venue';
 import CreateVenue from './CreateVenue';
-import ListHeader from './shared/ListHeader';
 import ListType from './shared/ListType';
 import ListTop from './shared/ListTop';
-
+import ListTable from './shared/ListTable';
 
 const VenueList = () => {
     useFetchVenues();
@@ -34,8 +32,8 @@ const VenueList = () => {
     };
 
     const onDelete = async (id) => {
+        const toastId = toast.loading("Deleting Venue...");
         const res = await deleteVenueById(id);
-        const toastId = toast.loading("Deleting Venue...")
         const data = await res.json();
         if (res.status === 200) {
             dispatch(deleteVenue(id));
@@ -43,22 +41,24 @@ const VenueList = () => {
         } else {
             toast.error(data.message);
         }
-        toast.dismiss(toastId)
+        toast.dismiss(toastId);
     };
+
+    const columns = ['Building Number', 'Room Number', 'Room Capacity', 'Action'];
 
     return (
         <section>
             <div className='max-w-4xl p-4'>
-                <ListTop onCreate={onCreate}/>
-                <ListType text={"Venue List"}/>
-                <ListHeader columns={['Building Number', 'Room Number', 'Room Capacity', 'Action']} />
-                <div>
-                    {loading ? <p>Loading...</p> : venues?.length === 0 ? <p>No venues found</p> :
-                        venues?.map((venue) => (
-                            <Venue key={venue._id} venue={venue} onDelete={onDelete} onEdit={onEdit} />
-                        ))
-                    }
-                </div>
+                <ListTop onCreate={onCreate} btnText={"Add Venue"}/>
+                <ListType text={"Venue List"} />
+                <ListTable
+                    columns={columns}
+                    data={venues}
+                    loading={loading}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    listType={"venues"}
+                />
                 <CreateVenue
                     onClose={onClose}
                     showForm={showForm}
