@@ -1,6 +1,6 @@
 import React from 'react'
 import "./App.css"
-import Sidebar from './components/Sidebar'
+import Sidebar from './components/shared/Sidebar'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import SpeakerList from './components/SpeakerList'
 import EventList from './components/EventList'

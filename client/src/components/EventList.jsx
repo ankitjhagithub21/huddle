@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteEventById} from '../api/events';
 import { deleteEvent} from '../redux/slices/eventSlice';
 import Search from './Search';
-import { FaPlus } from 'react-icons/fa';
+import AddButton from './shared/AddButton';
 
 const EventList = () => {
     // Fetch events with custom hook
@@ -38,24 +38,22 @@ const EventList = () => {
     };
 
     // Handle event editing
-    const handleEditEvent = (event) => {
-       
+    const handleEditEvent = (event) => {  
         setSelectedEvent(event);
         setShowForm(true);
     };
+
+    const onCreate = () =>{
+        setSelectedEvent(null)
+        setShowForm(true)
+    }
 
     return (
         <section>
             <div className="max-w-4xl p-4">
                 <div className="flex items-center justify-between gap-3 mb-5">
                     <Search/>
-                    <button
-                        onClick={() => setShowForm(true)}
-                        className="bg-[var(--secondary)] text-white px-4 py-2 rounded-lg flex items-center gap-1"
-                    >
-                        <FaPlus/>
-                      <span className='md:block hidden'>Add  Event</span>
-                    </button>
+                  <AddButton text={"Add Event"} onBtnClick={onCreate}/>
                 </div>
                 <h2 className="text-2xl font-bold">All Events</h2>
                 <div className='lg:grid hidden grid-cols-3 items-center my-2 font-bold '>

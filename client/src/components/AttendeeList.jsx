@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { FaPlus } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import Attendee from './Attendee';
 import { deleteAttendee } from '../redux/slices/attendeeSlice';
 import useFetchAttendees from '../hooks/useFetchAttendees';
 import { deleteAttendeeById } from '../api/attendees';
 import CreateAttendee from './CreateAttendee';
-import ExcelUploader from './ExcelUploader';
 import Search from './Search';
+import AddButton from './shared/AddButton';
 
 const AttendeeList = () => {
     useFetchAttendees();
@@ -48,10 +47,7 @@ const AttendeeList = () => {
          <div className='max-w-4xl p-4'>
          <div className='flex items-center gap-2 justify-between'>
                 <Search />
-                <button onClick={onCreate} className='text-white flex items-center gap-1 rounded-lg px-4 py-2 bg-[var(--secondary)]'>
-                    <FaPlus />
-                    <span className='md:inline-block hidden'>Add Attendee</span>
-                </button>
+                <AddButton text={"Add Attendee"} onBtnClick={onCreate}/>
             </div>
             <h2 className='mt-5 text-2xl font-bold'>Attendees List</h2>
             <div className='lg:grid hidden grid-cols-4 items-center my-2 font-bold'>

@@ -3,11 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import CreateSpeaker from './CreateSpeaker';
 import Speaker from './Speaker';
 import { toast } from 'react-toastify';
-import { FaPlus } from 'react-icons/fa';
 import Search from './Search';
 import { deleteSpeaker } from '../redux/slices/speakerSlice';
 import useFetchSpeakers from '../hooks/useFetchSpeakers';
 import { deleteSpeakerById } from '../api/speakers';
+import AddButton from './shared/AddButton';
 
 const SpeakerList = () => {
     useFetchSpeakers();
@@ -27,7 +27,6 @@ const SpeakerList = () => {
     };
 
     const onCreate = () => {
-      
        setSelectedSpeaker(null);
        setShowForm(true);
     };
@@ -54,10 +53,7 @@ const SpeakerList = () => {
           <div className='max-w-4xl p-4'>
           <div className='flex items-center gap-2 justify-between'>
                 <Search />
-                <button onClick={onCreate} disabled={selectedSpeaker} className='text-white flex items-center gap-1 rounded-lg px-4 py-2 bg-[var(--secondary)]'>
-                    <FaPlus />
-                    <span className='md:inline-block hidden'>Add Speaker</span>
-                </button>
+               <AddButton text={"Add Speaker"} onBtnClick={onCreate}/>
             </div>
             <h2 className='mt-5 text-2xl font-bold'>Speakers List</h2>
             <div className='lg:grid hidden grid-cols-5 items-center my-2 font-bold'>
