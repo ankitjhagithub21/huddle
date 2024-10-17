@@ -34,6 +34,7 @@ const VenueList = () => {
 
     const onDelete = async (id) => {
         const res = await deleteVenueById(id);
+        const toastId = toast.loading("Deleting Venue...")
         const data = await res.json();
         if (res.status === 200) {
             dispatch(deleteVenue(id));
@@ -41,6 +42,7 @@ const VenueList = () => {
         } else {
             toast.error(data.message);
         }
+        toast.dismiss(toastId)
     };
 
     return (

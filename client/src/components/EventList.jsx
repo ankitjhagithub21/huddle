@@ -39,7 +39,7 @@ const EventList = () => {
 
     // Handle event editing
     const handleEditEvent = (event) => {
-        console.log(event)
+       
         setSelectedEvent(event);
         setShowForm(true);
     };

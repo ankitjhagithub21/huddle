@@ -23,27 +23,24 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
 
     const editor = useRef(null);
 
-    // Fetch speakers and attendees when the component mounts or when showForm changes
     useEffect(() => {
         const getSpeakers = async () => {
             try {
                 const response = await fetchSpeakers();
-                const data = await response.json()
-                setAllSpeakers(data)
+                const data = await response.json();
+                setAllSpeakers(data);
             } catch (error) {
                 console.error('Error fetching speakers:', error);
-                toast.error('Error fetching speakers');
             }
         };
 
         const getAttendees = async () => {
             try {
                 const response = await fetchAttendees();
-                const data = await response.json()
+                const data = await response.json();
                 setAllAttendees(data);
             } catch (error) {
                 console.error('Error fetching attendees:', error);
-                toast.error('Error fetching attendees');
             }
         };
 
@@ -68,11 +65,9 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
         }
     }, [showForm, eventData]);
 
-    // Handle form submission for both creating and editing an event
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validation to ensure all fields are filled
         if (!title || !description || !date || selectedSpeakers.length === 0 || selectedAttendees.length === 0) {
             toast.error('All fields are required');
             return;
@@ -88,13 +83,11 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
 
         try {
             if (eventData) {
-                // Update existing event
                 const res = await editEventById(eventData._id, eventDetails);
                 const data = await res.json();
                 dispatch(editEvent(data));
                 toast.success('Event updated successfully!');
             } else {
-                // Create new event
                 const res = await addNewEvent(eventDetails);
                 const data = await res.json();
                 dispatch(addEvent(data));
@@ -105,6 +98,24 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
         } catch (error) {
             console.error('Error creating/updating event:', error);
             toast.error('Error creating/updating event');
+        }
+    };
+
+    // Toggle speaker selection
+    const toggleSpeaker = (speakerId) => {
+        if (selectedSpeakers.includes(speakerId)) {
+            setSelectedSpeakers(selectedSpeakers.filter((id) => id !== speakerId));
+        } else {
+            setSelectedSpeakers([...selectedSpeakers, speakerId]);
+        }
+    };
+
+    // Toggle attendee selection
+    const toggleAttendee = (attendeeId) => {
+        if (selectedAttendees.includes(attendeeId)) {
+            setSelectedAttendees(selectedAttendees.filter((id) => id !== attendeeId));
+        } else {
+            setSelectedAttendees([...selectedAttendees, attendeeId]);
         }
     };
 
@@ -153,42 +164,78 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
                     />
                 </div>
 
+                {/* Selected Speakers Pills */}
+                <p className="mb-2">Selected Speakers</p>
+                <div className="flex gap-2 items-center flex-wrap mb-4">
+                    {selectedSpeakers.map((speakerId) => {
+                        const speaker = allSpeakers.find((spk) => spk._id === speakerId);
+                        return (
+                            <div key={speakerId} className="bg-[var(--secondary)] text-sm text-white px-3 py-1 rounded-lg flex items-center">
+                                {speaker?.fullName}
+                                <IoIosCloseCircleOutline
+                                    size={18}
+                                    className="ml-2 cursor-pointer"
+                                    onClick={() => toggleSpeaker(speakerId)}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+
                 {/* Speakers Selection */}
                 <div className="mb-4">
                     <label htmlFor="speakers" className="block text-sm font-medium text-gray-700">Speakers</label>
-                    <select
-                        id="speakers"
-                        className={classnames}
-                        multiple
-                        value={selectedSpeakers}
-                        onChange={(e) => setSelectedSpeakers([...e.target.selectedOptions].map(option => option.value))}
-                        required
-                    >
+                    <div className="flex flex-col gap-2">
                         {allSpeakers?.map((speaker) => (
-                            <option key={speaker._id} value={speaker._id}>
-                                {speaker.fullName}
-                            </option>
+                            <div key={speaker._id} className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    id={`speaker-${speaker._id}`}
+                                    checked={selectedSpeakers.includes(speaker._id)}
+                                    onChange={() => toggleSpeaker(speaker._id)}
+                                    className="mr-2"
+                                />
+                                <label htmlFor={`speaker-${speaker._id}`} className="text-gray-700">{speaker.fullName}</label>
+                            </div>
                         ))}
-                    </select>
+                    </div>
+                </div>
+
+                {/* Selected Attendees Pills */}
+                <p className="mb-2">Selected Attendees</p>
+                <div className="flex gap-2 items-center flex-wrap mb-4">
+                    {selectedAttendees.map((attendeeId) => {
+                        const attendee = allAttendees.find((att) => att._id === attendeeId);
+                        return (
+                            <div key={attendeeId} className="bg-[var(--secondary)] text-sm text-white px-3 py-1 rounded-lg flex items-center">
+                                {attendee?.fullName}
+                                <IoIosCloseCircleOutline
+                                    size={18}
+                                    className="ml-2 cursor-pointer"
+                                    onClick={() => toggleAttendee(attendeeId)}
+                                />
+                            </div>
+                        );
+                    })}
                 </div>
 
                 {/* Attendees Selection */}
                 <div className="mb-4">
                     <label htmlFor="attendees" className="block text-sm font-medium text-gray-700">Attendees</label>
-                    <select
-                        id="attendees"
-                        className={classnames}
-                        multiple
-                        value={selectedAttendees}
-                        onChange={(e) => setSelectedAttendees([...e.target.selectedOptions].map(option => option.value))}
-                        required
-                    >
+                    <div className="flex flex-col gap-2">
                         {allAttendees?.map((attendee) => (
-                            <option key={attendee._id} value={attendee._id}>
-                                {attendee.fullName}
-                            </option>
+                            <div key={attendee._id} className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    id={`attendee-${attendee._id}`}
+                                    checked={selectedAttendees.includes(attendee._id)}
+                                    onChange={() => toggleAttendee(attendee._id)}
+                                    className="mr-2"
+                                />
+                                <label htmlFor={`attendee-${attendee._id}`} className="text-gray-700">{attendee.fullName}</label>
+                            </div>
                         ))}
-                    </select>
+                    </div>
                 </div>
 
                 <button

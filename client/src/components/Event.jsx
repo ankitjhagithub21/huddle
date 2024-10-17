@@ -15,18 +15,18 @@ const Event = ({ event, onDelete, onEdit }) => {
 
 
             <div className='flex items-center gap-2 lg:justify-end justify-start'>
-                <Link to={`/event/${event?._id}`} className="text-white p-2 rounded-full  bg-[var(--secondary)] ">
+                <Link to={`/event/${event?._id}`} className="text-white p-2 rounded-lg  bg-[var(--secondary)] ">
                     <FaEye/>
                 </Link>
                 <button
                     onClick={() => onEdit(event)}
-                    className="bg-[var(--secondary)]  text-white p-2 rounded-full"
+                    className="bg-[var(--secondary)]  text-white p-2 rounded-lg"
                 >
                     <FaEdit />
                 </button>
                 <button
                     onClick={() => onDelete(event._id)}
-                    className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full"
+                    className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg"
                 >
                     <FaTrash />
                 </button>

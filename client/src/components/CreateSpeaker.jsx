@@ -259,7 +259,7 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
 
                 <button
                     type="submit"
-                    className="w-full p-3 bg-[var(--secondary)] text-white rounded-md mt-4"
+                    className="w-full p-2 bg-[var(--secondary)] text-white rounded-md mt-4"
                     disabled={loading}
                 >
                     {loading ? 'Processing...' : speakerData ? 'Update Speaker' : 'Create Speaker'}
