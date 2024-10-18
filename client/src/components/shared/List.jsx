@@ -1,10 +1,11 @@
-import { FaTrash, FaEdit, FaEye } from "react-icons/fa";
+import { FaTrash, FaEdit} from "react-icons/fa";
 import { GoSearch } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Pagination from "../Pagination";
 import AddButton from "./AddButton";
-import { changeVisibility } from "../../api/events";
+import EyeButton from "./EyeButton";
+
 
 
 const List = ({ data, loading, onEdit, onDelete, listType, onCreate }) => {
@@ -32,20 +33,7 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate }) => {
         currentPage * pageSize
     );
 
-    const handleEyeButtonClick = async(id) =>{
-        try{
-            const res = await changeVisibility(id)
-             const data = await res.json()
-             if(res.ok){
-                alert(data.message)
-             }else{
-                alert(data.error)
-             }
-        }catch(error){
-            console.log(error)
-        }
-    }
-
+   
     const renderRow = (item) => (
         <tr key={item._id} className="hover:bg-gray-100">
             {listType === "speaker" && (
@@ -80,12 +68,7 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate }) => {
             )}
             <td className="border px-4 py-2 space-x-2">
                 {listType === "event" && (
-                    <button
-                        onClick={()=>handleEyeButtonClick(item._id)}
-                        className="text-white bg-[var(--secondary)] p-2 rounded-md transition"
-                    >
-                        <FaEye />
-                    </button>
+                   <EyeButton id={item._id} isPublic={item.isPublic}/>
                 )}
             
                 <button
@@ -100,7 +83,7 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate }) => {
                 >
                     <FaTrash />
                 </button>
-                <a href={`/public/event/${item._id}`} className="underline text-blue-500" target="_blank">View</a>
+                
             </td>
         </tr>
     );

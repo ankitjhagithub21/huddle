@@ -27,9 +27,16 @@ export const eventSlice = createSlice({
         deleteEvent: (state, action) => {
             state.events = state.events.filter(event => event._id !== action.payload);
         },
+        setIsPublic: (state, action) => {
+            state.events = state.events.map(event =>
+                event._id === action.payload 
+                    ? { ...event, isPublic: !event.isPublic } 
+                    : event
+            );
+        },
     },
 });
 
-export const { setevents, setLoading, addEvent, editEvent, deleteEvent } = eventSlice.actions;
+export const { setevents, setLoading, addEvent, editEvent, deleteEvent,setIsPublic } = eventSlice.actions;
 
 export default eventSlice.reducer;
