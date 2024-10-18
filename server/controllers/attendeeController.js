@@ -40,12 +40,33 @@ const createMultipleAttendee = async (req, res) => {
             return res.status(400).json({ message: 'No valid attendees to save.' });
         }
 
-        const newAttendees = await Attendee.insertMany(attendees);
-        res.status(201).json(newAttendees);
+        // Extract emails from the request body
+        const emails = attendees.map((attendee) => attendee.email);
+
+        // Find existing attendees with the same emails
+        const existingAttendees = await Attendee.find({ email: { $in: emails } });
+
+        // Get the emails of the existing attendees
+        const existingEmails = new Set(existingAttendees.map((attendee) => attendee.email));
+
+        // Filter out attendees whose emails already exist
+        const newAttendees = attendees.filter(
+            (attendee) => !existingEmails.has(attendee.email)
+        );
+
+        if (newAttendees.length === 0) {
+            return res.status(400).json({ message: 'All attendees already exist.'});
+        }
+
+        // Insert only the new attendees
+        const insertedAttendees = await Attendee.insertMany(newAttendees);
+        res.status(201).json(insertedAttendees);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-}
+};
+
+module.exports = { createMultipleAttendee };
 
 
 // READ all attendees

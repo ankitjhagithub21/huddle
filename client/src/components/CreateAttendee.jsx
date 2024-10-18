@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { addAttendee, editAttendee } from '../redux/slices/attendeeSlice';
 import { addNewAttendee, editAttendeeById } from '../api/attendees';
 
+
 const CreateAttendee = ({ onClose, showForm, attendeeData }) => {
     const dispatch = useDispatch();
     const initialData = {
@@ -66,8 +67,11 @@ const CreateAttendee = ({ onClose, showForm, attendeeData }) => {
                 <h2 className="text-2xl font-semibold">
                     {attendeeData ? 'Update Attendee' : 'Create New Attendee'}
                 </h2>
+
                 <IoIosCloseCircleOutline size={25} onClick={onClose} />
             </div>
+         
+            
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Full Name</label>

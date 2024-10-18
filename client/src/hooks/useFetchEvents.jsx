@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setevents, setLoading } from '../redux/slices/eventSlice'
+import { setEvents, setLoading } from '../redux/slices/eventSlice'
 import { fetchEvents } from '../api/events'
 
 
@@ -16,7 +16,7 @@ const useFetchEvents = () => {
             try {
                 const response = await fetchEvents();
                 const data = await response.json()
-                dispatch(setevents(data))
+                dispatch(setEvents(data))
             } catch (error) {
                 console.error('Error fetching events:', error);
 

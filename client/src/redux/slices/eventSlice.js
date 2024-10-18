@@ -2,7 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     events:null,
-    loading: false
+    loading: false,
+    selectedSpeakers:[],
+    selectedAttendees:[]
   }
 
 
@@ -10,8 +12,14 @@ export const eventSlice = createSlice({
     name: 'event',
     initialState,
     reducers: {
-        setevents: (state, action) => {
+        setEvents: (state, action) => {
             state.events = action.payload;
+        },
+        setSelectedSpeakers: (state, action) => {
+            state.selectedSpeakers = action.payload;
+        },
+        setSelectedAttendees: (state, action) => {
+            state.selectedAttendees = action.payload;
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
@@ -37,6 +45,6 @@ export const eventSlice = createSlice({
     },
 });
 
-export const { setevents, setLoading, addEvent, editEvent, deleteEvent,setIsPublic } = eventSlice.actions;
+export const { setEvents,setSelectedSpeakers, setSelectedAttendees,setLoading, addEvent, editEvent, deleteEvent,setIsPublic } = eventSlice.actions;
 
 export default eventSlice.reducer;

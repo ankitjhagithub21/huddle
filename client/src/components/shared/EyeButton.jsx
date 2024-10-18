@@ -1,4 +1,3 @@
-
 import { changeVisibility } from '../../api/events'
 import { toast } from "react-toastify"
 import { useDispatch } from "react-redux"

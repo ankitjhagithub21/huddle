@@ -10,13 +10,15 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EventDetails from './components/EventDetails';
 import VenueList from './components/VenueList';
+import SelectSpeaker from './components/SelectSpeaker';
 
 // Layout for routes that include the Sidebar
 const AppLayout = () => (
   <div className="h-screen w-full flex">
     <ToastContainer theme="dark" autoClose={1500} />
-    <Sidebar /> 
-    <main className="w-full p-5 h-full overflow-y-scroll main relative">
+    <Sidebar />
+    
+    <main className="w-full p-5 h-full overflow-y-scroll scroll main relative">
       <section className="max-w-4xl p-4">
         <Routes>
           <Route path="/" element={<SpeakerList />} />

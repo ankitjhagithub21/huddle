@@ -21,6 +21,7 @@ const EventList = () => {
     const onClose = () => {
         setShowForm(false);
         setSelectedEvent(null);
+        
     };
 
     const handleDeleteEvent = async (eventId) => {
@@ -37,6 +38,7 @@ const EventList = () => {
     const handleEditEvent = (event) => {
         setSelectedEvent(event);
         setShowForm(true);
+        
     };
 
     const onCreate = () => {

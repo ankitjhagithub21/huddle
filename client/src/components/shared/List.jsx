@@ -13,7 +13,7 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredData, setFilteredData] = useState([]);
-    const pageSize = 5;
+    const pageSize = 8;
 
     const safeData = Array.isArray(data) ? data : [];
 
@@ -83,7 +83,9 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate }) => {
                 >
                     <FaTrash />
                 </button>
-                
+                {listType === "event" && item.isPublic  &&  (
+                   <a href={`/public/event/${item._id}`} target="_blank" className="underline tex-sm text-green-600">View</a>
+                )}
             </td>
         </tr>
     );

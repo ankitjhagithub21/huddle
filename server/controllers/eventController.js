@@ -7,14 +7,25 @@ const createEvent = async (req, res) => {
   try {
     const { title, description, date, speakers, attendees } = req.body;
 
+    // Validate input fields
+    if (!title || !description || !date || !speakers || speakers.length === 0 || !attendees || attendees.length === 0) {
+      return res.status(400).json({ message: 'All fields are required.' });
+    }
+
     // Ensure that all referenced speakers and attendees exist
     const foundSpeakers = await Speaker.find({ '_id': { $in: speakers } });
     const foundAttendees = await Attendee.find({ '_id': { $in: attendees } });
 
-    if (foundSpeakers.length !== speakers.length || foundAttendees.length !== attendees.length) {
-      return res.status(400).json({ message: 'Invalid speakers or attendees provided' });
+    // Check if the count of found speakers and attendees matches the input length
+    if (foundSpeakers.length !== speakers.length) {
+      return res.status(400).json({ message: 'Invalid speakers provided' });
+    }
+    
+    if (foundAttendees.length !== attendees.length) {
+      return res.status(400).json({ message: 'Invalid attendees provided' });
     }
 
+    // Create and save the new event
     const newEvent = new Event({
       title,
       description,
@@ -24,10 +35,11 @@ const createEvent = async (req, res) => {
     });
 
     const savedEvent = await newEvent.save();
-    res.status(201).json(savedEvent);
+    return res.status(201).json(savedEvent);
+    
   } catch (error) {
-
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error creating event:', error); // Log the error for debugging
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -35,8 +47,6 @@ const createEvent = async (req, res) => {
 const getAllEvents = async (req, res) => {
   try {
     const events = await Event.find()
-      .populate('speakers', 'fullName')
-      .populate('attendees', 'fullName');
     res.status(200).json(events);
   } catch (error) {
 
@@ -76,33 +86,43 @@ const updateEvent = async (req, res) => {
     const { eventId } = req.params;
     const { title, description, date, speakers, attendees } = req.body;
 
+    // Validate input fields
+    if (!title || !description || !date || !speakers || speakers.length === 0 || !attendees || attendees.length === 0) {
+      return res.status(400).json({ message: 'All fields are required.' });
+    }
+
     // Ensure that all referenced speakers and attendees exist
     const foundSpeakers = await Speaker.find({ '_id': { $in: speakers } });
     const foundAttendees = await Attendee.find({ '_id': { $in: attendees } });
 
-    if (foundSpeakers.length !== speakers.length || foundAttendees.length !== attendees.length) {
-      return res.status(400).json({ message: 'Invalid speakers or attendees provided' });
+    // Check if the count of found speakers and attendees matches the input length
+    if (foundSpeakers.length !== speakers.length) {
+      return res.status(400).json({ message: 'Invalid speakers provided' });
+    }
+    
+    if (foundAttendees.length !== attendees.length) {
+      return res.status(400).json({ message: 'Invalid attendees provided' });
     }
 
+    // Update the event
     const updatedEvent = await Event.findByIdAndUpdate(
       eventId,
       { title, description, date, speakers, attendees },
-      { new: true }
-    )
-      .populate('speakers', 'fullName')
-      .populate('attendees', 'fullName');
-
+      { new: true, runValidators: true } // Ensure validation during update
+    );
 
     if (!updatedEvent) {
       return res.status(404).json({ message: 'Event not found' });
     }
 
-    res.status(200).json(updatedEvent);
+    return res.status(200).json(updatedEvent);
+    
   } catch (error) {
-
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error updating event:', error); // Log the error for debugging
+    return res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 
 // Delete an event

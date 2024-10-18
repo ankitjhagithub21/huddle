@@ -1,4 +1,3 @@
-
 const express = require('express');
 const eventRouter = express.Router();
 const {createEvent,getEventById,updateEvent,deleteEvent, getAllEvents, changeEventVisibility} = require('../controllers/eventController');
