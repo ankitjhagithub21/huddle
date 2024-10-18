@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePicker from 'react-datepicker';
@@ -7,7 +7,8 @@ import { toast } from 'react-toastify';
 import { addNewEvent, editEventById } from '../api/events';
 import { addEvent, editEvent, setSelectedAttendees, setSelectedSpeakers } from '../redux/slices/eventSlice';
 import EventModal from './EventModal';
-import TextEditor from './TextEditor';
+import JoditEditor from 'jodit-react';
+
 
 const CreateEvent = ({ showForm, onClose, eventData }) => {
   const dispatch = useDispatch();
@@ -17,26 +18,29 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState('');
   const [modalType, setModalType] = useState('');
   const [modalData, setModalData] = useState([]);
+
+  const editor = useRef(null)
+
 
   useEffect(() => {
     if (eventData) {
       setTitle(eventData.title || '');
       setDescription(eventData.description || '');
-      setDate(new Date(eventData.date) || null);
+      setDate(new Date(eventData.date) || '');
       dispatch(setSelectedSpeakers(eventData.speakers || []));
       dispatch(setSelectedAttendees(eventData.attendees || []));
     } else {
       resetForm();
     }
-  }, [eventData, dispatch]);
+  }, [eventData, showForm]);
 
   const resetForm = () => {
     setTitle('');
     setDescription('');
-    setDate(null);
+    setDate('');
     dispatch(setSelectedSpeakers([]));
     dispatch(setSelectedAttendees([]));
   };
@@ -48,41 +52,57 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
   };
 
   const handleSubmit = async () => {
-    setLoading(true);
-    const formData = {
+
+    if (!title || !description || !date || selectedSpeakers.length === 0 || selectedAttendees.length === 0) {
+      toast.error('All fields are required');
+      return;
+    }
+
+
+    const eventDetails = {
       title,
       description,
       date,
-      attendees: selectedAttendees,
       speakers: selectedSpeakers,
+      attendees: selectedAttendees,
     };
 
+    setLoading(true)
+    const toastId = toast.loading("Processing...")
+
     try {
-      const response = eventData
-        ? await editEventById(eventData._id, formData)
-        : await addNewEvent(formData);
-      const data = await response.json();
-       if(response.ok){
-        dispatch(eventData ? editEvent(data) : addEvent(data));
-        toast.success(`${eventData ? 'Event updated' : 'Event created'} successfully!`);
-       }else{
-        toast.error(data.message);
-       }
-    
+      if (eventData) {
+        const res = await editEventById(eventData._id, eventDetails);
+        const data = await res.json();
+        if (res.ok) {
+          dispatch(editEvent(data));
+          toast.success('Event updated successfully!');
+        }
+
+      } else {
+        const res = await addNewEvent(eventDetails);
+        const data = await res.json();
+        if (res.ok) {
+          dispatch(addEvent(data));
+          toast.success('Event created successfully!');
+        }
+      }
+
       onClose();
     } catch (error) {
-      console.error('Error:', error);
-      toast.error('Failed to save event.');
+      console.error('Error creating/updating event:', error);
+      toast.error('Error creating/updating event');
     } finally {
-      setLoading(false);
+      setLoading(false)
+      toast.dismiss(toastId)
     }
+
   };
 
   return (
     <div
-      className={`lg:w-[400px] w-full mx-auto p-6 h-full shadow-md fixed overflow-y-scroll ${
-        showForm ? 'right-0' : '-right-full'
-      } transition-all duration-500 top-0 bg-white`}
+      className={`lg:w-[400px] w-full mx-auto p-6 h-full shadow-md fixed overflow-y-scroll ${showForm ? 'right-0' : '-right-full'
+        } transition-all duration-500 top-0 bg-white`}
     >
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold">
@@ -100,10 +120,16 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
           className="w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2"
         />
 
-        <TextEditor
-          value={description}
-          onChange={setDescription}
-        />
+        <div className="mb-4">
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+          <JoditEditor
+            ref={editor}
+            value={description}
+            tabIndex={1}
+            onBlur={(newContent) => setDescription(newContent)}
+            onChange={() => { }}
+          />
+        </div>
 
         <DatePicker
           placeholderText="Enter date"

@@ -84,7 +84,7 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate }) => {
                     <FaTrash />
                 </button>
                 {listType === "event" && item.isPublic  &&  (
-                   <a href={`/public/event/${item._id}`} target="_blank" className="underline tex-sm text-green-600">View</a>
+                   <a href={`/publish/event/${item._id}`} target="_blank" className="underline tex-sm text-green-600">View</a>
                 )}
             </td>
         </tr>

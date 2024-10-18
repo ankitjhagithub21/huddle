@@ -36,7 +36,7 @@ const App = () => (
   <BrowserRouter>
     <Routes>
       {/* Route for EventDetails component rendered outside the layout */}
-      <Route path="/public/event/:eventId" element={<EventDetails />} />
+      <Route path="/publish/event/:eventId" element={<EventDetails />} />
       
       {/* All other routes use the AppLayout */}
       <Route path="/*" element={<AppLayout />} />
