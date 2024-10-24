@@ -27,13 +27,7 @@ button{
     background-color:var(--secondary);
 }
 
-button:hover{
-    background-color: #e97d0a;
-   
-}
-svg{
-    cursor: pointer;
-}
+
 
 textarea{
     resize: none !important;

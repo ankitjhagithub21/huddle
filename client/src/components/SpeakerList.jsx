@@ -14,6 +14,7 @@ const SpeakerList = () => {
     const { speakers, loading } = useSelector((state) => state.speaker);
     const [showForm, setShowForm] = useState(false);
     const [selectedSpeaker, setSelectedSpeaker] = useState(null);
+    const [isLoading,setIsLoading] = useState(false)
 
     const onClose = () => {
         setShowForm(false);
@@ -31,16 +32,26 @@ const SpeakerList = () => {
     };
 
     const onDelete = async (id) => {
+        setIsLoading(true)
         const toastId = toast.loading("Deleting speaker...");
-        const res = await deleteSpeakerById(id);
-        const data = await res.json();
-        if (res.status === 200) {
-            dispatch(deleteSpeaker(id));
-            toast.success(data.message);
-        } else {
-            toast.error(data.message);
+        try{
+          
+            const res = await deleteSpeakerById(id);
+            const data = await res.json();
+            if (res.status === 200) {
+                dispatch(deleteSpeaker(id));
+                toast.success(data.message);
+            } else {
+                toast.error(data.message);
+            }
+          
+        }catch(error){
+            console.log(error.message)
+            toast.error(data.message)
+        }finally{
+            setIsLoading(false)
+            toast.dismiss(toastId);
         }
-        toast.dismiss(toastId);
     };
 
     const columns = ['Image', 'Name', 'Mobile', 'Email', 'Action'];
@@ -55,7 +66,9 @@ const SpeakerList = () => {
                 onEdit={onEdit}
                 onDelete={onDelete}
                 onCreate={onCreate}
-                listType="speaker" />
+                listType="speaker" 
+                isLoading={isLoading}
+                />
 
             <CreateSpeaker
                 onClose={onClose}

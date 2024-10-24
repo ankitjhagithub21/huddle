@@ -14,6 +14,7 @@ const AttendeeList = () => {
     const { attendees, loading } = useSelector((state) => state.attendee);
     const [showForm, setShowForm] = useState(false);
     const [selectedAttendee, setSelectedAttendee] = useState(null);
+    const [isLoading,setIsLoading] = useState(false)
 
     const onClose = () => {
         setShowForm(false);
@@ -21,6 +22,7 @@ const AttendeeList = () => {
     };
 
     const onEdit = (attendee) => {
+
         setSelectedAttendee(attendee);
         setShowForm(true);
     };
@@ -31,14 +33,26 @@ const AttendeeList = () => {
     };
 
     const onDelete = async (id) => {
-        const res = await deleteAttendeeById(id);
-        const data = await res.json();
-        if (res.status === 200) {
-            dispatch(deleteAttendee(id));
-            toast.success(data.message);
-        } else {
-            toast.error(data.message);
+        setIsLoading(true)
+        const toastId = toast.loading("Deleting attendee...");
+        try{
+            const res = await deleteAttendeeById(id);
+            const data = await res.json();
+            if (res.status === 200) {
+                dispatch(deleteAttendee(id));
+                toast.success(data.message);
+            } else {
+                toast.error(data.message);
+            }
+        }catch(error){
+           console.log(error)
+           toast.error(error.message)
+        }finally{
+            setIsLoading(false)
+            toast.dismiss(toastId)
         }
+       
+        
     };
 
     const columns = ['Name', 'Mobile', 'Email', 'Action'];
@@ -54,6 +68,7 @@ const AttendeeList = () => {
                 onDelete={onDelete}
                 onCreate={onCreate}
                 listType={"attendee"}
+                isLoading={isLoading}
             />
             <CreateAttendee
                 onClose={onClose}

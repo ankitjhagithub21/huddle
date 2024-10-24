@@ -1,6 +1,5 @@
-import { FaTrash, FaEdit} from "react-icons/fa";
+import { FaTrash, FaEdit } from "react-icons/fa";
 import { GoSearch } from "react-icons/go";
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Pagination from "../Pagination";
 import AddButton from "./AddButton";
@@ -8,8 +7,8 @@ import EyeButton from "./EyeButton";
 
 
 
-const List = ({ data, loading, onEdit, onDelete, listType, onCreate }) => {
-    const navigate = useNavigate();
+const List = ({ data, loading, onEdit, onDelete, listType, onCreate,isLoading }) => {
+   
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredData, setFilteredData] = useState([]);
@@ -33,7 +32,7 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate }) => {
         currentPage * pageSize
     );
 
-   
+
     const renderRow = (item) => (
         <tr key={item._id} className="hover:bg-gray-100">
             {listType === "speaker" && (
@@ -68,23 +67,25 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate }) => {
             )}
             <td className="border px-4 py-2 space-x-2">
                 {listType === "event" && (
-                   <EyeButton id={item._id} isPublic={item.isPublic}/>
+                    <EyeButton id={item._id} isPublic={item.isPublic} />
                 )}
-            
+
                 <button
+                   disabled={isLoading}
                     onClick={() => onEdit(item)}
                     className="text-white bg-[var(--secondary)] p-2 rounded-md transition"
                 >
                     <FaEdit />
                 </button>
                 <button
+                disabled={isLoading}
                     onClick={() => onDelete(item._id)}
-                    className="text-white bg-red-500 hover:bg-red-600 p-2 rounded-md transition"
+                    className={`text-white ${isLoading ? 'bg-red-300' :'bg-red-500 hover:bg-red-600'} p-2 rounded-md transition`}
                 >
                     <FaTrash />
                 </button>
-                {listType === "event" && item.isPublic  &&  (
-                   <a href={`/publish/event/${item._id}`} target="_blank" className="underline tex-sm text-green-600">View</a>
+                {listType === "event" && item.isPublic && (
+                    <a href={`/publish/event/${item._id}`} target="_blank" className="underline tex-sm text-green-600">View</a>
                 )}
             </td>
         </tr>
