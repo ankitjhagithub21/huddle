@@ -94,7 +94,7 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate }) => {
         <>
             <div className="flex items-center justify-between w-full gap-3">
                 {/* Search Input */}
-                <div className="border p-2 w-full rounded-md flex items-center my-5 max-w-xl">
+                <div className="border p-2 w-full rounded-md flex items-center my-5 max-w-md">
                     <input
                         type="text"
                         placeholder={`Search ${listType}`}

@@ -137,7 +137,7 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
                             <img
                                 src={speakerData ? profilePic : URL.createObjectURL(profilePic)}
                                 alt="Profile Preview"
-                                className="w-full h-full object-cover object-center cursor-pointer"
+                                className="w-full h-full object-cover object-center cursor-pointer "
                             />
                         ) : (
                             <p className='text-sm p-3'>Choose Profile Pic</p>
