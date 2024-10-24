@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { addAttendee, editAttendee } from '../redux/slices/attendeeSlice';
 import { addNewAttendee, editAttendeeById } from '../api/attendees';
 import Input from './shared/Input';
+import Label from './shared/Label';
 
 
 const CreateAttendee = ({ onClose, showForm, attendeeData }) => {
@@ -74,7 +75,7 @@ const CreateAttendee = ({ onClose, showForm, attendeeData }) => {
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Full Name</label>
+                <Label htmlFor={"fullName"} text={"Full Name"}/>
                     <Input type="text"
                         name="fullName"
                         value={formData.fullName}
@@ -82,7 +83,7 @@ const CreateAttendee = ({ onClose, showForm, attendeeData }) => {
                         placeholder="Enter attendee's full name" />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Email</label>
+                <Label htmlFor={"email"} text={"Email"}/>
                    <Input 
                      type="email"
                      name="email"
@@ -92,7 +93,7 @@ const CreateAttendee = ({ onClose, showForm, attendeeData }) => {
                    />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Mobile</label>
+                   <Label htmlFor={"mobile"} text={"Mobile"}/>
                     <Input
                      type="text"
                      name="mobile"

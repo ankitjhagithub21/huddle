@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { addSpeaker, editSpeaker } from '../redux/slices/speakerSlice';
 import { addNewSpeaker, editSpeakerById } from '../api/speakers';
 import Input from './shared/Input';
+import Label from './shared/Label';
 
 const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
     const dispatch = useDispatch();
@@ -66,7 +67,7 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if(!profilePic){
+        if (!profilePic) {
             return toast.error("Please upload profile image.")
         }
         setLoading(true);
@@ -139,7 +140,7 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
                                 className="w-full h-full object-cover object-center cursor-pointer"
                             />
                         ) : (
-                            <p className='text-xs'>Choose Profile Pic</p>
+                            <p className='text-sm p-3'>Choose Profile Pic</p>
                         )}
                     </label>
                     <input
@@ -149,7 +150,7 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
                         accept="image/*"
                         onChange={handleFileChange}
                         className='hidden'
-                        
+
                     />
                 </div>
 
@@ -157,13 +158,13 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
 
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Salutation</label>
+                    <Label htmlFor={"salutation"} text={"Salutation"} />
                     <Input type={"text"} placeholder={"Enter speaker's salutation"} name={"salutation"} value={formData.salutation} setValue={handleInputChange} />
 
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Full Name</label>
+                    <Label htmlFor={"fullName"} text={"Full Name"} />
                     <Input
                         type="text"
                         name="fullName"
@@ -175,7 +176,7 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Bio</label>
+                    <Label htmlFor={"bio"} text={"Bio"} />
                     <Input
                         type={"text"}
                         name="bio"
@@ -186,7 +187,7 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Email</label>
+                    <Label htmlFor={"email"} text={"Email"} />
                     <Input type="email"
                         name="email"
                         value={formData.email}
@@ -195,7 +196,7 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Mobile</label>
+                    <Label htmlFor={"mobile"} text={"Mobile"} />
                     <Input
                         type="text"
                         name="mobile"
@@ -208,36 +209,36 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
 
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Facebook</label>
-                     <Input
-                       type="text"
-                       name="facebook"
-                       value={formData.socialLinks.facebook}
-                       setValue={handleInputChange}
-                       placeholder="Facebook Profile"
-                     />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Twitter</label>
+                    <Label htmlFor={"facebook"} text={"facebook"} />
                     <Input
-                    type="text"
-                    name="twitter"
-                    value={formData.socialLinks.twitter}
-                    setValue={handleInputChange}
-                    placeholder="Twitter Profile"
+                        type="text"
+                        name="facebook"
+                        value={formData.socialLinks.facebook}
+                        setValue={handleInputChange}
+                        placeholder="Facebook Profile"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">LinkedIn</label>
-                   <Input
-                      type="text"
-                      name="linkedin"
-                      value={formData.socialLinks.linkedin}
-                      setValue={handleInputChange}
-                      placeholder="LinkedIn Profile"
-                   />
+                    <Label htmlFor={"twitter"} text={"Twitter"} />
+                    <Input
+                        type="text"
+                        name="twitter"
+                        value={formData.socialLinks.twitter}
+                        setValue={handleInputChange}
+                        placeholder="Twitter Profile"
+                    />
+                </div>
+
+                <div>
+                    <Label htmlFor={"linkedin"} text={"Linkedin"} />
+                    <Input
+                        type="text"
+                        name="linkedin"
+                        value={formData.socialLinks.linkedin}
+                        setValue={handleInputChange}
+                        placeholder="LinkedIn Profile"
+                    />
                 </div>
 
 

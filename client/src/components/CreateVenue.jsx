@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { addNewVenue, editVenueById } from '../api/venue';
 import { addVenue, editVenue } from '../redux/slices/venueSlice';
 import Input from './shared/Input';
+import Label from './shared/Label';
 
 const CreateVenue = ({ onClose, showForm, venueData }) => {
     const dispatch = useDispatch();
@@ -73,7 +74,7 @@ const CreateVenue = ({ onClose, showForm, venueData }) => {
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Building Number</label>
+                    <Label htmlFor={"buildingNumber"} text={"Building Number"}/>
                     <Input
                         type="text"
                         name="buildingNumber"
@@ -83,7 +84,7 @@ const CreateVenue = ({ onClose, showForm, venueData }) => {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Room Number</label>
+                   <Label htmlFor={"roomNumber"} text={"Room Number"}/>
                     <Input
                         type="text"
                         name="roomNumber"
@@ -93,7 +94,7 @@ const CreateVenue = ({ onClose, showForm, venueData }) => {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Room Capacity</label>
+                  <Label htmlFor={"roomCapacity"} text={"Room Capacity"}/>
                     <Input
                      type="number"
                      name="roomCapacity"
