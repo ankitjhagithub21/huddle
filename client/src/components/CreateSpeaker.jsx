@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addSpeaker, editSpeaker } from '../redux/slices/speakerSlice';
 import { addNewSpeaker, editSpeakerById } from '../api/speakers';
+import Input from './shared/Input';
 
 const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
     const dispatch = useDispatch();
@@ -22,7 +23,6 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
         },
     };
 
-    const classnames = 'w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2';
 
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
@@ -66,6 +66,9 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if(!profilePic){
+            return toast.error("Please upload profile image.")
+        }
         setLoading(true);
         const toastId = toast.loading(speakerData ? "Updating speaker..." : "Creating speaker...");
 
@@ -127,13 +130,13 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
                 }} />
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
-                <div className='bg-gray-200 w-20 h-20 rounded-full mx-auto cursor-pointer overflow-hidden flex items-center justify-center text-center'>
+                <div className='bg-gray-200 w-28 h-28  rounded-full mx-auto overflow-hidden flex items-center justify-center text-center'>
                     <label htmlFor="profilePic">
                         {profilePic ? (
                             <img
                                 src={speakerData ? profilePic : URL.createObjectURL(profilePic)}
                                 alt="Profile Preview"
-                                className="w-full h-full object-cover object-center"
+                                className="w-full h-full object-cover object-center cursor-pointer"
                             />
                         ) : (
                             <p className='text-xs'>Choose Profile Pic</p>
@@ -145,8 +148,8 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
                         id='profilePic'
                         accept="image/*"
                         onChange={handleFileChange}
-                        className="hidden"
-                        required={!speakerData}
+                        className='hidden'
+                        
                     />
                 </div>
 
@@ -155,65 +158,50 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Salutation</label>
-                    <input
-                        type="text"
-                        name="salutation"
-                        value={formData.salutation}
-                        onChange={handleInputChange}
-                        className={classnames}
-                        placeholder="Enter speaker's salutation"
-                        required
-                    />
+                    <Input type={"text"} placeholder={"Enter speaker's salutation"} name={"salutation"} value={formData.salutation} setValue={handleInputChange} />
+
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Full Name</label>
-                    <input
+                    <Input
                         type="text"
                         name="fullName"
                         value={formData.fullName}
-                        onChange={handleInputChange}
-                        className={classnames}
+                        setValue={handleInputChange}
                         placeholder="Enter speaker's full name"
-                        required
                     />
+
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Bio</label>
-                    <textarea
+                    <Input
+                        type={"text"}
                         name="bio"
                         value={formData.bio}
-                        onChange={handleInputChange}
-                        className={classnames}
+                        setValue={handleInputChange}
                         placeholder="Enter speaker's bio"
-                        required
                     />
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Email</label>
-                    <input
-                        type="email"
+                    <Input type="email"
                         name="email"
                         value={formData.email}
-                        onChange={handleInputChange}
-                        className={classnames}
-                        placeholder="Enter speaker's email"
-                        required
-                    />
+                        setValue={handleInputChange}
+                        placeholder="Enter speaker's email" />
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Mobile</label>
-                    <input
+                    <Input
                         type="text"
                         name="mobile"
                         value={formData.mobile}
-                        onChange={handleInputChange}
-                        className={classnames}
+                        setValue={handleInputChange}
                         placeholder="Enter speaker's mobile number"
-                        required
                     />
                 </div>
 
@@ -221,38 +209,35 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Facebook</label>
-                    <input
-                        type="text"
-                        name="facebook"
-                        value={formData.socialLinks.facebook}
-                        onChange={handleInputChange}
-                        className={classnames}
-                        placeholder="Facebook Profile"
-                    />
+                     <Input
+                       type="text"
+                       name="facebook"
+                       value={formData.socialLinks.facebook}
+                       setValue={handleInputChange}
+                       placeholder="Facebook Profile"
+                     />
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Twitter</label>
-                    <input
-                        type="text"
-                        name="twitter"
-                        value={formData.socialLinks.twitter}
-                        onChange={handleInputChange}
-                        className={classnames}
-                        placeholder="Twitter Profile"
+                    <Input
+                    type="text"
+                    name="twitter"
+                    value={formData.socialLinks.twitter}
+                    setValue={handleInputChange}
+                    placeholder="Twitter Profile"
                     />
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700">LinkedIn</label>
-                    <input
-                        type="text"
-                        name="linkedin"
-                        value={formData.socialLinks.linkedin}
-                        onChange={handleInputChange}
-                        className={classnames}
-                        placeholder="LinkedIn Profile"
-                    />
+                   <Input
+                      type="text"
+                      name="linkedin"
+                      value={formData.socialLinks.linkedin}
+                      setValue={handleInputChange}
+                      placeholder="LinkedIn Profile"
+                   />
                 </div>
 
 

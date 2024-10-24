@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addNewVenue, editVenueById } from '../api/venue';
 import { addVenue, editVenue } from '../redux/slices/venueSlice';
+import Input from './shared/Input';
 
 const CreateVenue = ({ onClose, showForm, venueData }) => {
     const dispatch = useDispatch();
@@ -12,8 +13,8 @@ const CreateVenue = ({ onClose, showForm, venueData }) => {
         roomNumber: '',
         roomCapacity: ''
     };
-    
-    const classnames = 'w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2';
+
+   
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
 
@@ -73,38 +74,32 @@ const CreateVenue = ({ onClose, showForm, venueData }) => {
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Building Number</label>
-                    <input
+                    <Input
                         type="text"
                         name="buildingNumber"
                         value={formData.buildingNumber}
-                        onChange={handleInputChange}
-                        className={classnames}
+                        setValue={handleInputChange}
                         placeholder="Enter building number"
-                        required
                     />
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Room Number</label>
-                    <input
+                    <Input
                         type="text"
                         name="roomNumber"
                         value={formData.roomNumber}
-                        onChange={handleInputChange}
-                        className={classnames}
+                        setValue={handleInputChange}
                         placeholder="Enter room number"
-                        required
                     />
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Room Capacity</label>
-                    <input
-                        type="number"
-                        name="roomCapacity"
-                        value={formData.roomCapacity}
-                        onChange={handleInputChange}
-                        className={classnames}
-                        placeholder="Enter room capacity"
-                        required
+                    <Input
+                     type="number"
+                     name="roomCapacity"
+                     value={formData.roomCapacity}
+                     setValue={handleInputChange}
+                     placeholder="Enter room capacity"
                     />
                 </div>
                 <div className='flex justify-end gap-2'>

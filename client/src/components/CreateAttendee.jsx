@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addAttendee, editAttendee } from '../redux/slices/attendeeSlice';
 import { addNewAttendee, editAttendeeById } from '../api/attendees';
+import Input from './shared/Input';
 
 
 const CreateAttendee = ({ onClose, showForm, attendeeData }) => {
@@ -13,7 +14,6 @@ const CreateAttendee = ({ onClose, showForm, attendeeData }) => {
         email: '',
         mobile: ''
     };
-    const classnames = 'w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2';
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
 
@@ -70,43 +70,35 @@ const CreateAttendee = ({ onClose, showForm, attendeeData }) => {
 
                 <IoIosCloseCircleOutline size={25} onClick={onClose} />
             </div>
-         
-            
+
+
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Full Name</label>
-                    <input
-                        type="text"
+                    <Input type="text"
                         name="fullName"
                         value={formData.fullName}
-                        onChange={handleInputChange}
-                        className={classnames}
-                        placeholder="Enter attendee's full name"
-                        required
-                    />
+                        setValue={handleInputChange}
+                        placeholder="Enter attendee's full name" />
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Email</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className={classnames}
-                        placeholder="Enter attendee's email"
-                        required
-                    />
+                   <Input 
+                     type="email"
+                     name="email"
+                     value={formData.email}
+                     setValue={handleInputChange}
+                     placeholder="Enter attendee's email"
+                   />
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Mobile</label>
-                    <input
-                        type="text"
-                        name="mobile"
-                        value={formData.mobile}
-                        onChange={handleInputChange}
-                        className={classnames}
-                        placeholder="Enter attendee's mobile number"
-                        required
+                    <Input
+                     type="text"
+                     name="mobile"
+                     value={formData.mobile}
+                     setValue={handleInputChange}
+                     placeholder="Enter attendee's mobile number"
                     />
                 </div>
                 <div className='flex justify-end gap-2'>
