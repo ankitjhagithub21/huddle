@@ -14,6 +14,7 @@ const VenueList = () => {
     const { venues, loading } = useSelector((state) => state.venue);
     const [showForm, setShowForm] = useState(false);
     const [selectedVenue, setSelectedVenue] = useState(null);
+   const [isLoading,setIsLoading] = useState(false)
 
     const onClose = () => {
         setShowForm(false);
@@ -31,16 +32,26 @@ const VenueList = () => {
     };
 
     const onDelete = async (id) => {
+        setIsLoading(true)
         const toastId = toast.loading('Deleting Venue...');
-        const res = await deleteVenueById(id);
-        const data = await res.json();
-        if (res.status === 200) {
-            dispatch(deleteVenue(id));
-            toast.success(data.message);
-        } else {
-            toast.error(data.message);
+        try{
+           
+            const res = await deleteVenueById(id);
+            const data = await res.json();
+            if (res.status === 200) {
+                dispatch(deleteVenue(id));
+                toast.success(data.message);
+            } else {
+                toast.error(data.message);
+            }
+           
+        }catch(error){  
+            console.log(error.message)
+            toast.error(error.message)
+        }finally{
+            setIsLoading(false)
+            toast.dismiss(toastId);
         }
-        toast.dismiss(toastId);
     };
 
     const columns = ['Building Number', 'Room Number', 'Room Capacity', 'Action'];
@@ -55,6 +66,7 @@ const VenueList = () => {
                 onDelete={onDelete}
                 onCreate={onCreate}
                 listType="venue" 
+                isLoading={isLoading}
                 />
             <CreateVenue onClose={onClose} showForm={showForm} venueData={selectedVenue} />
         </>

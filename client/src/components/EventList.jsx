@@ -16,6 +16,7 @@ const EventList = () => {
     const { events, loading } = useSelector((state) => state.event);
     const [showForm, setShowForm] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [isLoading,setIsLoading] = useState(false)
     const dispatch = useDispatch();
 
     const onClose = () => {
@@ -25,6 +26,8 @@ const EventList = () => {
     };
 
     const handleDeleteEvent = async (eventId) => {
+        setIsLoading(true)
+         const toastId = toast.loading("Deleting event...")
         try {
             await deleteEventById(eventId);
             toast.success('Event deleted successfully!');
@@ -32,6 +35,9 @@ const EventList = () => {
         } catch (error) {
             console.error('Error deleting event:', error);
             toast.error('Failed to delete event.');
+        }finally{
+            setIsLoading(false)
+            toast.dismiss(toastId)
         }
     };
 
@@ -61,6 +67,7 @@ const EventList = () => {
                 onDelete={handleDeleteEvent}
                 onCreate={onCreate}
                 listType={"event"}
+                isLoading={isLoading}
             />
 
 
