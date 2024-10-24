@@ -95,15 +95,15 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate,isLoading })
         <>
             <div className="flex items-center justify-between w-full gap-3">
                 {/* Search Input */}
-                <div className="border p-2 w-full rounded-md flex items-center my-5 max-w-md">
+                <div className="border border-orange-500 p-2 w-full rounded-md flex items-center my-5 max-w-md">
                     <input
                         type="text"
                         placeholder={`Search ${listType}`}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full outline-none bg-transparent"
+                        className="w-full outline-none bg-transparent pr-1"
                     />
-                    <GoSearch />
+                    <GoSearch size={20} className="text-gray-800"/>
                 </div>
                 <AddButton text={`Add ${listType}`} onBtnClick={onCreate} />
             </div>

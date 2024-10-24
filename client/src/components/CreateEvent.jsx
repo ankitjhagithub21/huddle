@@ -14,7 +14,6 @@ import Label from './shared/Label';
 const CreateEvent = ({ showForm, onClose, eventData }) => {
   const dispatch = useDispatch();
   const { selectedAttendees, selectedSpeakers } = useSelector((state) => state.event);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
@@ -138,24 +137,25 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
           />
         </div>
 
-        <div>
+       
           <Label htmlFor={"date"} text={"Date"} />
           <DatePicker
             placeholderText="Enter date"
             name='date'
-            className="w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2"
+            className="w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)]"
             selected={date}
             onChange={(newDate) => setDate(newDate)}
             showPopperArrow={false}
           />
 
-        </div>
+       
         <button
           onClick={() => openModal('speaker')}
           className="w-full bg-gray-200 hover:bg-gray-300 p-2 mt-2 rounded-lg"
         >
           Select Speakers
         </button>
+      
 
         <button
           onClick={() => openModal('attendee')}
