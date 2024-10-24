@@ -68,14 +68,16 @@ const CreateAttendee = ({ onClose, showForm, attendeeData }) => {
                 <h2 className="text-2xl font-semibold">
                     {attendeeData ? 'Update Attendee' : 'Create New Attendee'}
                 </h2>
+                <button onClick={onClose}>
+                    <IoIosCloseCircleOutline size={25}  />
+                </button>
 
-                <IoIosCloseCircleOutline size={25} onClick={onClose} />
             </div>
 
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                <Label htmlFor={"fullName"} text={"Full Name"}/>
+                    <Label htmlFor={"fullName"} text={"Full Name"} />
                     <Input type="text"
                         name="fullName"
                         value={formData.fullName}
@@ -83,23 +85,23 @@ const CreateAttendee = ({ onClose, showForm, attendeeData }) => {
                         placeholder="Enter attendee's full name" />
                 </div>
                 <div>
-                <Label htmlFor={"email"} text={"Email"}/>
-                   <Input 
-                     type="email"
-                     name="email"
-                     value={formData.email}
-                     setValue={handleInputChange}
-                     placeholder="Enter attendee's email"
-                   />
+                    <Label htmlFor={"email"} text={"Email"} />
+                    <Input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        setValue={handleInputChange}
+                        placeholder="Enter attendee's email"
+                    />
                 </div>
                 <div>
-                   <Label htmlFor={"mobile"} text={"Mobile"}/>
+                    <Label htmlFor={"mobile"} text={"Mobile"} />
                     <Input
-                     type="text"
-                     name="mobile"
-                     value={formData.mobile}
-                     setValue={handleInputChange}
-                     placeholder="Enter attendee's mobile number"
+                        type="text"
+                        name="mobile"
+                        value={formData.mobile}
+                        setValue={handleInputChange}
+                        placeholder="Enter attendee's mobile number"
                     />
                 </div>
                 <div className='flex justify-end gap-2'>

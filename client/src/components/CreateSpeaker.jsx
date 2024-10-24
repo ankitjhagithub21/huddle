@@ -65,6 +65,12 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
         }
     };
 
+    const handleClose = () => {
+        setFormData(initialData);
+        setProfilePic(null);
+        onClose();
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!profilePic) {
@@ -118,17 +124,17 @@ const CreateSpeaker = ({ onClose, showForm, speakerData }) => {
         }
     };
 
+
+
     return (
         <div className={`lg:w-[400px] w-full mx-auto p-6 h-full overflow-y-scroll scroll shadow-md fixed ${showForm ? 'right-0' : '-right-full'} transition-all duration-500 top-0 bg-white`}>
             <div className='flex items-center justify-between mb-4'>
                 <h2 className="text-2xl font-semibold">
                     {speakerData ? 'Update Speaker' : 'Create New Speaker'}
                 </h2>
-                <IoIosCloseCircleOutline size={25} onClick={() => {
-                    setFormData(initialData);
-                    setProfilePic(null);
-                    onClose();
-                }} />
+                <button onClick={handleClose}>
+                    <IoIosCloseCircleOutline size={25} />
+                </button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className='bg-gray-200 w-28 h-28  rounded-full mx-auto overflow-hidden flex items-center justify-center text-center'>

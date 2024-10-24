@@ -8,6 +8,7 @@ import { addNewEvent, editEventById } from '../api/events';
 import { addEvent, editEvent, setSelectedAttendees, setSelectedSpeakers } from '../redux/slices/eventSlice';
 import EventModal from './EventModal';
 import JoditEditor from 'jodit-react';
+import Label from './shared/Label';
 
 
 const CreateEvent = ({ showForm, onClose, eventData }) => {
@@ -108,20 +109,26 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
         <h2 className="text-2xl font-semibold">
           {eventData ? 'Update Event' : 'Create New Event'}
         </h2>
-        <IoIosCloseCircleOutline size={25} onClick={onClose} />
+        <button onClick={onClose}>
+          <IoIosCloseCircleOutline size={25} />
+        </button>
       </div>
 
       <div className="flex flex-col gap-3 mt-5">
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter title"
-          className="w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2"
-        />
+        <div>
+          <Label htmlFor={"title"} text={"Title"} />
+          <input
+            type="text"
+            name='title'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter title"
+            className="w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2"
+          />
+        </div>
 
         <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+          <Label htmlFor={"description"} text={"Description"} />
           <JoditEditor
             ref={editor}
             value={description}
@@ -131,14 +138,18 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
           />
         </div>
 
-        <DatePicker
-          placeholderText="Enter date"
-          className="w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2"
-          selected={date}
-          onChange={(newDate) => setDate(newDate)}
-          showPopperArrow={false}
-        />
+        <div>
+          <Label htmlFor={"date"} text={"Date"} />
+          <DatePicker
+            placeholderText="Enter date"
+            name='date'
+            className="w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2"
+            selected={date}
+            onChange={(newDate) => setDate(newDate)}
+            showPopperArrow={false}
+          />
 
+        </div>
         <button
           onClick={() => openModal('speaker')}
           className="w-full bg-gray-200 hover:bg-gray-300 p-2 mt-2 rounded-lg"

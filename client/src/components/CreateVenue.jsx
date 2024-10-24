@@ -15,7 +15,7 @@ const CreateVenue = ({ onClose, showForm, venueData }) => {
         roomCapacity: ''
     };
 
-   
+
     const [formData, setFormData] = useState(initialData);
     const [loading, setLoading] = useState(false);
 
@@ -70,11 +70,13 @@ const CreateVenue = ({ onClose, showForm, venueData }) => {
                 <h2 className="text-2xl font-semibold">
                     {venueData ? 'Update Venue' : 'Create New Venue'}
                 </h2>
-                <IoIosCloseCircleOutline size={25} onClick={onClose} />
+                <button onClick={onClose} >
+                    <IoIosCloseCircleOutline size={25} />
+                </button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <Label htmlFor={"buildingNumber"} text={"Building Number"}/>
+                    <Label htmlFor={"buildingNumber"} text={"Building Number"} />
                     <Input
                         type="text"
                         name="buildingNumber"
@@ -84,7 +86,7 @@ const CreateVenue = ({ onClose, showForm, venueData }) => {
                     />
                 </div>
                 <div>
-                   <Label htmlFor={"roomNumber"} text={"Room Number"}/>
+                    <Label htmlFor={"roomNumber"} text={"Room Number"} />
                     <Input
                         type="text"
                         name="roomNumber"
@@ -94,13 +96,13 @@ const CreateVenue = ({ onClose, showForm, venueData }) => {
                     />
                 </div>
                 <div>
-                  <Label htmlFor={"roomCapacity"} text={"Room Capacity"}/>
+                    <Label htmlFor={"roomCapacity"} text={"Room Capacity"} />
                     <Input
-                     type="number"
-                     name="roomCapacity"
-                     value={formData.roomCapacity}
-                     setValue={handleInputChange}
-                     placeholder="Enter room capacity"
+                        type="number"
+                        name="roomCapacity"
+                        value={formData.roomCapacity}
+                        setValue={handleInputChange}
+                        placeholder="Enter room capacity"
                     />
                 </div>
                 <div className='flex justify-end gap-2'>
