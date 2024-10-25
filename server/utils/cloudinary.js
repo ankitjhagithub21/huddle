@@ -17,6 +17,8 @@ const uploadImage = async (localFilePath) => {
     use_filename: true,
     unique_filename: false,
     overwrite: true,
+    folder: 'huddle', 
+    upload_preset: 'huddle'
   };
 
   try {
@@ -28,8 +30,9 @@ const uploadImage = async (localFilePath) => {
       // Return the public URL and public_id (for deletion)
       return {
           publicUrl: response.secure_url, // Store secure_url for image access
-          cloudinaryId: response.public_id // Store public_id for deletion
+          publicId: response.public_id // Store public_id for deletion
       };
+      
   } catch (error) {
       fs.unlinkSync(localFilePath); // Clean up the local file if upload fails
       console.error(error);
@@ -38,10 +41,10 @@ const uploadImage = async (localFilePath) => {
 };
 
 
-const deleteImage = async (cloudinaryId) => {
+const deleteImage = async (publicId) => {
   try {
-      if (!cloudinaryId) return;
-      await cloudinary.uploader.destroy(cloudinaryId); // Delete the image from Cloudinary
+      if (!publicId) return;
+      await cloudinary.uploader.destroy(publicId); // Delete the image from Cloudinary
   } catch (error) {
       console.error('Error deleting image from Cloudinary:', error);
   }

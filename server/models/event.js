@@ -4,34 +4,41 @@ const eventSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
+        minlength: 50
+    },
+    images:{
+        type:Array,
+        default:[]
+    },
+    video:{
+        type:String,
     },
     description: {
         type: String,
         required: true,
+        minlength: 300
     },
     date: {
         type: Date,
-        required: true,
+        required: true
     },
+   
     isPublic: {
         type: Boolean,
-        required: false,
+        default: false 
     },
-    
     speakers: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Speaker",
-            required: true, 
+            ref: "Speaker"
         }
     ],
     attendees: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Attendee",
-            required: true, 
+            ref: "Attendee"
         }
-    ],
-}, { versionKey: false, timestamps: true }); 
+    ]
+}, { versionKey: false, timestamps: true });
 
-module.exports = mongoose.model('Event', eventSchema); 
+module.exports = mongoose.model('Event', eventSchema);
