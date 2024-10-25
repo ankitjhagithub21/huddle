@@ -19,7 +19,7 @@ const AppLayout = () => (
     <Sidebar />
     
     <main className="w-full p-5 h-full overflow-y-scroll scroll main relative">
-      <section className="max-w-4xl p-4">
+      <section className="p-4">
         <Routes>
           <Route path="/" element={<SpeakerList />} />
           <Route path="/events" element={<EventList />} />

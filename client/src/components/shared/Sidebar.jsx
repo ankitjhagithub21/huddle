@@ -13,10 +13,11 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className='h-full lg:w-1/5 w-fit px-2 bg-[var(--secondary)] flex flex-col items-center justify-between py-5'>
-      <h2 className='font-bold text-2xl text-white'>H<span className='lg:inline-block hidden'>UDDLE</span></h2>
+    <div className='h-full lg:w-1/5 w-fit md:px-4 px-0 bg-[var(--secondary)] flex flex-col items-center justify-between py-5'>
+      <h2 className='font-semibold  tracking-wider text-3xl text-white'>H<span className='lg:inline-block'>uddle</span></h2>
+     
 
-      <div className='flex flex-col gap-5'>
+      <div className='flex flex-col gap-5 md:w-full w-fit'>
         {/* Map through sidebarLinks array to render links */}
         {sidebarLinks.map((link) => (
           <NavLink
@@ -37,7 +38,7 @@ const Sidebar = () => {
       </div>
 
       <button className='text-sm text-white'>
-        <span className='lg:inline-block hidden'>Copyright</span> &copy; {new Date().getFullYear()}
+        <span className='lg:inline-block hidden'>Copyright</span> &copy; {new Date().getFullYear()} Huddle
       </button>
     </div>
   )
