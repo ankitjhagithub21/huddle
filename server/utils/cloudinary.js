@@ -29,7 +29,7 @@ const uploadImage = async (localFilePath) => {
 
       // Return the public URL and public_id (for deletion)
       return {
-          publicUrl: response.secure_url, // Store secure_url for image access
+          imageUrl: response.secure_url, // Store secure_url for image access
           publicId: response.public_id // Store public_id for deletion
       };
       

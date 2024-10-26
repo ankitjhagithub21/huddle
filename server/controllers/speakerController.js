@@ -28,7 +28,7 @@ const createSpeaker = async (req, res) => {
         bio,
         email,
         mobile,
-        profilePic: uploadResponse.publicUrl,
+        profilePic: uploadResponse.imageUrl,
         publicId: uploadResponse.publicId,
         socialLinks,
       });

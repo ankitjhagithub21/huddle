@@ -1,21 +1,34 @@
 const Event = require('../models/event');
 const Speaker = require('../models/speaker');
+const mongoose = require('mongoose');
 const Attendee = require('../models/attendee');
-const { uploadImage } = require('../utils/cloudinary');
+const { uploadImage ,deleteImage} = require('../utils/cloudinary');
 
 // Create a new event
 const createEvent = async (req, res) => {
   try {
-    const { title, description, date,videoUrl ,isPublic, speakers, attendees } = req.body;
+    const { title, description, date, videoUrl, isPublic, speakers, attendees } = req.body;
 
-
+    // Validate required fields
     if (!title || !description || !date || !speakers) {
       return res.status(400).json({ message: 'All required fields must be filled.' });
     }
 
+    // Parse speakers and attendees to ensure they are arrays of ObjectIds
+    const parsedSpeakers = Array.isArray(speakers)
+      ? speakers.map(id => new mongoose.Types.ObjectId(id)) 
+      : JSON.parse(speakers).map(id => new mongoose.Types.ObjectId(id)); 
+
+    const parsedAttendees = attendees
+      ? Array.isArray(attendees)
+        ? attendees.map(id => new mongoose.Types.ObjectId(id)) // Use new here
+        : JSON.parse(attendees).map(id => new mongoose.Types.ObjectId(id)) // Use new here
+      : [];
+
+
     let images = [];
 
-    // Upload images to Cloudinary
+    // Upload images to Cloudinary if any
     if (req.files) {
       images = await Promise.all(
         req.files.map(async (file) => {
@@ -23,28 +36,29 @@ const createEvent = async (req, res) => {
           return result;
         })
       );
-
     }
+
     // Create new event with uploaded images
     const newEvent = new Event({
       title,
       description,
       date,
-      images:images || [],
+      images: images || [],
       isPublic,
-      speakers,
-      videoUrl:videoUrl || "",
-      attendees
+      videoUrl: videoUrl || "",
+      speakers: parsedSpeakers,
+      attendees: parsedAttendees,
     });
 
     const savedEvent = await newEvent.save();
     return res.status(201).json(savedEvent);
-
-    } catch (error) {
+  } catch (error) {
     console.error('Error creating event:', error); // Log the error for debugging
     return res.status(500).json({ message: 'Server error' });
   }
 };
+
+
 
 // Get all events
 const getAllEvents = async (req, res) => {
@@ -62,7 +76,7 @@ const getEventById = async (req, res) => {
   try {
     const { eventId } = req.params;
     const event = await Event.findById(eventId)
-      .populate('speakers', 'fullName profilePic')
+      .populate('speakers', 'fullName profilePic bio')
       .populate('attendees', 'fullName');
 
 
@@ -133,18 +147,30 @@ const deleteEvent = async (req, res) => {
   try {
     const { eventId } = req.params;
 
+    // Find and delete the event by ID
     const event = await Event.findByIdAndDelete(eventId);
 
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
 
+    // If images exist, delete all images from Cloudinary
+    if (event.images.length > 0) {
+      // Use Promise.all to wait for all deletions to complete
+      await Promise.all(
+        event.images.map(async (image) => {
+          await deleteImage(image.publicId);
+        })
+      );
+    }
+
     res.status(200).json({ message: 'Event deleted successfully' });
   } catch (error) {
-
+    console.error(error); // Log the error for debugging
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 const changeEventVisibility = async (req, res) => {
   try {

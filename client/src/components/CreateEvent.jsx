@@ -65,7 +65,9 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(loading) return;
     setLoading(true);
+ 
 
     try {
       const formData = new FormData();
@@ -74,15 +76,15 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
       formData.append('date', date);
       formData.append('videoUrl', videoUrl);
       formData.append('isPublic', isPublic);
-      formData.append('speakers',selectedSpeakers)
-      formData.append('attendees',selectedAttendees)
-
+      formData.append('speakers',JSON.stringify(selectedSpeakers))
+      formData.append('attendees',JSON.stringify(selectedAttendees))
       images.forEach((image) => formData.append('images', image));
+
 
       const response = await addNewEvent(formData);
       if (response.ok) {
         toast.success('Event created successfully!');
-        resetForm();
+        // resetForm();
         onClose();
       } else {
         throw new Error('Failed to create event');
@@ -127,7 +129,7 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
 
         <UploadAndDisplayImage onImageChange={onImageChange} imageURLs={imageURLs} />
 
-        <div className="mb-4">
+        <div className="my-4">
           <label htmlFor="title" className="block font-medium">
             Title
           </label>
@@ -138,11 +140,13 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
+            minLength={50}
+
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="title" className="block font-medium">
-            Title
+          <label htmlFor="date" className="block font-medium">
+            Date and Time
           </label>
           <input
             type="datetime-local"
@@ -164,6 +168,7 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
+            minLength={300}
           ></textarea>
         </div>
 
