@@ -1,43 +1,46 @@
 const Event = require('../models/event');
 const Speaker = require('../models/speaker');
 const Attendee = require('../models/attendee');
+const { uploadImage } = require('../utils/cloudinary');
 
 // Create a new event
 const createEvent = async (req, res) => {
   try {
-    const { title, description, date, speakers, attendees } = req.body;
+    const { title, description, date,videoUrl ,isPublic, speakers, attendees } = req.body;
 
-    // Validate input fields
-    if (!title || !description || !date || !speakers || speakers.length === 0 || !attendees || attendees.length === 0) {
-      return res.status(400).json({ message: 'All fields are required.' });
+
+    if (!title || !description || !date || !speakers) {
+      return res.status(400).json({ message: 'All required fields must be filled.' });
     }
 
-    // Ensure that all referenced speakers and attendees exist
-    const foundSpeakers = await Speaker.find({ '_id': { $in: speakers } });
-    const foundAttendees = await Attendee.find({ '_id': { $in: attendees } });
+    let images = [];
 
-    // Check if the count of found speakers and attendees matches the input length
-    if (foundSpeakers.length !== speakers.length) {
-      return res.status(400).json({ message: 'Invalid speakers provided' });
-    }
-    
-    if (foundAttendees.length !== attendees.length) {
-      return res.status(400).json({ message: 'Invalid attendees provided' });
-    }
+    // Upload images to Cloudinary
+    if (req.files) {
+      images = await Promise.all(
+        req.files.map(async (file) => {
+          const result = await uploadImage(file.path);
+          return result;
+        })
+      );
 
-    // Create and save the new event
+    }
+    // Create new event with uploaded images
     const newEvent = new Event({
       title,
       description,
       date,
+      images:images || [],
+      isPublic,
       speakers,
+      videoUrl:videoUrl || "",
       attendees
     });
 
     const savedEvent = await newEvent.save();
     return res.status(201).json(savedEvent);
-    
-  } catch (error) {
+
+    } catch (error) {
     console.error('Error creating event:', error); // Log the error for debugging
     return res.status(500).json({ message: 'Server error' });
   }
@@ -75,7 +78,7 @@ const getEventById = async (req, res) => {
 
     res.status(200).json(event);
   } catch (error) {
-    
+
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -99,7 +102,7 @@ const updateEvent = async (req, res) => {
     if (foundSpeakers.length !== speakers.length) {
       return res.status(400).json({ message: 'Invalid speakers provided' });
     }
-    
+
     if (foundAttendees.length !== attendees.length) {
       return res.status(400).json({ message: 'Invalid attendees provided' });
     }
@@ -116,7 +119,7 @@ const updateEvent = async (req, res) => {
     }
 
     return res.status(200).json(updatedEvent);
-    
+
   } catch (error) {
     console.error('Error updating event:', error); // Log the error for debugging
     return res.status(500).json({ message: 'Server error' });
@@ -135,7 +138,6 @@ const deleteEvent = async (req, res) => {
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
-
 
     res.status(200).json({ message: 'Event deleted successfully' });
   } catch (error) {
@@ -169,11 +171,13 @@ const changeEventVisibility = async (req, res) => {
 };
 
 
+
 module.exports = {
   createEvent,
   getAllEvents,
   getEventById,
   updateEvent,
   deleteEvent,
-  changeEventVisibility
+  changeEventVisibility,
+
 };

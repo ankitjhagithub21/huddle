@@ -11,8 +11,7 @@ export const fetchEvents = async () => {
 export const addNewEvent = async (eventData) => {
     const res = await fetch(`${baseUrl}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(eventData),
+        body: eventData,
     });
     return res;
 };

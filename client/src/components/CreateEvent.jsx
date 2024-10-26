@@ -1,35 +1,44 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { toast } from 'react-toastify';
-import { addNewEvent, editEventById } from '../api/events';
-import { addEvent, editEvent, setSelectedAttendees, setSelectedSpeakers } from '../redux/slices/eventSlice';
+import { addNewEvent } from '../api/events';
+import { setSelectedAttendees, setSelectedSpeakers } from '../redux/slices/eventSlice';
 import EventModal from './EventModal';
-import JoditEditor from 'jodit-react';
-import Label from './shared/Label';
-
+import UploadAndDisplayImage from './UploadAndDisplayImage';
 
 const CreateEvent = ({ showForm, onClose, eventData }) => {
   const dispatch = useDispatch();
   const { selectedAttendees, selectedSpeakers } = useSelector((state) => state.event);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
+  const [isPublic, setIsPublic] = useState(false);
+  const [images, setImages] = useState([]);
+  const [imageURLs, setImageURLs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
   const [modalData, setModalData] = useState([]);
 
-  const editor = useRef(null)
+  useEffect(() => {
+    if (images.length < 1) return;
+    const newImageURLs = images.map((image) => URL.createObjectURL(image));
+    setImageURLs(newImageURLs);
+  }, [images]);
 
+  const onImageChange = (e) => {
+    setImages([...e.target.files]);
+  };
 
   useEffect(() => {
     if (eventData) {
       setTitle(eventData.title || '');
       setDescription(eventData.description || '');
-      setDate(new Date(eventData.date) || '');
+      setDate(eventData.date ? new Date(eventData.date).toISOString().slice(0, 16) : '');
+      setVideoUrl(eventData.videoUrl || '');
       dispatch(setSelectedSpeakers(eventData.speakers || []));
       dispatch(setSelectedAttendees(eventData.attendees || []));
     } else {
@@ -41,68 +50,55 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
     setTitle('');
     setDescription('');
     setDate('');
+    setVideoUrl('');
+    setIsPublic(false);
+    setImages([]);
     dispatch(setSelectedSpeakers([]));
     dispatch(setSelectedAttendees([]));
   };
 
   const openModal = (type) => {
     setModalType(type);
-    setModalData(type === 'speaker' ? selectedSpeakers : selectedAttendees); // Set modal data based on type
+    setModalData(type === 'speaker' ? selectedSpeakers : selectedAttendees);
     setIsModalOpen(true);
   };
 
-  const handleSubmit = async () => {
-
-    if (!title || !description || !date || selectedSpeakers.length === 0 || selectedAttendees.length === 0) {
-      toast.error('All fields are required');
-      return;
-    }
-
-
-    const eventDetails = {
-      title,
-      description,
-      date,
-      speakers: selectedSpeakers,
-      attendees: selectedAttendees,
-    };
-
-    setLoading(true)
-    const toastId = toast.loading("Processing...")
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      if (eventData) {
-        const res = await editEventById(eventData._id, eventDetails);
-        const data = await res.json();
-        if (res.ok) {
-          dispatch(editEvent(data));
-          toast.success('Event updated successfully!');
-        }
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('date', date);
+      formData.append('videoUrl', videoUrl);
+      formData.append('isPublic', isPublic);
+      formData.append('speakers',selectedSpeakers)
+      formData.append('attendees',selectedAttendees)
 
+      images.forEach((image) => formData.append('images', image));
+
+      const response = await addNewEvent(formData);
+      if (response.ok) {
+        toast.success('Event created successfully!');
+        resetForm();
+        onClose();
       } else {
-        const res = await addNewEvent(eventDetails);
-        const data = await res.json();
-        if (res.ok) {
-          dispatch(addEvent(data));
-          toast.success('Event created successfully!');
-        }
+        throw new Error('Failed to create event');
       }
-
-      onClose();
     } catch (error) {
-      console.error('Error creating/updating event:', error);
-      toast.error('Error creating/updating event');
+      toast.error(`Error: ${error.message}`);
     } finally {
-      setLoading(false)
-      toast.dismiss(toastId)
+      setLoading(false);
     }
-
   };
 
   return (
     <div
-      className={`lg:w-[400px] w-full mx-auto p-6 h-full shadow-md fixed overflow-y-scroll ${showForm ? 'right-0' : '-right-full'
-        } transition-all duration-500 top-0 bg-white`}
+      className={`w-full mx-auto p-6 h-full shadow-md fixed top-0 left-0 scroll bg-white overflow-y-scroll transition-all duration-500 ${
+        showForm ? 'translate-y-0' : '-translate-y-full'
+      }`}
     >
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold">
@@ -113,65 +109,101 @@ const CreateEvent = ({ showForm, onClose, eventData }) => {
         </button>
       </div>
 
-      <div className="flex flex-col gap-3 mt-5">
-        <div>
-          <Label htmlFor={"title"} text={"Title"} />
+      <form onSubmit={handleSubmit} encType="multipart/form-data" className="mt-4">
+       
+
+        <div className="mb-4">
+          <label htmlFor="videoUrl" className="block font-medium">
+            Video URL
+          </label>
+          <input
+            type="url"
+            id="videoUrl"
+            className="w-full p-2 border rounded-lg mt-1"
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+          />
+        </div>
+
+        <UploadAndDisplayImage onImageChange={onImageChange} imageURLs={imageURLs} />
+
+        <div className="mb-4">
+          <label htmlFor="title" className="block font-medium">
+            Title
+          </label>
           <input
             type="text"
-            name='title'
+            id="title"
+            className="w-full p-2 border rounded-lg mt-1"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter title"
-            className="w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)] mt-2"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="title" className="block font-medium">
+            Title
+          </label>
+          <input
+            type="datetime-local"
+            id="date"
+            className="w-full p-2 border rounded-lg mt-1"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            required
           />
         </div>
 
         <div className="mb-4">
-          <Label htmlFor={"description"} text={"Description"} />
-          <JoditEditor
-            ref={editor}
+          <label htmlFor="description" className="block font-medium">
+            Description
+          </label>
+          <textarea
+            id="description"
+            className="w-full p-2 border rounded-lg mt-1"
             value={description}
-            tabIndex={1}
-            onBlur={(newContent) => setDescription(newContent)}
-            onChange={() => { }}
-          />
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          ></textarea>
         </div>
 
-       
-          <Label htmlFor={"date"} text={"Date"} />
-          <DatePicker
-            placeholderText="Enter date"
-            name='date'
-            className="w-full border p-2 rounded-md focus:ring focus:ring-[var(--secondary)]"
-            selected={date}
-            onChange={(newDate) => setDate(newDate)}
-            showPopperArrow={false}
+        <div className="flex items-center gap-4 mt-4">
+          <button
+            type="button"
+            onClick={() => openModal('speaker')}
+            className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
+          >
+            Select Speakers
+          </button>
+          <button
+            type="button"
+            onClick={() => openModal('attendee')}
+            className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
+          >
+            Select Attendees
+          </button>
+        </div>
+
+        <div className="flex items-center mt-4">
+          <input
+            type="checkbox"
+            id="isPublic"
+            checked={isPublic}
+            onChange={(e) => setIsPublic(e.target.checked)}
           />
-
-       
-        <button
-          onClick={() => openModal('speaker')}
-          className="w-full bg-gray-200 hover:bg-gray-300 p-2 mt-2 rounded-lg"
-        >
-          Select Speakers
-        </button>
-      
+          <label htmlFor="isPublic" className="ml-2">
+            Public Event
+          </label>
+        </div>
 
         <button
-          onClick={() => openModal('attendee')}
-          className="w-full bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
-        >
-          Select Attendees
-        </button>
-
-        <button
-          onClick={handleSubmit}
-          className="bg-[var(--secondary)] p-2 rounded-lg text-white mt-2"
+          type="submit"
+          className="bg-[var(--secondary)] p-2 rounded-lg text-white mt-4 w-full"
           disabled={loading}
         >
           {loading ? 'Saving...' : eventData ? 'Update Event' : 'Create Event'}
         </button>
-      </div>
+      </form>
 
       {isModalOpen && (
         <EventModal

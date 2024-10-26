@@ -13,8 +13,8 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className='h-full lg:w-1/5 w-fit md:px-4 px-0 bg-[var(--secondary)] flex flex-col  justify-between py-5'>
-      <h2 className='font-semibold  tracking-wider text-3xl text-white'>H<span className='lg:inline-block'>uddle</span></h2>
+    <div className='h-full lg:w-1/5 w-fit md:px-4 px-0 bg-[var(--secondary)] flex flex-col items-center  justify-between py-5'>
+      <h2 className='font-semibold  tracking-wider text-3xl text-white'>H<span className='lg:inline-block hidden'>uddle</span></h2>
      
 
       <div className='flex flex-col gap-5 md:w-full w-fit'>

@@ -1,20 +1,18 @@
-import { FaTrash, FaEdit } from "react-icons/fa";
+import { useMemo, useState, useEffect } from "react";
 import { GoSearch } from "react-icons/go";
-import { useState, useEffect } from "react";
-import Pagination from "../Pagination";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import AddButton from "./AddButton";
+import Pagination from "../Pagination";
 import EyeButton from "./EyeButton";
 
-
-
-const List = ({ data, loading, onEdit, onDelete, listType, onCreate,isLoading }) => {
-   
+const List = ({ data, loading, onEdit, onDelete, listType, onCreate, isLoading }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredData, setFilteredData] = useState([]);
     const pageSize = 8;
 
-    const safeData = Array.isArray(data) ? data : [];
+    // Memoize the safe data to avoid unnecessary re-renders
+    const safeData = useMemo(() => (Array.isArray(data) ? data : []), [data]);
 
     // Filter the data based on the search query
     useEffect(() => {
@@ -26,13 +24,12 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate,isLoading })
         setCurrentPage(1); // Reset to page 1 after filtering
     }, [searchQuery, safeData]);
 
-    // Paginate the filtered data
     const paginatedData = filteredData.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize
     );
 
-
+    // Render row based on listType
     const renderRow = (item) => (
         <tr key={item._id} className="hover:bg-gray-100">
             {listType === "speaker" && (
@@ -43,6 +40,12 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate,isLoading })
                     <td className="border px-4 py-2">{item.fullName}</td>
                     <td className="border px-4 py-2">{item.mobile}</td>
                     <td className="border px-4 py-2">{item.email}</td>
+                </>
+            )}
+            {listType === "event" && (
+                <>
+                    <td className="border px-4 py-2">{item.title}</td>
+                    <td className="border px-4 py-2">{item.date}</td>
                 </>
             )}
             {listType === "attendee" && (
@@ -59,42 +62,35 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate,isLoading })
                     <td className="border px-4 py-2">{item.roomCapacity}</td>
                 </>
             )}
-            {listType === "event" && (
-                <>
-                    <td className="border px-4 py-2">{item.title}</td>
-                    <td className="border px-4 py-2">{new Date(item?.date).toLocaleDateString()}</td>
-                </>
-            )}
             <td className="border px-4 py-2 space-x-2">
-                {listType === "event" && (
-                    <EyeButton id={item._id} isPublic={item.isPublic} />
-                )}
-
+                {listType === "event" && <EyeButton id={item._id} isPublic={item.isPublic} />}
                 <button
-                   disabled={isLoading}
+                    disabled={isLoading}
                     onClick={() => onEdit(item)}
                     className="text-white bg-[var(--secondary)] p-2 rounded-md transition"
                 >
                     <FaEdit />
                 </button>
                 <button
-                disabled={isLoading}
+                    disabled={isLoading}
                     onClick={() => onDelete(item._id)}
-                    className={`text-white ${isLoading ? 'bg-red-300' :'bg-red-500 hover:bg-red-600'} p-2 rounded-md transition`}
+                    className={`text-white ${isLoading ? 'bg-red-300' : 'bg-red-500 hover:bg-red-600'} p-2 rounded-md transition`}
                 >
                     <FaTrash />
                 </button>
                 {listType === "event" && item.isPublic && (
-                    <a href={`/publish/event/${item._id}`} target="_blank" className="underline tex-sm text-green-600">View</a>
+                    <a href={`/publish/event/${item._id}`} target="_blank" className="underline text-sm text-green-600">
+                        View
+                    </a>
                 )}
             </td>
         </tr>
     );
 
+    // Return the table and search functionality
     return (
         <>
             <div className="flex items-center justify-between w-full gap-3">
-                {/* Search Input */}
                 <div className="border border-orange-500 p-2 w-full rounded-md flex items-center my-5 max-w-md">
                     <input
                         type="text"
@@ -103,12 +99,12 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate,isLoading })
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full outline-none bg-transparent pr-1"
                     />
-                    <GoSearch size={20} className="text-gray-800"/>
+                    <GoSearch size={20} className="text-gray-800" />
                 </div>
                 <AddButton text={`Add ${listType}`} onBtnClick={onCreate} />
             </div>
 
-            <table className="table-auto text-left  w-full border-collapse border border-gray-200">
+            <table className="table-auto text-left w-full border-collapse border border-gray-200">
                 <thead className="bg-gray-200">
                     <tr>
                         {listType === "speaker" && (
@@ -117,6 +113,12 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate,isLoading })
                                 <th className="border px-4 py-2">Name</th>
                                 <th className="border px-4 py-2">Mobile</th>
                                 <th className="border px-4 py-2">Email</th>
+                            </>
+                        )}
+                        {listType === "event" && (
+                            <>
+                                <th className="border px-4 py-2">Title</th>
+                                <th className="border px-4 py-2">Date</th>
                             </>
                         )}
                         {listType === "attendee" && (
@@ -131,12 +133,6 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate,isLoading })
                                 <th className="border px-4 py-2">Building Number</th>
                                 <th className="border px-4 py-2">Room Number</th>
                                 <th className="border px-4 py-2">Room Capacity</th>
-                            </>
-                        )}
-                        {listType === "event" && (
-                            <>
-                                <th className="border px-4 py-2">Title</th>
-                                <th className="border px-4 py-2">Date</th>
                             </>
                         )}
                         <th className="border px-4 py-2">Actions</th>
@@ -161,7 +157,6 @@ const List = ({ data, loading, onEdit, onDelete, listType, onCreate,isLoading })
                 </tbody>
             </table>
 
-            {/* Pagination Component */}
             {filteredData.length > 0 && (
                 <Pagination
                     currentPage={currentPage}

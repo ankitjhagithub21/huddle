@@ -1,44 +1,65 @@
 const mongoose = require('mongoose');
 
-const eventSchema = new mongoose.Schema({
+// Event Schema Definition
+const eventSchema = new mongoose.Schema(
+  {
     title: {
-        type: String,
-        required: true,
-        minlength: 50
+      type: String,
+      required: [true, 'Event title is required'],
+      minlength: [50, 'Title must be at least 50 characters long'], 
+      trim: true,
     },
-    images:{
-        type:Array,
-        default:[]
-    },
-    video:{
-        type:String,
-    },
+    images: [
+      {
+        imageUrl: {
+          type: String,
+          required: [true, 'Image URL is required'],
+        },
+        publicId: {
+          type: String,
+          required: [true, 'Cloudinary public ID is required'],
+        },
+      },
+    ],
     description: {
-        type: String,
-        required: true,
-        minlength: 300
+      type: String,
+      required: [true, 'Description is required'],
+      minlength: [300, 'Description must be at least 300 characters long'], 
+      trim: true,
+    },
+    videoUrl: {
+      type: String,
+      required: true,
     },
     date: {
-        type: Date,
-        required: true
+      type: Date,
+      required: [true, 'Event date is required'],
+      validate: {
+        validator: function (value) {
+          return value >= new Date(); // Ensure date is not in the past
+        },
+        message: 'Event date must be in the future',
+      },
     },
-   
     isPublic: {
-        type: Boolean,
-        default: false 
+      type: Boolean,
+      default: false,
     },
     speakers: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Speaker"
-        }
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Speaker',
+        required: true, // Ensure at least one speaker is added
+      },
     ],
     attendees: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Attendee"
-        }
-    ]
-}, { versionKey: false, timestamps: true });
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Attendee',
+      },
+    ],
+  },
+  { versionKey: false, timestamps: true }
+);
 
 module.exports = mongoose.model('Event', eventSchema);

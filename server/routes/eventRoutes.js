@@ -1,9 +1,11 @@
 const express = require('express');
 const eventRouter = express.Router();
 const {createEvent,getEventById,updateEvent,deleteEvent, getAllEvents, changeEventVisibility} = require('../controllers/eventController');
+const upload = require('../middlewares/multer');
 
 // Create a new event
-eventRouter.post('/', createEvent);
+eventRouter.post('/',upload.array('images') ,createEvent);
+
 
 // Get all events
 eventRouter.get('/', getAllEvents);
