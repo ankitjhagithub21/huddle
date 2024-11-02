@@ -2,48 +2,35 @@ const Event = require('../models/event');
 const Speaker = require('../models/speaker');
 const mongoose = require('mongoose');
 const Attendee = require('../models/attendee');
-const { uploadImage ,deleteImage} = require('../utils/cloudinary');
+const { deleteImage} = require('../utils/cloudinary');
 
 // Create a new event
 const createEvent = async (req, res) => {
   try {
-    const { title, description, date, videoUrl, isPublic, speakers, attendees } = req.body;
+   
+    const { title, description, date, videoUrl, isPublic, speakers, attendees, images } = req.body;
 
-    // Validate required fields
+    
     if (!title || !description || !date || !speakers) {
       return res.status(400).json({ message: 'All required fields must be filled.' });
     }
 
     // Parse speakers and attendees to ensure they are arrays of ObjectIds
     const parsedSpeakers = Array.isArray(speakers)
-      ? speakers.map(id => new mongoose.Types.ObjectId(id)) 
-      : JSON.parse(speakers).map(id => new mongoose.Types.ObjectId(id)); 
+      ? speakers.map(id => new mongoose.Types.ObjectId(id))
+      : JSON.parse(speakers).map(id => new mongoose.Types.ObjectId(id));
 
     const parsedAttendees = attendees
       ? Array.isArray(attendees)
-        ? attendees.map(id => new mongoose.Types.ObjectId(id)) // Use new here
-        : JSON.parse(attendees).map(id => new mongoose.Types.ObjectId(id)) // Use new here
+        ? attendees.map(id => new mongoose.Types.ObjectId(id))
+        : JSON.parse(attendees).map(id => new mongoose.Types.ObjectId(id))
       : [];
 
-
-    let images = [];
-
-    // Upload images to Cloudinary if any
-    if (req.files) {
-      images = await Promise.all(
-        req.files.map(async (file) => {
-          const result = await uploadImage(file.path);
-          return result;
-        })
-      );
-    }
-
-    // Create new event with uploaded images
     const newEvent = new Event({
       title,
       description,
       date,
-      images: images || [],
+      images,  
       isPublic,
       videoUrl: videoUrl || "",
       speakers: parsedSpeakers,
@@ -53,10 +40,11 @@ const createEvent = async (req, res) => {
     const savedEvent = await newEvent.save();
     return res.status(201).json(savedEvent);
   } catch (error) {
-    console.error('Error creating event:', error); // Log the error for debugging
+    console.error('Error creating event:', error);
     return res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 
 
@@ -147,29 +135,45 @@ const deleteEvent = async (req, res) => {
   try {
     const { eventId } = req.params;
 
-    // Find and delete the event by ID
     const event = await Event.findByIdAndDelete(eventId);
 
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
 
-    // If images exist, delete all images from Cloudinary
-    if (event.images.length > 0) {
-      // Use Promise.all to wait for all deletions to complete
+    if (event.images && event.images.length > 0) {
       await Promise.all(
         event.images.map(async (image) => {
-          await deleteImage(image.publicId);
+          let attempts = 0;
+          const maxAttempts = 3; // Define max retries
+          
+          while (attempts < maxAttempts) {
+            try {
+              await deleteImage(image.publicId);
+              break; // Exit loop on success
+            } catch (err) {
+              attempts++;
+              console.error(`Attempt ${attempts} - Error deleting image with publicId ${image.publicId}:`, err);
+              
+              if (err?.error?.http_code === 499 && attempts < maxAttempts) {
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait before retrying
+              } else {
+                throw err; // Throw if it's not a timeout error or max attempts reached
+              }
+            }
+          }
         })
       );
     }
 
     res.status(200).json({ message: 'Event deleted successfully' });
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    console.error('Error deleting event:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+
 
 
 const changeEventVisibility = async (req, res) => {

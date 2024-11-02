@@ -4,7 +4,7 @@ const {createEvent,getEventById,updateEvent,deleteEvent, getAllEvents, changeEve
 const upload = require('../middlewares/multer');
 
 // Create a new event
-eventRouter.post('/',upload.array('images') ,createEvent);
+eventRouter.post('/', createEvent);
 
 
 // Get all events

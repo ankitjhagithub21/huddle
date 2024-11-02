@@ -46,11 +46,11 @@ const EventDetails = () => {
 
   return (
     <div className="p-5 container mx-auto">
-      <h1 className="text-3xl font-semibold mb-2 text-center">{event.title}</h1>
+     
       <p className="text-lg text-gray-600 mb-2 text-center">
         Date: {new Date(event?.date).toLocaleDateString()}
       </p>
-      <hr />
+     
 
       {/* Image Carousel */}
       {
@@ -87,6 +87,9 @@ const EventDetails = () => {
           </div>
         </div>
       }
+      
+       <h1 className="text-xl font-semibold my-5 text-center">{event.title}</h1>
+       <p className='text-center'>{event.description}</p>
 
       <div className='flex  md:justify-center justify-start gap-5 p-5'>
         {event?.speakers.map(speaker => (

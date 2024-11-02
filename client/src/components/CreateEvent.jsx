@@ -1,48 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addNewEvent } from '../api/events';
 import { addEvent, setSelectedAttendees, setSelectedSpeakers } from '../redux/slices/eventSlice';
 import EventModal from './EventModal';
-
 import UploadAndDisplayImage from './UploadAndDisplayImage';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const CreateEvent = () => {
   const dispatch = useDispatch();
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { selectedAttendees, selectedSpeakers } = useSelector((state) => state.event);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
-  const [modalData, setModalData] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
   const [isPublic, setIsPublic] = useState(false);
   const [images, setImages] = useState([]);
-  const [imageURLs, setImageURLs] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (images.length < 1) return;
-    const newImageURLs = images.map((image) => URL.createObjectURL(image));
-    setImageURLs(newImageURLs);
-  }, [images]);
+  const [imagePreviewURLs, setImagePreviewURLs] = useState([]);
+  const [uploadedImageURLs, setUploadedImageURLs] = useState([]);
+  const [uploadingImages, setUploadingImages] = useState(false);
 
   const onImageChange = (e) => {
-    setImages([...e.target.files]);
+    const files = Array.from(e.target.files);
+    setImages(files);
+
+    // Generate preview URLs for each file
+    const previewURLs = files.map((file) => URL.createObjectURL(file));
+    setImagePreviewURLs(previewURLs);
   };
 
 
   const openModal = (type) => {
     setModalType(type);
-    setModalData(type === 'speaker' ? selectedSpeakers : selectedAttendees);
     setIsModalOpen(true);
   };
-
-
 
   const resetForm = () => {
     setTitle('');
@@ -55,39 +51,67 @@ const CreateEvent = () => {
     dispatch(setSelectedAttendees([]));
   };
 
+  const uploadImages = async () => {
+    setUploadingImages(true);
+    const uploadedUrls = [];
+
+    for (const image of images) {
+      const formData = new FormData();
+      formData.append('file', image);
+      formData.append('upload_preset', 'huddle');
+      formData.append('folder', 'huddle');
+
+      try {
+        const res = await axios.post(
+          `https://api.cloudinary.com/v1_1/dijp45drq/image/upload`,
+          formData
+        );
+        uploadedUrls.push({
+          imageUrl: res.data.secure_url,
+          publicId: res.data.public_id,
+        });
+      } catch (err) {
+        console.error('Error uploading image:', err);
+        toast.error('Error uploading one or more images.');
+      }
+    }
+
+    setUploadingImages(false);
+    return uploadedUrls;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (loading) return;
-    setLoading(true);
 
+    if (uploadingImages) return;
 
     try {
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('description', description);
-      formData.append('date', date);
-      formData.append('videoUrl', videoUrl);
-      formData.append('isPublic', isPublic);
-      formData.append('speakers', JSON.stringify(selectedSpeakers))
-      formData.append('attendees', JSON.stringify(selectedAttendees))
-      images.forEach((image) => formData.append('images', image));
+      const imageUploadResults = await uploadImages();
+      setUploadedImageURLs(imageUploadResults);
 
+      const formData = {
+        title,
+        description,
+        date,
+        videoUrl,
+        isPublic,
+        speakers: selectedSpeakers,
+        attendees: selectedAttendees,
+        images: imageUploadResults,
+      };
 
       const response = await addNewEvent(formData);
       if (response.ok) {
-        const data = await response.json()
+        const data = await response.json();
         toast.success('Event created successfully!');
-
-        dispatch(addEvent(data))
-        navigate("/events")
+        dispatch(addEvent(data));
+        navigate("/events");
+        resetForm();
       } else {
         throw new Error('Failed to create event');
       }
     } catch (error) {
       toast.error(`Error: ${error.message}`);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -95,19 +119,13 @@ const CreateEvent = () => {
     <section>
       <div className='max-w-7xl mx-auto py-12 px-5'>
         <button className='px-4 py-2 bg-orange-500 text-white rounded-full mb-5' onClick={() => navigate(-1)}>Back</button>
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">
-            Create new event
-          </h2>
+        <h2 className="text-2xl font-semibold">Create new event</h2>
 
-        </div>
+        <form onSubmit={handleSubmit} className="mt-4">
+          <UploadAndDisplayImage onImageChange={onImageChange} imageURLs={imagePreviewURLs} />
 
-        <form onSubmit={handleSubmit} encType="multipart/form-data" className="mt-4">
-
-          <div className="mb-4">
-            <label htmlFor="videoUrl" className="block font-medium">
-              Video URL
-            </label>
+          <div className="my-4">
+            <label htmlFor="videoUrl" className="block font-medium">Video URL</label>
             <input
               type="url"
               id="videoUrl"
@@ -117,12 +135,8 @@ const CreateEvent = () => {
             />
           </div>
 
-          <UploadAndDisplayImage onImageChange={onImageChange} imageURLs={imageURLs} />
-
           <div className="my-4">
-            <label htmlFor="title" className="block font-medium">
-              Title
-            </label>
+            <label htmlFor="title" className="block font-medium">Title</label>
             <input
               type="text"
               id="title"
@@ -130,14 +144,12 @@ const CreateEvent = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              minLength={50}
-
+              minLength={10}
             />
           </div>
+
           <div className="mb-4">
-            <label htmlFor="date" className="block font-medium">
-              Date and Time
-            </label>
+            <label htmlFor="date" className="block font-medium">Date and Time</label>
             <input
               type="datetime-local"
               id="date"
@@ -149,16 +161,14 @@ const CreateEvent = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="description" className="block font-medium">
-              Description
-            </label>
+            <label htmlFor="description" className="block font-medium">Description</label>
             <textarea
               id="description"
               className="w-full p-2 border rounded-lg mt-1"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
-              minLength={300}
+              minLength={50}
             ></textarea>
           </div>
 
@@ -186,29 +196,24 @@ const CreateEvent = () => {
               checked={isPublic}
               onChange={(e) => setIsPublic(e.target.checked)}
             />
-            <label htmlFor="isPublic" className="ml-2">
-              Public Event
-            </label>
+            <label htmlFor="isPublic" className="ml-2">Public Event</label>
           </div>
-
+          
           <button
             type="submit"
-            className="bg-[var(--secondary)] px-6 py-2  rounded-lg text-white mt-4"
-            disabled={loading}
+            className="bg-[var(--secondary)] px-6 py-2 rounded-lg text-white mt-4"
+            disabled={uploadingImages}
           >
-            {loading ? 'Saving...' : 'Create Event'}
+            {uploadingImages ? 'Uploading Images...' : 'Create Event'}
           </button>
         </form>
-
 
         {isModalOpen && (
           <EventModal
             setIsModalOpen={setIsModalOpen}
             type={modalType}
-            data={modalData}
           />
         )}
-
       </div>
     </section>
   );
