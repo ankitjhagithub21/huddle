@@ -57,7 +57,7 @@ const EventDetails = () => {
         event.images && event.images.length > 0 && <div className="relative max-w-5xl mx-auto">
 
           <img
-            src={event.images[currentImageIndex].imageUrl}
+            src={event?.images[currentImageIndex]?.imageUrl}
             alt={`Event image ${currentImageIndex + 1}`}
             className="w-full h-[50vh] object-cover rounded-lg"
           />

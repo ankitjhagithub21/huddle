@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import CreateEvent from './CreateEvent';
 import useFetchEvents from '../hooks/useFetchEvents';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteEventById } from '../api/events';
 import { deleteEvent } from '../redux/slices/eventSlice';
 import ListType from './shared/ListType';
 import List from './shared/List';
+import { useNavigate } from 'react-router-dom';
 
 const EventList = () => {
     // Fetch events with custom hook
@@ -14,16 +14,14 @@ const EventList = () => {
 
     // Get event state and loading status from Redux
     const { events, loading } = useSelector((state) => state.event);
-    const [showForm, setShowForm] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [isLoading,setIsLoading] = useState(false)
     const dispatch = useDispatch();
 
-    const onClose = () => {
-        setShowForm(false);
-        setSelectedEvent(null);
-        
-    };
+    const navigate = useNavigate()
+
+
+    
 
     const handleDeleteEvent = async (eventId) => {
         setIsLoading(true)
@@ -43,13 +41,12 @@ const EventList = () => {
 
     const handleEditEvent = (event) => {
         setSelectedEvent(event);
-        setShowForm(true);
         
     };
 
     const onCreate = () => {
-        setSelectedEvent(null);
-        setShowForm(true);
+        navigate("/event/new")
+       
     };
 
     const columns = ['Event Name', 'Event Date', 'Action'];
@@ -70,14 +67,6 @@ const EventList = () => {
                 isLoading={isLoading}
             />
 
-
-            {/* Create/Edit Event Form */}
-            <CreateEvent
-                showForm={showForm}
-                onClose={onClose}
-                eventData={selectedEvent}
-
-            />
         </>
     );
 };

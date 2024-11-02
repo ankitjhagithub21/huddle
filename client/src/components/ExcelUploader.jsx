@@ -75,7 +75,7 @@ const ExcelUploader = ({ onImport }) => {
 
   return (
     <div className="max-w-7xl">
-      <div className="bg-[var(--secondary)] w-fit px-4 py-2 text-white rounded-lg cursor-pointer ">
+      <div className="bg-orange-500 w-fit px-4 py-2 text-white rounded-lg cursor-pointer ">
         <label htmlFor="excel" className='cursor-pointer'>Import Excel</label>
         <input
           type="file"

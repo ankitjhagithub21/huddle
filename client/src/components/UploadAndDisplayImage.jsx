@@ -8,7 +8,7 @@ const UploadAndDisplayImage = ({onImageChange,imageURLs}) => {
       <input type="file" multiple accept="image/*" onChange={onImageChange} />
       <div className="grid lg:grid-cols-5 grid-cols-3 gap-3">
         {imageURLs.map((imageSrc, index) => (
-          <img key={index} src={imageSrc} alt="Preview" />
+          <img key={index} src={imageSrc} alt="Preview" className="w-full"/>
         ))}
       </div>
     </div>

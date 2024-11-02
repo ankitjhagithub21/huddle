@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FaCheckCircle } from 'react-icons/fa';
 import { fetchAttendees } from '../api/attendees';
 import { setSelectedAttendees } from '../redux/slices/eventSlice';
-import ExcelUploader from './ExcelUploader'; // Import the ExcelUploader component
+import ExcelUploader from './ExcelUploader';
 
 const SelectAttendee = () => {
   const [attendees, setAttendees] = useState([]);
@@ -15,6 +15,17 @@ const SelectAttendee = () => {
       ? selectedAttendees.filter((aid) => aid !== id)
       : [...selectedAttendees, id];
     dispatch(setSelectedAttendees(updated));
+  };
+
+  const handleSelectAll = () => {
+    if (selectedAttendees.length === attendees.length) {
+      // Deselect all if all are currently selected
+      dispatch(setSelectedAttendees([]));
+    } else {
+      // Select all attendees' IDs
+      const allAttendeeIds = attendees.map((attendee) => attendee._id);
+      dispatch(setSelectedAttendees(allAttendeeIds));
+    }
   };
 
   useEffect(() => {
@@ -37,22 +48,28 @@ const SelectAttendee = () => {
 
   // Callback function to handle imported attendees
   const handleImportedAttendees = (importedData) => {
-    // Filter out duplicates based on email or any unique identifier
     const uniqueAttendees = importedData.filter((imported) => 
       !attendees.some(existing => existing.email === imported.email)
     );
 
-    // Update the attendees state with unique imported attendees
     setAttendees(prev => [...prev, ...uniqueAttendees]);
-    // Optionally, you can also automatically select the newly imported attendees
     const newSelected = uniqueAttendees.map(item => item._id);
     dispatch(setSelectedAttendees([...selectedAttendees, ...newSelected]));
   };
 
   return (
     <div className="flex flex-col gap-3 px-2 h-full overflow-y-scroll scroll">
-      <ExcelUploader onImport={handleImportedAttendees} /> {/* Pass the callback */}
+     <div className='flex items-center justify-between mb-3'>
+     <ExcelUploader onImport={handleImportedAttendees} />
       
+      <button
+        className="px-4 py-2 bg-orange-500 text-white rounded-lg"
+        onClick={handleSelectAll}
+      >
+        {selectedAttendees.length === attendees.length ? 'Remove All' : 'Select All'}
+      </button>
+     </div>
+
       {attendees.map((attendee) => (
         <div
           key={attendee._id}

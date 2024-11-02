@@ -10,7 +10,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EventDetails from './components/EventDetails';
 import VenueList from './components/VenueList';
-import SelectSpeaker from './components/SelectSpeaker';
+import CreateEvent from './components/CreateEvent';
 
 // Layout for routes that include the Sidebar
 const AppLayout = () => (
@@ -36,6 +36,7 @@ const App = () => (
   <BrowserRouter>
     <Routes>
       {/* Route for EventDetails component rendered outside the layout */}
+      <Route path="/event/new" element={<CreateEvent />} />
       <Route path="/publish/event/:eventId" element={<EventDetails />} />
       
       {/* All other routes use the AppLayout */}

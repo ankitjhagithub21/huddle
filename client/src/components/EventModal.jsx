@@ -5,7 +5,7 @@ import SelectSpeaker from './SelectSpeaker';
 
 const EventModal = ({ setIsModalOpen, type, data }) => {
   return (
-    <div className="fixed top-0 left-0 h-full w-full z-50 overlay backdrop-blur-lg flex items-center justify-center p-5">
+    <div className="fixed top-0 left-0 h-full  w-full z-50 overlay backdrop-blur-lg flex items-center justify-center p-5">
       <div className="p-5 shadow-xl bg-white rounded-xl h-[80vh] gap-2 max-w-xl w-full flex flex-col justify-between">
       
         <h1 className="text-2xl font-semibold mb-5">Select {type}</h1>
