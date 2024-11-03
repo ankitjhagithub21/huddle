@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaTimes } from 'react-icons/fa';
 import { fetchAttendees } from '../api/attendees';
 import { setSelectedAttendees } from '../redux/slices/eventSlice';
 import ExcelUploader from './ExcelUploader';
@@ -59,17 +59,38 @@ const SelectAttendee = () => {
 
   return (
     <div className="flex flex-col gap-3 px-2 h-full overflow-y-scroll scroll">
-     <div className='flex items-center justify-between mb-3'>
-     <ExcelUploader onImport={handleImportedAttendees} />
-      
-      <button
-        className="px-4 py-2 bg-orange-500 text-white rounded-lg"
-        onClick={handleSelectAll}
-      >
-        {selectedAttendees.length === attendees.length ? 'Remove All' : 'Select All'}
-      </button>
-     </div>
+      {/* Selected Attendees Pills */}
+      <div className="flex flex-wrap gap-2 mb-3">
+        {attendees
+          .filter((attendee) => selectedAttendees.includes(attendee._id))
+          .map((attendee) => (
+            <div
+              key={attendee._id}
+              className="flex items-center gap-1 bg-gray-200 rounded-full px-3 py-1 min-w-fit"
+            >
+              <p className="text-sm font-medium">{attendee.fullName}</p>
+              <FaTimes
+                size={12}
+                className="cursor-pointer text-red-600"
+                onClick={() => handleSelect(attendee._id)}
+              />
+            </div>
+          ))}
+      </div>
 
+      {/* Excel Uploader and Select All / Deselect All Button */}
+      <div className='flex items-center justify-between mb-3'>
+        <ExcelUploader onImport={handleImportedAttendees} />
+        
+        <button
+          className="px-4 py-2 bg-orange-500 text-white rounded-lg"
+          onClick={handleSelectAll}
+        >
+          {selectedAttendees.length === attendees.length ? 'Remove All' : 'Select All'}
+        </button>
+      </div>
+
+      {/* Attendees List */}
       {attendees.map((attendee) => (
         <div
           key={attendee._id}

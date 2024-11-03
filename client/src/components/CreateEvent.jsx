@@ -12,7 +12,7 @@ const CreateEvent = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { selectedAttendees, selectedSpeakers } = useSelector((state) => state.event);
-
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
   const [title, setTitle] = useState('');
@@ -188,7 +188,7 @@ const CreateEvent = () => {
               Select Attendees
             </button>
           </div>
-
+        
           <div className="flex items-center mt-4">
             <input
               type="checkbox"

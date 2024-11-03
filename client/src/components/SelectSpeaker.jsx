@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaTimes } from 'react-icons/fa';
 import { fetchSpeakers } from '../api/speakers';
 import { setSelectedSpeakers } from '../redux/slices/eventSlice';
 
@@ -15,6 +15,17 @@ const SelectSpeaker = () => {
       ? selectedSpeakers.filter((sid) => sid !== id)
       : [...selectedSpeakers, id];
     dispatch(setSelectedSpeakers(updatedSpeakers));
+  };
+
+  const handleSelectAll = () => {
+    if (selectedSpeakers.length === allSpeakers.length) {
+      // Deselect all
+      dispatch(setSelectedSpeakers([]));
+    } else {
+      // Select all
+      const allSpeakerIds = allSpeakers.map((speaker) => speaker._id);
+      dispatch(setSelectedSpeakers(allSpeakerIds));
+    }
   };
 
   useEffect(() => {
@@ -42,22 +53,58 @@ const SelectSpeaker = () => {
     return <p className="text-center mt-5">No speakers available.</p>;
   }
 
+  const selectedSpeakerData = allSpeakers.filter((speaker) =>
+    selectedSpeakers.includes(speaker._id)
+  );
+  const unselectedSpeakers = allSpeakers.filter(
+    (speaker) => !selectedSpeakers.includes(speaker._id)
+  );
 
   return (
+    <div className="flex flex-col h-full overflow-y-scroll scroll">
+      {/* Select All / Deselect All Button */}
+      <div className="flex justify-between items-center p-2">
+        <h2 className='text-2xl font-bold'>Select Speaker</h2>
+      <button
+          className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg"
+          onClick={handleSelectAll}
+        >
+          {selectedSpeakers.length === allSpeakers.length
+            ? 'Deselect All'
+            : 'Select All'}
+        </button>
+      </div>
 
+      {/* Selected Speakers Display */}
+      <div className="flex flex-wrap gap-2 p-2">
+        {selectedSpeakerData.map((speaker) => (
+          <div
+            key={speaker._id}
+            className="flex items-center gap-1 bg-gray-200 rounded-full px-3 py-1"
+          >
+            <img src={speaker.profilePic} alt={speaker.fullName} className="rounded-full w-10" />
+            <p className="text-sm font-medium">{speaker.fullName}</p>
+            <FaTimes
+              size={14}
+              className="cursor-pointer text-red-600"
+              onClick={() => handleSelectSpeaker(speaker._id)}
+            />
+          </div>
+        ))}
+      </div>
 
-    <div className="flex flex-col gap-3 h-full overflow-y-scroll scroll">
-      {allSpeakers.map((speaker) => (
+      {/* Speakers List */}
+      {unselectedSpeakers.map((speaker) => (
         <div
           key={speaker._id}
-          className="flex items-center justify-between gap-2 border  p-2 rounded-lg cursor-pointer hover:bg-gray-100"
+          className="flex items-center justify-between gap-2 border p-2 rounded-lg cursor-pointer hover:bg-gray-100"
           onClick={() => handleSelectSpeaker(speaker._id)}
         >
           <div className="flex items-center gap-2">
             <img
               src={speaker.profilePic || 'https://via.placeholder.com/150'}
               alt={speaker.fullName}
-              className="w-14 h-14 rounded-full object-cover border"
+              className="w-10 h-10 rounded-full object-cover border"
               onError={(e) => (e.target.src = 'https://via.placeholder.com/150')}
             />
             <p className="font-medium">{speaker.fullName}</p>
@@ -68,7 +115,6 @@ const SelectSpeaker = () => {
         </div>
       ))}
     </div>
-
   );
 };
 
