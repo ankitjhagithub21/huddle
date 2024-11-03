@@ -2,15 +2,15 @@ const Event = require('../models/event');
 const Speaker = require('../models/speaker');
 const mongoose = require('mongoose');
 const Attendee = require('../models/attendee');
-const { deleteImage} = require('../utils/cloudinary');
+const { deleteImage } = require('../utils/cloudinary');
 
 // Create a new event
 const createEvent = async (req, res) => {
   try {
-   
+
     const { title, description, date, videoUrl, isPublic, speakers, attendees, images } = req.body;
 
-    
+
     if (!title || !description || !date || !speakers) {
       return res.status(400).json({ message: 'All required fields must be filled.' });
     }
@@ -30,7 +30,7 @@ const createEvent = async (req, res) => {
       title,
       description,
       date,
-      images,  
+      images,
       isPublic,
       videoUrl: videoUrl || "",
       speakers: parsedSpeakers,
@@ -135,32 +135,22 @@ const deleteEvent = async (req, res) => {
   try {
     const { eventId } = req.params;
 
+    // Find and delete the event by ID
     const event = await Event.findByIdAndDelete(eventId);
 
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
 
+    // If images exist, delete all images from Cloudinary
     if (event.images && event.images.length > 0) {
+      // Use Promise.all to wait for all deletions to complete
       await Promise.all(
         event.images.map(async (image) => {
-          let attempts = 0;
-          const maxAttempts = 3; // Define max retries
-          
-          while (attempts < maxAttempts) {
-            try {
-              await deleteImage(image.publicId);
-              break; // Exit loop on success
-            } catch (err) {
-              attempts++;
-              console.error(`Attempt ${attempts} - Error deleting image with publicId ${image.publicId}:`, err);
-              
-              if (err?.error?.http_code === 499 && attempts < maxAttempts) {
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait before retrying
-              } else {
-                throw err; // Throw if it's not a timeout error or max attempts reached
-              }
-            }
+          try {
+            await deleteImage(image.publicId);
+          } catch (err) {
+            console.error(`Error deleting image with publicId ${image.publicId}:`, err);
           }
         })
       );
@@ -172,7 +162,6 @@ const deleteEvent = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
 
 
 
@@ -196,6 +185,7 @@ const changeEventVisibility = async (req, res) => {
     });
 
   } catch (error) {
+
     res.status(500).json({ message: 'Server error' });
   }
 };
